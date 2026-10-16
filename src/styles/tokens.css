@@ -1,0 +1,135 @@
+/*
+  Vive Health — design tokens.
+  Ported from the ViveNow design system bundle (colors.css, typography.css,
+  spacing.css, effects.css) so the tokens live with the app instead of the
+  design-tool export.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Brand teal */
+  --teal-500: #23b2be;
+  --teal-50: #eafafb;
+  --teal-100: #d3f2f5;
+  --teal-200: #a9e6ec;
+  --teal-300: #6fd2db;
+  --teal-400: #3fc1cc;
+  --teal-600: #1b8e98;
+  --teal-700: #146b73;
+  --teal-800: #0f4f55;
+
+  /* Navy */
+  --navy-500: #004366;
+  --navy-600: #063a54;
+  --navy-700: #072e43;
+  --navy-800: #08222f;
+  --navy-900: #061a24;
+
+  /* Complementary accents */
+  --red-500: #eb3300;
+  --gold-500: #f0b323;
+
+  /* Neutrals */
+  --warm-gray: #777473;
+  --gray-0: #ffffff;
+  --gray-25: #f7f9fa;
+  --gray-50: #f1f4f5;
+  --gray-100: #e6eaec;
+  --gray-200: #d3d9db;
+  --gray-300: #b4bcbf;
+  --gray-400: #8b9497;
+  --gray-500: #6b7376;
+  --gray-600: #4e5558;
+  --gray-700: #363c3e;
+  --gray-800: #23282a;
+  --gray-900: #14181a;
+  --black: #000000;
+
+  /* Semantic aliases */
+  --brand: var(--teal-500);
+  --brand-hover: var(--teal-600);
+  --brand-active: var(--teal-700);
+  --brand-subtle: var(--teal-50);
+  --brand-subtle-2: var(--teal-100);
+  --brand-contrast: #ffffff;
+
+  --ink: var(--navy-700);
+  --ink-strong: var(--navy-900);
+  --text-body: var(--gray-700);
+  --text-muted: var(--gray-500);
+  --text-inverse: #ffffff;
+  --text-link: var(--teal-600);
+  --text-link-hover: var(--teal-700);
+
+  --surface-page: #ffffff;
+  --surface-subtle: var(--gray-25);
+  --surface-card: #ffffff;
+  --surface-inverse: var(--navy-700);
+  --surface-brand: var(--teal-500);
+
+  --border-subtle: var(--gray-100);
+  --border-default: var(--gray-200);
+  --border-strong: var(--gray-300);
+  --border-brand: var(--teal-500);
+
+  --focus-ring: color-mix(in srgb, var(--teal-500) 45%, transparent);
+
+  --success: #1f9d57;
+  --success-subtle: #e6f6ec;
+  --warning: var(--gold-500);
+  --warning-subtle: #fdf3dc;
+  --danger: var(--red-500);
+  --danger-subtle: #fde7e0;
+  --info: var(--teal-500);
+  --info-subtle: var(--teal-50);
+
+  /* Typography */
+  --font-sans: 'Poppins', 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --font-display: 'Poppins', 'Montserrat', Arial, sans-serif;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --fs-base: 1rem;
+  --fs-sm: 0.875rem;
+  --fs-xs: 0.75rem;
+  --lh-body: 1.6;
+  --lh-heading: 1.2;
+  --ls-tight: -0.01em;
+  --ls-caps: 0.08em;
+
+  /* Spacing (4px base grid) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Radius */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-pill: 999px;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(6, 46, 67, 0.06);
+  --shadow-sm: 0 1px 3px rgba(6, 46, 67, 0.08), 0 1px 2px rgba(6, 46, 67, 0.06);
+  --shadow-md: 0 4px 12px rgba(6, 46, 67, 0.10);
+  --shadow-lg: 0 12px 28px rgba(6, 46, 67, 0.14);
+  --shadow-brand: 0 8px 20px rgba(35, 178, 190, 0.30);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --dur-fast: 120ms;
+  --dur-med: 200ms;
+
+  /* Safe areas (iOS/Android notch + home indicator) */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
