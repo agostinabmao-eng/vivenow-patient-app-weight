@@ -102,11 +102,13 @@ function BmiBadge({ weightLbs, heightIn }) {
   );
 }
 
-function AccountRow({ icon, label, last }) {
+function AccountRow({ icon, label, last, onClick }) {
   return (
     <div
       role="button"
       tabIndex={0}
+      onClick={onClick}
+      onKeyDown={(e) => onClick && (e.key === 'Enter' || e.key === ' ') && onClick()}
       style={{
         display: 'flex',
         alignItems: 'center',
@@ -136,7 +138,17 @@ const WEIGHT_UNIT_OPTIONS = [
   { key: 'kg', label: 'kg' },
 ];
 
-export default function ProfileScreen({ onBack, simpleMode, onSetSimpleMode, waterUnit, onSetWaterUnit, weightUnit, onSetWeightUnit }) {
+export default function ProfileScreen({
+  onBack,
+  simpleMode,
+  onSetSimpleMode,
+  waterUnit,
+  onSetWaterUnit,
+  weightUnit,
+  onSetWeightUnit,
+  onReportRisk,
+  onSimulateNurseUpdate,
+}) {
   const { fullName, dob, patientId, heightIn, conditions, careTeam, devices } = patientProfile;
 
   return (
@@ -317,9 +329,28 @@ export default function ProfileScreen({ onBack, simpleMode, onSetSimpleMode, wat
           >
             <AccountRow icon="bell" label="Notifications" />
             <AccountRow icon="shield" label="Privacy &amp; Data" />
+            <AccountRow icon="alert-triangle" label="Report a fall, pain, or new symptom" onClick={onReportRisk} />
             <AccountRow icon="help-circle" label="Help &amp; Support" last />
           </div>
         </div>
+
+        {/* Dev-only stand-in for a live Portal sync — there's no real-time
+            plan backend in this prototype, so this just demonstrates the
+            "Your nurse updated your plan" notice the real sync would fire. */}
+        <button
+          onClick={onSimulateNurseUpdate}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: '4px 0',
+            font: '500 0.75rem/1.3 var(--font-sans)',
+            color: 'var(--text-muted)',
+            textAlign: 'center',
+            cursor: 'pointer',
+          }}
+        >
+          Simulate: nurse updated your plan
+        </button>
 
         <button
           onClick={onBack}

@@ -12,6 +12,7 @@ import MedicationList from '../components/MedicationList';
 import Toast from '../components/Toast';
 import { HeroProgressCard, WeightGoalMiniCard } from '../components/ProgressCards';
 import { formatWeight, weightToLbs } from '../utils/units';
+import { shouldReconfirmPersonalReason } from '../data/rules';
 import { metrics, patientName, MEDICATIONS, patientPlan, todaySample, WEIGHT_DELTA_LBS, isTaskFullyDone, formatSlotStatus } from '../data/sampleData';
 
 // Where "Log data" sends each summary card — the dedicated vitals screen
@@ -202,6 +203,71 @@ function CheckInCard({ day, onOpenSurvey }) {
   );
 }
 
+/** The patient's own "why" (her first answer to "What would change for you
+ * if you reach your goals?" at onboarding) — shown daily as a quiet
+ * reminder, and re-asked every few weeks ("Is this still your reason?")
+ * per the clinical spec (see data/rules.js). Renders nothing if onboarding
+ * hasn't set a reason yet. */
+function ReasonCard({ personalReason, onConfirm }) {
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(personalReason?.value || '');
+  if (!personalReason?.value) return null;
+  const due = shouldReconfirmPersonalReason(personalReason);
+
+  const cardStyle = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    marginTop: 14,
+    background: 'var(--surface-card)',
+    border: '1px solid var(--border-subtle)',
+    borderRadius: 'var(--radius-md)',
+    boxShadow: 'var(--shadow-sm)',
+    padding: 14,
+  };
+
+  if (editing) {
+    return (
+      <div style={{ ...cardStyle, flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
+        <div style={{ font: '700 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>What&apos;s your reason now?</div>
+        <Input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="e.g. Time with family" />
+        <Button
+          variant="primary"
+          size="md"
+          onClick={() => {
+            onConfirm(false, draft);
+            setEditing(false);
+          }}
+        >
+          Save
+        </Button>
+      </div>
+    );
+  }
+
+  return (
+    <div style={cardStyle}>
+      <Icon name="message-circle" size={18} color="var(--teal-600)" style={{ flexShrink: 0 }} />
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ font: '600 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>
+          {due ? 'Is this still your reason?' : 'Your reason'}
+        </div>
+        <div style={{ font: '700 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{personalReason.value}</div>
+      </div>
+      {due && (
+        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+          <Button variant="outline" size="sm" onClick={() => onConfirm(true)}>
+            Yes
+          </Button>
+          <Button variant="ghost" size="sm" onClick={() => setEditing(true)}>
+            Change it
+          </Button>
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** The active/completed split + toggle, shared by both Home layouts —
  * done tasks drop out of the main list so it only ever shows what's left,
  * with completed ones a tap away instead of gone. */
@@ -250,6 +316,10 @@ export default function HomeScreen({
   onboardingComplete,
   onResumeOnboarding,
   onUncompleteTask,
+  onboarding,
+  onConfirmReason,
+  nurseUpdateBanner,
+  onDismissNurseUpdateBanner,
   simpleMode,
   waterUnit,
   weightUnit,
@@ -316,6 +386,9 @@ export default function HomeScreen({
   // to the completed section as soon as it's collapsed.
   const activeTodos = todos.filter((t) => !t.done || t.id === expandedTask);
   const completedTodos = todos.filter((t) => t.done && t.id !== expandedTask);
+  // "Motivation" barrier (see data/rules.js) highlights a short win the
+  // moment anything's done today, on top of the streak already shown above.
+  const showShortWin = onboarding?.highlightWins && doneCount > 0;
 
   if (simpleMode) {
     return (
@@ -332,6 +405,13 @@ export default function HomeScreen({
             <div style={{ marginBottom: 14 }}>
               <Alert tone="warning" title="You're offline">
                 Vitals you enter now are saved on this phone and will sync automatically once you&apos;re back online.
+              </Alert>
+            </div>
+          )}
+          {nurseUpdateBanner && (
+            <div style={{ marginBottom: 14 }}>
+              <Alert tone="info" icon="bell" title="Your nurse updated your plan" onDismiss={onDismissNurseUpdateBanner}>
+                Your care team made a change — take a look next time you're on Progress or Exercise.
               </Alert>
             </div>
           )}
@@ -359,10 +439,17 @@ export default function HomeScreen({
               }
             />
           </div>
+          {showShortWin && (
+            <div style={{ marginTop: 8, font: '600 0.8125rem/1.3 var(--font-sans)', color: 'var(--teal-700)' }}>
+              🎉 Nice work — you&apos;ve already done {doneCount} of {totalCount} today.
+            </div>
+          )}
 
           <div style={{ marginTop: 12 }}>
             <WeightGoalMiniCard weightGoal={patientPlan.weight} currentLbs={todaySample.weight} />
           </div>
+
+          <ReasonCard personalReason={onboarding?.personalReason} onConfirm={onConfirmReason} />
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 20 }}>
             {activeTodos.map((t) => {
@@ -546,6 +633,13 @@ export default function HomeScreen({
             </Alert>
           </div>
         )}
+        {nurseUpdateBanner && (
+          <div style={{ marginBottom: 14 }}>
+            <Alert tone="info" icon="bell" title="Your nurse updated your plan" onDismiss={onDismissNurseUpdateBanner}>
+              Your care team made a change — take a look next time you're on Progress or Exercise.
+            </Alert>
+          </div>
+        )}
 
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
           <div>
@@ -556,6 +650,11 @@ export default function HomeScreen({
                 {streak}-day streak
               </span>
             </div>
+            {showShortWin && (
+              <div style={{ marginTop: 4, font: '600 0.78125rem/1.3 var(--font-sans)', color: 'var(--teal-700)' }}>
+                🎉 Nice work — you&apos;ve already done {doneCount} today.
+              </div>
+            )}
           </div>
           <IconButton variant="outline" label="Open your profile" onClick={onOpenProfile}>
             <Icon name="user" size={20} />
@@ -576,6 +675,8 @@ export default function HomeScreen({
         <div style={{ marginTop: 14 }}>
           <WeightGoalMiniCard weightGoal={patientPlan.weight} currentLbs={todaySample.weight} />
         </div>
+
+        <ReasonCard personalReason={onboarding?.personalReason} onConfirm={onConfirmReason} />
 
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 20 }}>
           <div style={{ font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)' }}>To-Do List</div>

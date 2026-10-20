@@ -124,10 +124,20 @@ export const patientPlan = {
     heartFailure: false,
   },
   takesMedication: true,
-  // Drives which mobility-level task/exercise template applies (see
+  // Drives which mobility-level task template applies (see
   // MOBILITY_TASK_TEMPLATES) — independent/limited/assisted, same three
   // tiers the Provider Portal uses to pick a safe default exercise set.
   mobilityLevel: 'independent',
+  // Set on the nurse's intake call (the mobility check), never asked again
+  // in the app — one of 'bed' | 'seated' | 'standing-beginner' |
+  // 'standing-advanced'. Drives which tier of EXERCISE_VIDEO_LIBRARY shows
+  // up (see exercisesForPatient) — independent of mobilityLevel above,
+  // which only drives whether the daily task list includes an exercise row.
+  exerciseLevel: 'standing-beginner',
+  // The clinical goal in plain words for the Welcome screen — the numeric
+  // target itself lives in goals.targets below; this is just the one-line
+  // "why" (e.g. "Lower your blood pressure").
+  mainGoalPlain: 'Lower your blood pressure',
   weight: {
     baselineLbs: 214,
     baselineDate: '2026-05-10',
@@ -182,7 +192,9 @@ export const patientPlan = {
   // that have actually been recorded; see LearnScreen.
   conditionEducation: [
     { id: 'edu-cond-bp', title: 'Understanding High Blood Pressure', condition: 'hypertension', recorded: true },
+    { id: 'edu-cond-sodium', title: 'Cutting Back on Salt', condition: 'hypertension', recorded: true, tag: 'sodium' },
     { id: 'edu-cond-portion', title: 'Portion Sizes Made Simple', condition: 'weightManagement', recorded: true },
+    { id: 'edu-cond-5to10', title: 'Why Losing 5 to 10% Matters', condition: 'weightManagement', recorded: true, tag: 'why5to10' },
     { id: 'edu-cond-diabetes', title: 'Managing Type 2 Diabetes', condition: 'type2Diabetes', recorded: false },
     { id: 'edu-cond-heart', title: 'Living with Heart Failure', condition: 'heartFailure', recorded: false },
   ],
@@ -192,13 +204,19 @@ export const patientPlan = {
 // from conditionEducation (which is assigned per-condition) and from
 // EXERCISE_VIDEO_LIBRARY (which is exercise to *do*, not to watch and
 // learn from). All recorded; these aren't gated by the patient's plan.
+// `quick: true` marks the short (~5 min) ones promoted first for the
+// "Time" barrier and the "just thinking about it" readiness answer (see
+// data/rules.js); `tag` marks the two added for the "Not sure where to
+// start" barrier, shown first as their own "Getting Started" section.
 export const EXERCISE_EDUCATION_VIDEOS = [
-  { id: 'edu-ex-1', title: 'Warming Up Safely', recorded: true },
+  { id: 'edu-ex-7', title: 'Welcome to Your Program', recorded: true, quick: true, tag: 'welcome' },
+  { id: 'edu-ex-8', title: 'Your First Week Guide', recorded: true, quick: true, tag: 'firstWeek' },
+  { id: 'edu-ex-1', title: 'Warming Up Safely', recorded: true, quick: true },
   { id: 'edu-ex-2', title: 'The Talk Test Explained', recorded: true },
   { id: 'edu-ex-3', title: 'Proper Form for Seated Exercises', recorded: true },
   { id: 'edu-ex-4', title: 'Cooling Down & Stretching', recorded: true },
   { id: 'edu-ex-5', title: 'Exercising with Joint Pain', recorded: true },
-  { id: 'edu-ex-6', title: 'Staying Motivated', recorded: true },
+  { id: 'edu-ex-6', title: 'Staying Motivated', recorded: true, quick: true },
 ];
 
 /** The condition-education videos relevant to this patient — matched
@@ -221,11 +239,41 @@ export function hasBpTask(plan) {
   return !!(plan.conditions.hypertension || plan.conditions.cardiovascularDisease || plan.conditions.heartFailure);
 }
 
+/** True when the plan's diagnosis is anywhere on the overweight/obesity
+ * (E66.x) ladder — overweight and every obesity class share the same
+ * onboarding block and the same "weight management" education content,
+ * regardless of which exact E66 code the chart has. Not a flag in
+ * `conditions` (that object is reserved for the four conditions the
+ * Provider Portal tracks per-task) — this reads the diagnosis directly. */
+export function hasWeightManagementCondition(plan) {
+  return !!plan.diagnosis?.icd10?.startsWith('E66');
+}
+
+// The equipment the nurse can ask about at home — matched against each
+// exercise's optional `equipment` list (below) to decide what's safe to
+// show. Values are the ids used in that `equipment` list; labels are what
+// the onboarding question's options show (see data/onboardingQuestions.js).
+export const EQUIPMENT_OPTIONS = [
+  { id: 'resistance-band', label: 'Resistance bands' },
+  { id: 'dumbbells', label: 'Light dumbbells (1-3 lb)' },
+  { id: 'ball', label: 'Small ball' },
+  { id: 'step-box', label: 'Step box or sturdy step' },
+];
+
+export const ACTIVITY_OPTIONS = ['Walking', 'Swimming', 'Biking', 'Dancing', 'Chair or strength exercises'];
+
+// Fixed weekday schedule for the exercises the clinical team wants on
+// specific days rather than every day (0=Sun…6=Sat) — squats and standing
+// balance work aren't meant to be done daily.
+const SQUAT_DAYS = [2, 4]; // Tue, Thu
+const BALANCE_DAYS = [1, 3, 5]; // Mon, Wed, Fri
+const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6];
+
 // Full library of exercise videos this patient could be assigned, each
-// scheduled for specific days of the week (0=Sun…6=Sat) — a real build
-// would pull this from the Provider Portal's assigned routine. Intensity
-// drives the blood-pressure safety check (see utils/bpSafety.js): "low"
-// videos are always safe to do; "moderate" ones are gated behind a recent,
+// scheduled for specific days of the week — a real build would pull this
+// from the Provider Portal's assigned routine. Intensity drives the
+// blood-pressure safety check (see utils/bpSafety.js): "low" videos are
+// always safe to do; "moderate" ones are gated behind a recent,
 // non-elevated BP reading for patients who have the BP task.
 //
 // Two kinds of video, per the Provider Portal's plan:
@@ -235,19 +283,61 @@ export function hasBpTask(plan) {
 //    ({ amount, unit: 'reps' | 'sec' | 'min', sets }) — the card shows the
 //    dose, the player shows a set counter + rest between sets, and it's
 //    marked done once every set is done (see useAppState/VideoPlayerScreen).
+//
+// Every exercise also carries:
+//  - `focus`: 'upper-body' | 'lower-body' | 'full-body' | 'cardio' |
+//    'balance' | 'mobility' — informational, keeps the plan readable.
+//  - `levels`: which of the patient's exercise levels (set by the nurse's
+//    mobility check, see patientPlan.exerciseLevel) this is safe for —
+//    'bed' | 'seated' | 'standing-beginner' | 'standing-advanced'.
+//  - `equipment` (optional): ids from EQUIPMENT_OPTIONS this exercise
+//    needs. Omitted (or empty) means no equipment required. An exercise
+//    whose equipment the patient doesn't have at home is hidden entirely
+//    (see exercisesForPatient) — exercises with no equipment always stay.
 export const EXERCISE_VIDEO_LIBRARY = [
-  { id: 452, kind: 'workout', title: 'Full Body Strength Workout', duration: '18 min', icon: 'dumbbell', intensity: 'moderate', days: [0, 1, 2, 3, 4, 5, 6] },
-  { id: 473, kind: 'exercise', title: 'Sit-to-Stand', icon: 'person-standing', intensity: 'moderate', dose: { amount: 10, unit: 'reps', sets: 2 }, days: [0, 1, 2, 3, 4, 5, 6] },
-  { id: 372, kind: 'exercise', title: 'Wall Sit', icon: 'dumbbell', intensity: 'moderate', dose: { amount: 30, unit: 'sec', sets: 2 }, days: [0, 1, 2, 3, 4, 5, 6] },
-  { id: 413, kind: 'exercise', title: 'March in Place', icon: 'footprints', intensity: 'low', dose: { amount: 2, unit: 'min', sets: 3 }, days: [0, 1, 2, 3, 4, 5, 6] },
+  { id: 452, kind: 'workout', title: 'Full Body Strength Workout', duration: '18 min', icon: 'dumbbell', intensity: 'moderate', focus: 'full-body', levels: ['standing-beginner', 'standing-advanced'], days: EVERY_DAY },
+  { id: 473, kind: 'exercise', title: 'Sit-to-Stand', icon: 'person-standing', intensity: 'moderate', focus: 'lower-body', levels: ['seated', 'standing-beginner', 'standing-advanced'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 372, kind: 'exercise', title: 'Wall Sit', icon: 'dumbbell', intensity: 'moderate', focus: 'lower-body', levels: ['standing-beginner', 'standing-advanced'], dose: { amount: 30, unit: 'sec', sets: 2 }, days: EVERY_DAY },
+  { id: 413, kind: 'exercise', title: 'March in Place', icon: 'footprints', intensity: 'low', focus: 'cardio', levels: ['standing-beginner', 'standing-advanced'], dose: { amount: 2, unit: 'min', sets: 3 }, days: EVERY_DAY },
+
+  // Bed level — hands, neck, upper body, and a light-dumbbell option.
+  { id: 501, kind: 'exercise', title: 'Hand and Finger Stretches', icon: 'activity', intensity: 'low', focus: 'mobility', levels: ['bed'], dose: { amount: 10, unit: 'reps', sets: 1 }, days: EVERY_DAY },
+  { id: 502, kind: 'exercise', title: 'Gentle Neck Stretches', icon: 'activity', intensity: 'low', focus: 'mobility', levels: ['bed'], dose: { amount: 10, unit: 'reps', sets: 1 }, days: EVERY_DAY },
+  { id: 503, kind: 'exercise', title: 'In-Bed Arm Circles', icon: 'dumbbell', intensity: 'low', focus: 'upper-body', levels: ['bed'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 504, kind: 'exercise', title: 'In-Bed Light Dumbbell Curls', icon: 'dumbbell', intensity: 'low', focus: 'upper-body', levels: ['bed'], equipment: ['dumbbells'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+
+  // Seated level — side-lying, mini-band, seated upper-body strength, and a
+  // seated balance exercise (fixed days, like standing balance work below).
+  { id: 505, kind: 'exercise', title: 'Side-Lying Leg Lifts', icon: 'footprints', intensity: 'low', focus: 'lower-body', levels: ['seated'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 506, kind: 'exercise', title: 'Seated Mini-Band Leg Press', icon: 'footprints', intensity: 'low', focus: 'lower-body', levels: ['seated'], equipment: ['resistance-band'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 507, kind: 'exercise', title: 'Seated Upper-Body Strength', icon: 'dumbbell', intensity: 'low', focus: 'upper-body', levels: ['seated'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 508, kind: 'exercise', title: 'Seated Balance Exercise', icon: 'person-standing', intensity: 'low', focus: 'balance', levels: ['seated'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: BALANCE_DAYS },
+
+  // Higher (standing) levels — wall push-up, wall bird dog, weight shift at
+  // the beginner tier; squat with chair touch and tandem stance (fixed
+  // days) at the advanced tier.
+  { id: 509, kind: 'exercise', title: 'Wall Push-Up', icon: 'dumbbell', intensity: 'moderate', focus: 'upper-body', levels: ['standing-beginner', 'standing-advanced'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 510, kind: 'exercise', title: 'Wall Bird Dog', icon: 'person-standing', intensity: 'moderate', focus: 'balance', levels: ['standing-beginner', 'standing-advanced'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 511, kind: 'exercise', title: 'Weight Shift', icon: 'person-standing', intensity: 'low', focus: 'balance', levels: ['standing-beginner', 'standing-advanced'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: EVERY_DAY },
+  { id: 512, kind: 'exercise', title: 'Squat with Chair Touch', icon: 'dumbbell', intensity: 'moderate', focus: 'lower-body', levels: ['standing-advanced'], dose: { amount: 10, unit: 'reps', sets: 2 }, days: SQUAT_DAYS },
+  { id: 513, kind: 'exercise', title: 'Tandem Stance', icon: 'person-standing', intensity: 'low', focus: 'balance', levels: ['standing-advanced'], dose: { amount: 30, unit: 'sec', sets: 2 }, days: BALANCE_DAYS },
 ];
 
-/** Today's assigned videos (library filtered to today's weekday), freshly
- * unwatched — called once per day by defaultDay() so a new calendar day
- * always starts from the correct schedule instead of yesterday's list. */
-export function videosForToday(date = new Date()) {
+/** Today's assigned videos — the library filtered to today's weekday, the
+ * patient's exercise level (set by the nurse's mobility check), and the
+ * equipment she actually has at home (so an exercise that needs a
+ * resistance band or dumbbells just doesn't appear if she doesn't have
+ * one) — then freshly unwatched. Called once per day by defaultDay(), and
+ * again right after onboarding submits (now that equipment is known). */
+export function exercisesForPatient(plan, equipmentOwned = [], date = new Date()) {
   const weekday = date.getDay();
-  return EXERCISE_VIDEO_LIBRARY.filter((v) => v.days.includes(weekday)).map((v) => ({
+  const owned = new Set(equipmentOwned);
+  return EXERCISE_VIDEO_LIBRARY.filter((v) => {
+    if (!v.days.includes(weekday)) return false;
+    if (v.levels && !v.levels.includes(plan.exerciseLevel)) return false;
+    if (v.equipment && v.equipment.length > 0 && !v.equipment.every((e) => owned.has(e))) return false;
+    return true;
+  }).map((v) => ({
     ...v,
     checked: false,
     // Single exercises track sets completed so far; full workouts don't
@@ -427,86 +517,11 @@ export const SURVEY_QUESTIONS = [
   { id: 'notes', type: 'text', question: "Anything else you'd like your care team to know?", optional: true },
 ];
 
-// Adapted from the nurse's onboarding intake interview — a one-time set of
-// questions shown the first time a patient opens the app, so her care team
-// has a baseline to build her plan around. Not a verbatim transcript: each
-// open-ended interview prompt became a patient-facing question with an
-// input type (choice, scale, free text) that works on a phone screen.
-// Keyed by id (rather than a plain array) so OnboardingSurveyScreen can
-// assemble them in order and splice in the conditional follow-ups.
-export const ONBOARDING_QUESTIONS = {
-  goals: {
-    id: 'goals',
-    type: 'multiselect',
-    question: 'What are your main goals for this program?',
-    options: ['⚖️ Losing weight', '🚶 Improving mobility', '⚡ Having more energy', '❤️ Better blood pressure or glucose', '🌿 Feeling healthier overall'],
-  },
-  challenges: {
-    id: 'challenges',
-    type: 'multiselect',
-    optional: true,
-    question: "What's more challenging for you?",
-    options: [
-      '🍽️ Portion sizes are hard to control',
-      '🍫 Cravings get the best of me',
-      '⏰ Hard to stay consistent',
-      '📉 Lose motivation after a while',
-      '🥗 Diet feels too restrictive',
-      '🏃 Can’t keep up with exercise',
-      '💸 Cost of healthy food or programs',
-    ],
-    otherOption: 'Something else',
-  },
-  // Grouped by meal instead of a blank text box — faster to answer, and
-  // the resulting shape mirrors MEAL_PLAN (breakfast/lunch/dinner/snack).
-  typicalEating: {
-    id: 'typicalEating',
-    type: 'meal-pattern',
-    optional: true,
-    question: 'What does a typical day of eating look like for you?',
-  },
-  activityLevel: {
-    id: 'activityLevel',
-    type: 'multiselect',
-    optional: true,
-    question: 'What does physical activity look like for you right now?',
-    layout: 'list',
-    options: ['🚶 Walking', '🧹 Light housework or gardening', '🏋️ Structured exercise (gym, classes)', '🧍 On my feet a lot for work', '🛋️ Mostly sedentary', '🦽 Limited by pain or mobility'],
-    otherOption: 'Something else',
-  },
-  // Health conditions themselves aren't asked here — the care team already
-  // has those from the EHR. This narrows to the one thing that isn't
-  // already on file and directly shapes what exercises are safe to assign.
-  painCheck: {
-    id: 'painCheck',
-    type: 'choice',
-    question: 'Do you have any pain, a recent injury, or a recent surgery that affects your movement?',
-    options: ['Yes', 'No'],
-  },
-  painAreas: {
-    id: 'painAreas',
-    type: 'body-map',
-    optional: true,
-    question: 'Where is it?',
-  },
-  biggestChallenge: {
-    id: 'biggestChallenge',
-    type: 'multiselect',
-    optional: true,
-    question: "What's your biggest challenge with managing your weight?",
-    options: [
-      '🍫 Hunger or cravings',
-      '🍽️ Portion sizes',
-      '😔 Emotional eating',
-      '⏰ Busy schedule',
-      '💸 Cost of healthy food',
-      '🍳 Cooking skills',
-      '🔥 Motivation',
-      '🦽 Physical limitations',
-      '🤝 Lack of support',
-    ],
-  },
-};
+// Onboarding's question *content* now lives in data/onboardingQuestions.js
+// (see buildOnboardingSteps) — the nurse's intake call already covers
+// goals, diagnoses, mobility, falls, pain and medications, so the app
+// itself only asks the handful of low-risk preference questions the care
+// team doesn't already have (see the ONBOARDING.md prompt this replaced).
 
 export const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'];
 

@@ -3,6 +3,7 @@ import SosFab from './components/SosFab';
 import ElevatedAlertModal from './components/ElevatedAlertModal';
 import ExerciseSafetyModal from './components/ExerciseSafetyModal';
 import ReminderModal from './components/ReminderModal';
+import NurseWillDiscussNotice from './screens/NurseWillDiscussNotice';
 import { TASK_LABELS, patientPlan } from './data/sampleData';
 import HomeScreen from './screens/HomeScreen';
 import ProgressScreen from './screens/ProgressScreen';
@@ -32,7 +33,7 @@ const TAB_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn
 // Profile is the one non-tab screen that qualifies (its own footer button
 // was replaced by a header back-icon), so it floats too, just without the
 // NavBar-height offset the tab screens get (see SosFab's hasNavBar prop).
-const FLOATING_SOS_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn', 'profile']);
+const FLOATING_SOS_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn', 'profile', 'nurse-notice']);
 
 export default function App() {
   const online = useOnlineStatus();
@@ -46,6 +47,10 @@ export default function App() {
     onboarding,
     submitOnboarding,
     pauseOnboarding,
+    confirmPersonalReason,
+    nurseUpdateBanner,
+    simulateNurseUpdate,
+    dismissNurseUpdateBanner,
     simpleMode,
     setSimpleMode,
     waterUnit,
@@ -121,6 +126,7 @@ export default function App() {
         <OnboardingSurveyScreen
           initialResponses={onboarding.responses}
           initialStepIndex={onboarding.stepIndex}
+          initialWelcomeSeen={onboarding.welcomeSeen}
           onSubmit={submitOnboarding}
           onPause={pauseOnboarding}
           onGoHome={goHome}
@@ -182,7 +188,7 @@ export default function App() {
       );
       break;
     case 'learn':
-      body = <LearnScreen watched={learnWatched} onOpenVideo={openLearnVideo} onBack={goHome} />;
+      body = <LearnScreen watched={learnWatched} learnHints={onboarding.learnHints} onOpenVideo={openLearnVideo} onBack={goHome} />;
       break;
     case 'learn-video':
       body = (
@@ -196,6 +202,9 @@ export default function App() {
       break;
     case 'sos':
       body = <SosScreen onCancel={closeSos} />;
+      break;
+    case 'nurse-notice':
+      body = <NurseWillDiscussNotice onBack={closeSos} />;
       break;
     case 'bp':
       body = (
@@ -229,6 +238,8 @@ export default function App() {
           onSetWaterUnit={setWaterUnit}
           weightUnit={weightUnit}
           onSetWeightUnit={setWeightUnit}
+          onReportRisk={() => open('nurse-notice')}
+          onSimulateNurseUpdate={simulateNurseUpdate}
         />
       );
       break;
@@ -252,6 +263,10 @@ export default function App() {
           onboardingComplete={onboarding.completed}
           onResumeOnboarding={() => open('onboarding')}
           onUncompleteTask={uncompleteTask}
+          onboarding={onboarding}
+          onConfirmReason={confirmPersonalReason}
+          nurseUpdateBanner={nurseUpdateBanner}
+          onDismissNurseUpdateBanner={dismissNurseUpdateBanner}
           simpleMode={simpleMode}
           waterUnit={waterUnit}
           weightUnit={weightUnit}

@@ -28,6 +28,41 @@ const overlayBtnStyle = {
   flexShrink: 0,
 };
 
+// The coach's own videos use an on-screen rep counter or timer (8-12 reps
+// a set, typically) — this simulates the same readout during playback so
+// a single exercise's dose isn't only visible as static text below the
+// player. Reps tick up with playback progress; seconds/minutes count down.
+function ExerciseCounterBadge({ dose, progress }) {
+  if (!dose) return null;
+  let text;
+  if (dose.unit === 'reps') {
+    const rep = Math.min(dose.amount, Math.max(1, Math.ceil(progress * dose.amount)));
+    text = `Rep ${rep} of ${dose.amount}`;
+  } else {
+    const totalSeconds = dose.unit === 'min' ? dose.amount * 60 : dose.amount;
+    const remaining = Math.max(0, Math.round(totalSeconds * (1 - progress)));
+    text = `${remaining}s left`;
+  }
+  return (
+    <div
+      style={{
+        position: 'absolute',
+        top: 14,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        background: 'rgba(0,0,0,0.45)',
+        color: '#fff',
+        borderRadius: 'var(--radius-pill)',
+        padding: '6px 16px',
+        font: '700 1rem/1 var(--font-display)',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {text}
+    </div>
+  );
+}
+
 function ChoicePill({ label, active, onClick }) {
   return (
     <button
@@ -314,6 +349,7 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
       <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'rgba(255,255,255,0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <Icon name="play" size={32} color="#fff" />
       </div>
+      {isExercise && <ExerciseCounterBadge dose={video.dose} progress={progress} />}
       {fullscreen && (
         <button onClick={() => setFullscreen(false)} aria-label="Exit full screen" style={{ position: 'absolute', top: 14, left: 14, ...overlayBtnStyle }}>
           <Icon name="arrow-left" size={18} color="#fff" />

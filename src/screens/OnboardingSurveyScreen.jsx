@@ -3,49 +3,53 @@ import Icon from '../components/Icon';
 import Button from '../components/Button';
 import BackIconButton from '../components/BackIconButton';
 import { ChoiceQuestion, MultiSelectQuestion, TextQuestion, isAnswered } from '../components/SurveyFields';
-import MealPatternQuestion from '../components/MealPatternQuestion';
-import BodyMapQuestion from '../components/BodyMapQuestion';
-import { ONBOARDING_QUESTIONS, patientName } from '../data/sampleData';
+import WelcomeScreen from './WelcomeScreen';
+import { buildOnboardingSteps } from '../data/onboardingQuestions';
+import { patientName, patientPlan } from '../data/sampleData';
 
-// Ordered with the conditional follow-ups spliced in only when their parent
-// answer calls for them, so picking "No" (or leaving a "Something else"
-// pill untapped) skips straight past the detail question it would have
-// unlocked. Recomputed on every render (cheap — a dozen objects) so an
-// edited earlier answer immediately adds or removes the step it gates,
-// instead of needing its own effect to resync.
-function buildSteps(responses) {
-  const q = ONBOARDING_QUESTIONS;
-  const steps = [q.goals, q.challenges, q.typicalEating, q.activityLevel, q.painCheck];
-  if (responses.painCheck === 'Yes') steps.push(q.painAreas);
-  steps.push(q.biggestChallenge);
-  return steps;
-}
-
-/** The very first survey a patient sees — adapted from the nurse's
- * onboarding intake interview (see ONBOARDING_QUESTIONS), one question per
- * screen instead of one long form, since that reads better on a phone and
- * doesn't front-load the whole interview at once. Shown once, before Home,
- * the first time the app is opened — see useAppState, which persists
- * completion separately from `day` (this shouldn't reset daily).
+/** Step 2 of onboarding (step 1 is the nurse's intake call, outside the
+ * app — see WelcomeScreen). Welcome first, then one low-risk preference
+ * question per screen — never a goal, diagnosis, medication, fall, pain or
+ * mobility question; the care team already has all of that. Shown once,
+ * before Home, the first time the app is opened — see useAppState, which
+ * persists completion separately from `day` (this shouldn't reset daily).
  *
- * `initialResponses`/`initialStepIndex` let a paused-and-resumed session
- * pick up exactly where it left off, instead of restarting at question 1. */
-export default function OnboardingSurveyScreen({ initialResponses = {}, initialStepIndex = 0, onSubmit, onPause, onGoHome }) {
+ * `initialResponses`/`initialStepIndex`/`initialWelcomeSeen` let a
+ * paused-and-resumed session pick up exactly where it left off. */
+export default function OnboardingSurveyScreen({
+  initialResponses = {},
+  initialStepIndex = 0,
+  initialWelcomeSeen = false,
+  onSubmit,
+  onPause,
+  onGoHome,
+}) {
+  const [welcomeSeen, setWelcomeSeen] = useState(initialWelcomeSeen);
   const [responses, setResponses] = useState(initialResponses);
   const [stepIndex, setStepIndex] = useState(initialStepIndex);
   const [done, setDone] = useState(false);
 
-  const steps = buildSteps(responses);
+  if (!welcomeSeen) {
+    return <WelcomeScreen onStart={() => setWelcomeSeen(true)} />;
+  }
+
+  const steps = buildOnboardingSteps(patientPlan);
   const index = Math.min(stepIndex, steps.length - 1);
   const step = steps[index];
   const isLast = index === steps.length - 1;
   const canProceed = isAnswered(step, responses[step.id]);
 
   const setAnswer = (value) => setResponses((r) => ({ ...r, [step.id]: value }));
-  // The first question has nowhere earlier to go, so Back pauses instead —
-  // saves the draft as-is and returns to Home; every later question just
-  // steps back one, same as a normal wizard.
-  const goBack = () => (index === 0 ? onPause(responses, index) : setStepIndex((i) => Math.max(0, i - 1)));
+  // The first question goes back to Welcome (nowhere earlier to pause to);
+  // every later question just steps back one, same as a normal wizard.
+  const goBack = () => {
+    if (index === 0) {
+      setWelcomeSeen(false);
+      onPause(responses, 0, false);
+    } else {
+      setStepIndex((i) => Math.max(0, i - 1));
+    }
+  };
   const goNext = () => {
     if (isLast) {
       onSubmit(responses);
@@ -73,7 +77,9 @@ export default function OnboardingSurveyScreen({ initialResponses = {}, initialS
           <Icon name="check" size={34} color="var(--success)" />
         </div>
         <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>You&apos;re all set, {patientName}!</div>
-        <div style={{ font: '400 0.9375rem/1.5 var(--font-sans)', color: 'var(--text-muted)' }}>Thanks for sharing — your care team will use this to build your plan.</div>
+        <div style={{ font: '400 0.9375rem/1.5 var(--font-sans)', color: 'var(--text-muted)' }}>
+          Thanks for sharing — we&apos;ve personalized your app with this.
+        </div>
         <Button variant="primary" size="lg" onClick={onGoHome} style={{ marginTop: 8, minWidth: 220 }}>
           Go to my dashboard
         </Button>
@@ -106,7 +112,7 @@ export default function OnboardingSurveyScreen({ initialResponses = {}, initialS
       <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: '24px 20px', display: 'flex', flexDirection: 'column' }}>
         {index === 0 && (
           <div style={{ font: '500 0.8125rem/1.3 var(--font-sans)', color: 'var(--text-muted)', marginBottom: 8 }}>
-            Let&apos;s build your plan together — most answers are optional.
+            Just a few quick preferences — this helps us personalize your app.
           </div>
         )}
         <div style={{ font: '700 1.1875rem/1.4 var(--font-display)', color: 'var(--ink)' }}>
@@ -124,8 +130,6 @@ export default function OnboardingSurveyScreen({ initialResponses = {}, initialS
             onChange={setAnswer}
           />
         )}
-        {step.type === 'meal-pattern' && <MealPatternQuestion value={responses[step.id]} onChange={setAnswer} />}
-        {step.type === 'body-map' && <BodyMapQuestion value={responses[step.id]} onChange={setAnswer} />}
         {step.type === 'text' && <TextQuestion value={responses[step.id]} onChange={setAnswer} placeholder={step.placeholder} />}
       </div>
 

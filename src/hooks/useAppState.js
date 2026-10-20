@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { videosForToday, TASK_LABELS, MEAL_TYPES, MEAL_PLAN, MEDICATIONS, patientPlan, buildDailyTasks, currentTimeSlot, hasBpTask } from '../data/sampleData';
+import { exercisesForPatient, TASK_LABELS, MEAL_TYPES, MEAL_PLAN, MEDICATIONS, patientPlan, buildDailyTasks, currentTimeSlot, hasBpTask } from '../data/sampleData';
+import { buildQuestionBlockMap } from '../data/onboardingQuestions';
+import { applyFixedRules, TIME_FOR_PREFERENCE } from '../data/rules';
 import { matchMealPlan } from '../utils/matchMealPlan';
 import { bpSeverity, isReadingRecent } from '../utils/bpSafety';
 
@@ -55,15 +57,26 @@ function emptyMeals() {
   return m;
 }
 
-function defaultTaskDefs() {
-  return buildDailyTasks(patientPlan, videosForToday().length);
+function defaultTaskDefs(equipmentOwned) {
+  return buildDailyTasks(patientPlan, exercisesForPatient(patientPlan, equipmentOwned).length);
 }
 
 function defaultTasks(taskDefs) {
   return Object.fromEntries(taskDefs.map((t) => [t.id, Object.fromEntries(t.timesOfDay.map((slot) => [slot, false]))]));
 }
 
-function loadToday() {
+// Same shape as defaultTasks, but keeps whatever was already marked done
+// for a task/slot that still exists in `taskDefs` — used when equipment
+// becomes known right after onboarding submits, so recomputing today's
+// task list doesn't erase anything the patient already logged while
+// onboarding was paused (see useAppState.submitOnboarding).
+function mergeTasksOntoDefs(oldTasks, taskDefs) {
+  return Object.fromEntries(
+    taskDefs.map((t) => [t.id, Object.fromEntries(t.timesOfDay.map((slot) => [slot, oldTasks[t.id]?.[slot] ?? false]))]),
+  );
+}
+
+function loadToday(equipmentOwned) {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
@@ -75,7 +88,7 @@ function loadToday() {
     // handle. Tasks are merged key-by-key (and slot-by-slot) against
     // *today's* task set rather than spread wholesale, so a task id or
     // time slot retired since the session was saved can't resurface.
-    const base = defaultDay();
+    const base = defaultDay(equipmentOwned);
     const meals = emptyMeals();
     for (const t of MEAL_TYPES) {
       const v = parsed.meals?.[t];
@@ -120,11 +133,38 @@ function loadReminders() {
 function loadOnboarding() {
   try {
     const raw = localStorage.getItem(ONBOARDING_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return { ...defaultOnboarding(), ...JSON.parse(raw) };
   } catch {
     // fall through to the default below
   }
-  return { completed: false, completedAt: null, responses: {}, stepIndex: 0 };
+  return defaultOnboarding();
+}
+
+// `equipment`/`preferredTimes`/`preferredActivities`/`barriers`/
+// `foodsToKeep`/`personalReason`/`learnHints`/`eveningCheckIn`/
+// `rulesApplied`/`responseBlocks` are all set once, at submitOnboarding —
+// see data/rules.js for how the fixed rules derive them from `responses`.
+// This is also the shape the Provider Portal would read back (see
+// DATA THE APP STORES in sampleData's header comment).
+function defaultOnboarding() {
+  return {
+    completed: false,
+    completedAt: null,
+    responses: {},
+    responseBlocks: {},
+    stepIndex: 0,
+    welcomeSeen: false,
+    equipment: [],
+    preferredTimes: [],
+    preferredActivities: [],
+    barriers: [],
+    foodsToKeep: '',
+    personalReason: null,
+    learnHints: { quickFirst: false, welcomeFirst: false, sodiumFirst: false, why5to10First: false },
+    highlightWins: false,
+    eveningCheckIn: false,
+    rulesApplied: [],
+  };
 }
 
 function loadSimpleMode() {
@@ -179,14 +219,14 @@ function loadLearnWatched() {
   return {};
 }
 
-function defaultDay() {
-  const taskDefs = defaultTaskDefs();
+function defaultDay(equipmentOwned = []) {
+  const taskDefs = defaultTaskDefs(equipmentOwned);
   return {
     date: todayKey(),
     taskDefs,
     tasks: defaultTasks(taskDefs),
     medsTaken: Object.fromEntries(MEDICATIONS.map((m) => [m.id, false])),
-    videos: videosForToday(),
+    videos: exercisesForPatient(patientPlan, equipmentOwned),
     waterGlasses: 0,
     // Each meal type holds a *list* of logged entries, not one slot — a
     // patient can log several things for the same meal (e.g. a prescribed
@@ -205,6 +245,10 @@ function defaultDay() {
   };
 }
 
+// Screens reachable from more than one place via a floating button or an
+// in-screen link (not a tab) — see the `open` callback below.
+const RETURNS_TO_PREVIOUS = new Set(['sos', 'nurse-notice']);
+
 function newEntryId() {
   return typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 }
@@ -213,12 +257,20 @@ function newEntryId() {
  * the PWA again later — doesn't wipe out what the patient already logged
  * today) plus the transient screen/navigation state. */
 export default function useAppState() {
-  const [day, setDay] = useState(() => loadToday() || defaultDay());
+  const [day, setDay] = useState(() => {
+    const equipmentOwned = loadOnboarding().equipment;
+    return loadToday(equipmentOwned) || defaultDay(equipmentOwned);
+  });
   const [streak, setStreak] = useState(loadStreak);
   const [onboarding, setOnboarding] = useState(loadOnboarding);
   // Onboarding runs once, ever — not once a day like `day` — so the very
   // first screen depends on whether it's already been completed.
   const [screen, setScreen] = useState(() => (loadOnboarding().completed ? 'home' : 'onboarding'));
+  // Simulates a nurse editing the plan from the Provider Portal mid-session
+  // (see ProfileScreen's "Simulate nurse update" link) — there's no live
+  // plan-sync backend in this prototype, so this only drives the banner
+  // itself, not an actual plan change.
+  const [nurseUpdateBanner, setNurseUpdateBanner] = useState(false);
   const [previousScreen, setPreviousScreen] = useState('home');
   const [bpSys, setBpSys] = useState('');
   const [bpDia, setBpDia] = useState('');
@@ -332,19 +384,85 @@ export default function useAppState() {
   // Saving doesn't navigate — OnboardingSurveyScreen shows its own closing
   // screen first ("you're all set") and only leaves for Home once the
   // patient taps through that, the same way the post-exercise survey does.
+  // The fixed rules (data/rules.js) run right here, on the spot, with no
+  // review step — their effects (reminders, equipment-filtered exercises,
+  // Learn ordering, the personal-reason reminder) all land in the same
+  // update as `completed: true`.
   const submitOnboarding = useCallback((responses) => {
-    setOnboarding({ completed: true, completedAt: new Date().toISOString(), responses, stepIndex: 0 });
+    const now = new Date().toISOString();
+    const outcome = applyFixedRules(responses, patientPlan);
+
+    setOnboarding((o) => ({
+      ...o,
+      completed: true,
+      completedAt: now,
+      responses,
+      responseBlocks: buildQuestionBlockMap(patientPlan),
+      stepIndex: 0,
+      welcomeSeen: true,
+      equipment: outcome.equipmentOwned,
+      preferredTimes: responses.preferredTimes || [],
+      preferredActivities: outcome.approvedActivities,
+      barriers: responses.barriers || [],
+      foodsToKeep: outcome.foodsToKeep,
+      personalReason: outcome.personalReason ? { value: outcome.personalReason, setAt: now, lastConfirmedAt: now } : null,
+      learnHints: {
+        quickFirst: outcome.quickFirst,
+        welcomeFirst: outcome.welcomeFirst,
+        sodiumFirst: outcome.sodiumFirst,
+        why5to10First: outcome.why5to10First,
+      },
+      highlightWins: outcome.highlightWins,
+      eveningCheckIn: outcome.eveningCheckIn,
+      rulesApplied: outcome.rulesApplied,
+    }));
+
+    // Reminders the hypertension/diabetes rules drive — a real build would
+    // push these straight to the reminder-scheduling backend; here they
+    // just seed the same `reminders` state the bell icon sets by hand.
+    setReminders((r) => ({
+      ...r,
+      ...(outcome.bpReminderTime ? { bp: TIME_FOR_PREFERENCE[outcome.bpReminderTime] } : {}),
+      ...(outcome.glucoseReminderNote && !r.glucose ? { glucose: '07:30' } : {}),
+    }));
+
+    // Equipment is only known now — recompute today's exercise (and task)
+    // list so a video needing equipment she doesn't have never shows up,
+    // preserving anything already logged while onboarding was paused.
+    setDay((d) => {
+      const videos = exercisesForPatient(patientPlan, outcome.equipmentOwned);
+      const taskDefs = buildDailyTasks(patientPlan, videos.length);
+      return { ...d, videos, taskDefs, tasks: mergeTasksOntoDefs(d.tasks, taskDefs) };
+    });
   }, []);
 
-  // Backing out of the first question has nowhere earlier to go, so it
-  // pauses instead — the draft (answers so far + which question she was
-  // on) is saved as-is, not marked complete, and she lands back on Home
-  // with a nudge to finish later. Re-opening onboarding (automatically on
-  // next launch, or by tapping that nudge) resumes right there.
-  const pauseOnboarding = useCallback((responses, stepIndex) => {
-    setOnboarding((o) => ({ ...o, completed: false, responses, stepIndex }));
+  // Backing out of the first question goes back to Welcome; backing out of
+  // Welcome itself (nowhere earlier to go) pauses instead — the draft
+  // (answers so far + which question she was on) is saved as-is, not
+  // marked complete, and she lands back on Home with a nudge to finish
+  // later. Re-opening onboarding (automatically on next launch, or by
+  // tapping that nudge) resumes right there.
+  const pauseOnboarding = useCallback((responses, stepIndex, welcomeSeen = true) => {
+    setOnboarding((o) => ({ ...o, completed: false, responses, stepIndex, welcomeSeen }));
     setScreen('home');
   }, []);
+
+  // The personal reason (set from the first onboarding "outcomes" answer)
+  // is re-asked every few weeks, per the clinical spec — "Yes" just bumps
+  // the confirmation date; "Change it" replaces the value and resets the
+  // clock the same way (see data/rules.js's REASON_RECONFIRM_DAYS).
+  const confirmPersonalReason = useCallback((stillValid, newValue) => {
+    setOnboarding((o) => {
+      const now = new Date().toISOString();
+      return {
+        ...o,
+        personalReason: stillValid ? { ...o.personalReason, lastConfirmedAt: now } : { value: newValue, setAt: now, lastConfirmedAt: now },
+      };
+    });
+  }, []);
+
+  const simulateNurseUpdate = useCallback(() => setNurseUpdateBanner(true), []);
+  const dismissNurseUpdateBanner = useCallback(() => setNurseUpdateBanner(false), []);
 
   // Reminders are a standing preference (not reset daily like `day`), set
   // from the bell on a Home checklist row — either for just that task or,
@@ -359,14 +477,15 @@ export default function useAppState() {
     [reminderTarget],
   );
 
-  // SOS is reachable from every screen via a floating button, not a tab —
-  // remember where the patient was so Cancel returns them there instead of
+  // SOS and the nurse-notice redirect are both reachable from more than one
+  // screen via a floating button or an in-screen link, not a tab — remember
+  // where the patient was so Cancel/Back returns them there instead of
   // always dumping them back to Home. Entering the Exercise tab also resets
   // this visit's safety-gate state, so returning to it later asks the
   // symptom check again instead of remembering an earlier answer forever.
   const open = useCallback((next) => {
     setScreen((cur) => {
-      if (next === 'sos' && cur !== 'sos') setPreviousScreen(cur);
+      if (RETURNS_TO_PREVIOUS.has(next) && !RETURNS_TO_PREVIOUS.has(cur)) setPreviousScreen(cur);
       return next;
     });
     if (next === 'exercise') {
@@ -770,6 +889,10 @@ export default function useAppState() {
     onboarding,
     submitOnboarding,
     pauseOnboarding,
+    confirmPersonalReason,
+    nurseUpdateBanner,
+    simulateNurseUpdate,
+    dismissNurseUpdateBanner,
     simpleMode,
     setSimpleMode,
     waterUnit,
