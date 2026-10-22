@@ -177,10 +177,9 @@ export const patientPlan = {
   // stated once, up front (see GoalsCard), and never repeated inside the
   // behavior list itself.
   goals: {
-    targets: [{ id: 'bp', label: 'Blood pressure below 130/80 mmHg' }],
+    targets: [],
     behaviors: [
-      'Take your blood pressure as scheduled',
-      'Check your blood glucose as scheduled',
+      'Weigh yourself as scheduled',
       'Stay active most days of the week',
       'Log your meals daily',
       'Take your medications as prescribed',

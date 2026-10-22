@@ -1,7 +1,7 @@
 import Icon from '../components/Icon';
 import BackIconButton from '../components/BackIconButton';
 import Switch from '../components/Switch';
-import { patientProfile, todaySample } from '../data/sampleData';
+import { patientPlan, patientProfile, todaySample } from '../data/sampleData';
 import { calculateBmi, classifyBmi, z68Code } from '../utils/bmi';
 
 function initials(fullName) {
@@ -185,6 +185,13 @@ export default function ProfileScreen({
         </div>
 
         <BmiBadge weightLbs={todaySample.weight} heightIn={heightIn} />
+
+        <div>
+          <SectionLabel>Main goal</SectionLabel>
+          <div style={{ marginTop: 10, background: 'var(--sand-50)', border: '1px solid var(--sand-100)', borderRadius: 'var(--radius-lg)', padding: '18px 20px', font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>
+            {patientPlan.mainGoalPlain}
+          </div>
+        </div>
 
         <div>
           <SectionLabel>Managing</SectionLabel>

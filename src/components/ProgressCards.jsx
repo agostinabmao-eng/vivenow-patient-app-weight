@@ -123,7 +123,7 @@ export function WeightGoalCard({ weightGoal, currentLbs, weightUnit }) {
 }
 
 /** Goals are behaviors, not numbers — this card states the clinical
- * target(s) first (blood pressure, weight), each as a single plain-language
+ * target first (weight), as a single plain-language
  * line with its number, and only then lists the behavior goals underneath,
  * which never repeat a target's number (see patientPlan.goals). */
 export function GoalsCard({ goals, weightGoal, weightUnit }) {
