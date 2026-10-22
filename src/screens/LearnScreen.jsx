@@ -60,16 +60,6 @@ function Section({ title, children }) {
   );
 }
 
-// Moves whichever videos carry one of `tags` to the front, in tag order —
-// the fixed-rule way to promote a video ("show the sodium video first")
-// without hardcoding a different section order per patient.
-function promoteTags(list, tags) {
-  if (!tags.length) return list;
-  const promoted = list.filter((v) => tags.includes(v.tag));
-  const rest = list.filter((v) => !tags.includes(v.tag));
-  return [...promoted, ...rest];
-}
-
 /** Learn tab — short education videos, separate from the exercise library
  * (those are workouts to *do*; these are things to watch and understand).
  * Two sources: a standing library of general exercise-safety videos, and
@@ -79,21 +69,20 @@ function promoteTags(list, tags) {
  * doesn't show up as a broken entry (see conditionEducationForPatient).
  *
  * `learnHints` comes from the fixed rules that fired at onboarding (see
- * data/rules.js) — which barrier or readiness answer the patient gave
- * reorders this screen, it never adds or removes a question to ask. */
+ * data/rules.js) — which barrier answer the patient gave reorders this
+ * screen, it never adds or removes a question to ask. */
 export default function LearnScreen({ watched, learnHints, onOpenVideo, onBack }) {
-  const { quickFirst, welcomeFirst, sodiumFirst, why5to10First } = learnHints || {};
+  const { quickFirst, welcomeFirst } = learnHints || {};
 
   // "Not sure where to start" promotes the welcome video + first-week
   // guide into their own section at the very top instead of just
   // reordering them within Exercise Education.
   const gettingStarted = welcomeFirst ? EXERCISE_EDUCATION_VIDEOS.filter((v) => v.tag === 'welcome' || v.tag === 'firstWeek') : [];
   let exerciseVideos = EXERCISE_EDUCATION_VIDEOS.filter((v) => !gettingStarted.includes(v));
-  // "Time" (or "just thinking about it") shows the ~5 min videos first.
+  // "Time" shows the ~5 min videos first.
   if (quickFirst) exerciseVideos = [...exerciseVideos].sort((a, b) => (a.quick === b.quick ? 0 : a.quick ? -1 : 1));
 
-  const promotedTags = [...(sodiumFirst ? ['sodium'] : []), ...(why5to10First ? ['why5to10'] : [])];
-  const conditionVideos = promoteTags(conditionEducationForPatient(patientPlan), promotedTags);
+  const conditionVideos = conditionEducationForPatient(patientPlan);
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>

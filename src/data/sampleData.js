@@ -135,9 +135,9 @@ export const patientPlan = {
   // which only drives whether the daily task list includes an exercise row.
   exerciseLevel: 'standing-beginner',
   // The clinical goal in plain words for the Welcome screen — the numeric
-  // target itself lives in goals.targets below; this is just the one-line
-  // "why" (e.g. "Lower your blood pressure").
-  mainGoalPlain: 'Lower your blood pressure',
+  // target itself is the weight goal below; this is just the one-line
+  // "why" for this weight-management-focused plan.
+  mainGoalPlain: 'Lower your weight',
   weight: {
     baselineLbs: 214,
     baselineDate: '2026-05-10',
@@ -259,8 +259,6 @@ export const EQUIPMENT_OPTIONS = [
   { id: 'ball', label: 'Small ball' },
   { id: 'step-box', label: 'Step box or sturdy step' },
 ];
-
-export const ACTIVITY_OPTIONS = ['Walking', 'Swimming', 'Biking', 'Dancing', 'Chair or strength exercises'];
 
 // Fixed weekday schedule for the exercises the clinical team wants on
 // specific days rather than every day (0=Sun…6=Sat) — squats and standing

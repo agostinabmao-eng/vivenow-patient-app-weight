@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Icon from './Icon';
+import OptionImage from './OptionImage';
 
 /** Whether a question has been answered well enough to move on — optional
  * questions always pass; required ones check the shape appropriate to
@@ -14,12 +15,16 @@ export function isAnswered(step, value) {
 }
 
 // Full-width, one option per line — easier to scan and tap reliably than a
-// wrapped row of pills, especially for longer option text.
+// wrapped row of pills, especially for longer option text. The check mark
+// (when selected) sits at the far right, auto-spaced from the label by
+// justify-content — label (+ optional image) stays grouped at the left.
 const optionButtonStyle = (active) => ({
   width: '100%',
+  boxSizing: 'border-box',
   textAlign: 'left',
   display: 'flex',
   alignItems: 'center',
+  justifyContent: 'space-between',
   gap: 10,
   padding: '14px 16px',
   borderRadius: 'var(--radius-md)',
@@ -30,15 +35,24 @@ const optionButtonStyle = (active) => ({
   cursor: 'pointer',
 });
 
-export function ChoiceQuestion({ options, value, onChange }) {
+function OptionLabel({ opt, image }) {
+  return (
+    <span style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+      {image && <OptionImage id={image} />}
+      <span>{opt}</span>
+    </span>
+  );
+}
+
+export function ChoiceQuestion({ options, images, value, onChange }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
       {options.map((opt) => {
         const active = value === opt;
         return (
           <button key={opt} onClick={() => onChange(opt)} aria-pressed={active} style={optionButtonStyle(active)}>
-            {active && <Icon name="check" size={16} color="var(--teal-600)" />}
-            {opt}
+            <OptionLabel opt={opt} image={images?.[opt]} />
+            {active && <Icon name="check" size={16} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
           </button>
         );
       })}
@@ -46,7 +60,7 @@ export function ChoiceQuestion({ options, value, onChange }) {
   );
 }
 
-export function MultiSelectQuestion({ options, noneOption, otherOption, layout, value, onChange }) {
+export function MultiSelectQuestion({ options, images, noneOption, otherOption, otherPlaceholder, layout, value, onChange }) {
   const selected = Array.isArray(value) ? value : [];
   const [otherText, setOtherText] = useState(selected.find((v) => v.startsWith?.('Something else:'))?.slice(16) || '');
   const otherSelected = selected.some((v) => v === otherOption || v.startsWith?.('Something else:'));
@@ -75,16 +89,20 @@ export function MultiSelectQuestion({ options, noneOption, otherOption, layout, 
         const active = selected.includes(opt);
         return (
           <button key={opt} onClick={() => toggle(opt)} aria-pressed={active} style={optionButtonStyle(active)}>
-            {active && <Icon name="check" size={16} color="var(--teal-600)" />}
-            {opt}
+            <OptionLabel opt={opt} image={images?.[opt]} />
+            {active && <Icon name="check" size={16} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
           </button>
         );
       })}
       {otherOption && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <button onClick={toggleOther} aria-pressed={otherSelected} style={optionButtonStyle(otherSelected)}>
-            {otherSelected && <Icon name="check" size={16} color="var(--teal-600)" />}
-            {otherOption}
+        // Full width, like every other option — a plain sibling in the
+        // same flex flow rather than its own column-flex wrapper, which
+        // used to shrink both this button and the input below the
+        // minimum-content width of the row instead of filling it.
+        <>
+          <button onClick={toggleOther} aria-pressed={otherSelected} style={{ ...optionButtonStyle(otherSelected), width: '100%' }}>
+            <OptionLabel opt={otherOption} />
+            {otherSelected && <Icon name="check" size={16} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
           </button>
           {otherSelected && (
             <input
@@ -94,7 +112,7 @@ export function MultiSelectQuestion({ options, noneOption, otherOption, layout, 
                 const withoutOld = selected.filter((v) => v !== otherOption && !v.startsWith?.('Something else:'));
                 onChange([...withoutOld, `Something else:${e.target.value}`]);
               }}
-              placeholder="Tell us more…"
+              placeholder={otherPlaceholder || 'Tell us more…'}
               style={{
                 width: '100%',
                 boxSizing: 'border-box',
@@ -105,7 +123,7 @@ export function MultiSelectQuestion({ options, noneOption, otherOption, layout, 
               }}
             />
           )}
-        </div>
+        </>
       )}
     </div>
   );

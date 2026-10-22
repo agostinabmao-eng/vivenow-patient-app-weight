@@ -88,6 +88,78 @@ function VideoRow({ video, onOpen }) {
   );
 }
 
+function LoggedExerciseRow({ entry, onRemove }) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 14,
+        background: 'var(--surface-card)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 'var(--radius-md)',
+        padding: 12,
+        minHeight: 56,
+        boxSizing: 'border-box',
+      }}
+    >
+      <div
+        style={{
+          width: 48,
+          height: 48,
+          borderRadius: 'var(--radius-md)',
+          flexShrink: 0,
+          background: 'var(--success-subtle)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Icon name="check" size={20} color="var(--success)" />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{entry.activityType}</div>
+        <div style={{ font: '400 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>
+          {entry.durationMinutes} min · {entry.intensity} intensity
+        </div>
+      </div>
+      <IconButton variant="ghost" size="sm" label={`Remove ${entry.activityType}`} title="Remove" onClick={() => onRemove(entry.id)}>
+        <Icon name="x" size={16} />
+      </IconButton>
+    </div>
+  );
+}
+
+// A dashed, lower-emphasis affordance (not a solid card like the
+// prescribed videos above it) — it's an optional extra log, not part of
+// today's assigned routine, so it shouldn't visually compete with it.
+function LogCustomExerciseButton({ onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        width: '100%',
+        background: 'none',
+        border: '1.5px dashed var(--border-default)',
+        borderRadius: 'var(--radius-md)',
+        padding: 14,
+        minHeight: 56,
+        boxSizing: 'border-box',
+        font: '600 0.875rem/1.3 var(--font-sans)',
+        color: 'var(--teal-600)',
+        cursor: 'pointer',
+      }}
+    >
+      <Icon name="plus" size={18} color="var(--teal-600)" />
+      Log other activity
+    </button>
+  );
+}
+
 function RestDayMessage() {
   return (
     <div
@@ -114,7 +186,7 @@ function RestDayMessage() {
  * "task" logic to keep in sync). Tapping a video runs it through the
  * pre-exercise safety check (see useAppState's exercise-gate logic) before
  * VideoPlayerScreen actually opens. */
-export default function ExerciseScreen({ videos, videoFilter, onOpenVideo, onOpenSafetyInfo, onBack }) {
+export default function ExerciseScreen({ videos, videoFilter, customExercises, onOpenVideo, onOpenSafetyInfo, onLogCustom, onRemoveCustom, onBack }) {
   const completedToday = videos.filter((v) => v.checked).length;
   const visibleVideos = videoFilter ? videos.filter((v) => v.intensity === videoFilter) : videos;
 
@@ -165,6 +237,21 @@ export default function ExerciseScreen({ videos, videoFilter, onOpenVideo, onOpe
               ))}
             </div>
           </>
+        )}
+
+        <LogCustomExerciseButton onClick={onLogCustom} />
+
+        {customExercises.length > 0 && (
+          <div>
+            <div style={{ font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)', marginBottom: 10 }}>
+              Logged Activities
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {customExercises.map((e) => (
+                <LoggedExerciseRow key={e.id} entry={e} onRemove={onRemoveCustom} />
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>

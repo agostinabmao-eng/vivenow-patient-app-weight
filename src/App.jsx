@@ -10,6 +10,7 @@ import ProgressScreen from './screens/ProgressScreen';
 import NutritionScreen from './screens/NutritionScreen';
 import MealComposerScreen from './screens/MealComposerScreen';
 import ExerciseScreen from './screens/ExerciseScreen';
+import LogCustomExerciseScreen from './screens/LogCustomExerciseScreen';
 import ExerciseSafetyIntroScreen from './screens/ExerciseSafetyIntroScreen';
 import LearnScreen from './screens/LearnScreen';
 import LearnVideoScreen from './screens/LearnVideoScreen';
@@ -33,7 +34,7 @@ const TAB_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn
 // Profile is the one non-tab screen that qualifies (its own footer button
 // was replaced by a header back-icon), so it floats too, just without the
 // NavBar-height offset the tab screens get (see SosFab's hasNavBar prop).
-const FLOATING_SOS_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn', 'profile', 'nurse-notice']);
+const FLOATING_SOS_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn', 'profile', 'nurse-notice', 'exercise-log-custom']);
 
 export default function App() {
   const online = useOnlineStatus();
@@ -48,6 +49,8 @@ export default function App() {
     submitOnboarding,
     pauseOnboarding,
     confirmPersonalReason,
+    reasonToastDue,
+    dismissReasonToast,
     nurseUpdateBanner,
     simulateNurseUpdate,
     dismissNurseUpdateBanner,
@@ -85,6 +88,10 @@ export default function App() {
     goToAdjacentVideo,
     closeVideoPlayer,
     markVideoWatched,
+    openCustomExerciseForm,
+    closeCustomExerciseForm,
+    saveCustomExercise,
+    removeCustomExercise,
     submitExerciseFeedback,
     exerciseGate,
     submitSymptomCheck,
@@ -168,11 +175,17 @@ export default function App() {
         <ExerciseScreen
           videos={day.videos}
           videoFilter={exerciseVideoFilter}
+          customExercises={day.customExercises}
           onOpenVideo={openVideoPlayer}
           onOpenSafetyInfo={openExerciseSafetyIntro}
+          onLogCustom={openCustomExerciseForm}
+          onRemoveCustom={removeCustomExercise}
           onBack={goHome}
         />
       );
+      break;
+    case 'exercise-log-custom':
+      body = <LogCustomExerciseScreen onSave={saveCustomExercise} onBack={closeCustomExerciseForm} />;
       break;
     case 'exercise-video':
       body = (
@@ -265,6 +278,8 @@ export default function App() {
           onUncompleteTask={uncompleteTask}
           onboarding={onboarding}
           onConfirmReason={confirmPersonalReason}
+          reasonToastDue={reasonToastDue}
+          onDismissReasonToast={dismissReasonToast}
           nurseUpdateBanner={nurseUpdateBanner}
           onDismissNurseUpdateBanner={dismissNurseUpdateBanner}
           simpleMode={simpleMode}
@@ -304,7 +319,7 @@ export default function App() {
       }}
     >
       <div style={{ flex: 1, overflow: 'hidden' }}>{body}</div>
-      {screen !== 'sos' && (
+      {screen !== 'sos' && screen !== 'onboarding' && (
         <SosFab
           onClick={() => open('sos')}
           floating={FLOATING_SOS_SCREENS.has(screen)}

@@ -32,12 +32,6 @@ export default function WelcomeScreen({ onStart }) {
           </div>
           <div style={{ font: '700 1.0625rem/1.4 var(--font-display)', color: 'var(--ink)', marginTop: 6 }}>{patientPlan.mainGoalPlain}</div>
           <div style={{ marginTop: 14, display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {patientPlan.goals.targets.map((t) => (
-              <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Icon name="check" size={14} color="var(--teal-600)" style={{ flexShrink: 0 }} />
-                <span style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{t.label}</span>
-              </div>
-            ))}
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Icon name="check" size={14} color="var(--teal-600)" style={{ flexShrink: 0 }} />
               <span style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>

@@ -12,7 +12,7 @@ import MedicationList from '../components/MedicationList';
 import Toast from '../components/Toast';
 import { HeroProgressCard, WeightGoalMiniCard } from '../components/ProgressCards';
 import { formatWeight, weightToLbs } from '../utils/units';
-import { shouldReconfirmPersonalReason } from '../data/rules';
+import { shouldReconfirmPersonalReason, pickDailyReasonMessage } from '../data/rules';
 import { metrics, patientName, MEDICATIONS, patientPlan, todaySample, WEIGHT_DELTA_LBS, isTaskFullyDone, formatSlotStatus } from '../data/sampleData';
 
 // Where "Log data" sends each summary card — the dedicated vitals screen
@@ -203,16 +203,15 @@ function CheckInCard({ day, onOpenSurvey }) {
   );
 }
 
-/** The patient's own "why" (her first answer to "What would change for you
- * if you reach your goals?" at onboarding) — shown daily as a quiet
- * reminder, and re-asked every few weeks ("Is this still your reason?")
- * per the clinical spec (see data/rules.js). Renders nothing if onboarding
- * hasn't set a reason yet. */
-function ReasonCard({ personalReason, onConfirm }) {
+/** The patient's own "why" (her first answer to "What would you like to
+ * achieve with the care plan?" at onboarding) is re-asked every few weeks
+ * ("Is this still your reason?") per the clinical spec — this card only
+ * ever renders during that reconfirmation window (see
+ * shouldReconfirmPersonalReason); day to day it's a quiet toast instead
+ * (see ReasonToast below), not an always-visible card. */
+function ReasonConfirmCard({ personalReason, onConfirm }) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(personalReason?.value || '');
-  if (!personalReason?.value) return null;
-  const due = shouldReconfirmPersonalReason(personalReason);
 
   const cardStyle = {
     display: 'flex',
@@ -249,21 +248,60 @@ function ReasonCard({ personalReason, onConfirm }) {
     <div style={cardStyle}>
       <Icon name="message-circle" size={18} color="var(--teal-600)" style={{ flexShrink: 0 }} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>
-          {due ? 'Is this still your reason?' : 'Your reason'}
-        </div>
+        <div style={{ font: '600 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>Is this still your reason?</div>
         <div style={{ font: '700 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{personalReason.value}</div>
       </div>
-      {due && (
-        <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-          <Button variant="outline" size="sm" onClick={() => onConfirm(true)}>
-            Yes
-          </Button>
-          <Button variant="ghost" size="sm" onClick={() => setEditing(true)}>
-            Change it
-          </Button>
-        </div>
-      )}
+      <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+        <Button variant="outline" size="sm" onClick={() => onConfirm(true)}>
+          Yes
+        </Button>
+        <Button variant="ghost" size="sm" onClick={() => setEditing(true)}>
+          Change it
+        </Button>
+      </div>
+    </div>
+  );
+}
+
+/** The day-to-day form of the personal-reason reminder — a dismissible
+ * toast with a rotating motivational line (see data/rules.js's
+ * pickDailyReasonMessage), shown once per calendar day instead of sitting
+ * on Home permanently. Auto-dismisses after a few seconds; closing it
+ * early (or just navigating away) marks today as shown either way. */
+function ReasonToast({ message, onDismiss }) {
+  useEffect(() => {
+    const id = setTimeout(onDismiss, 6000);
+    return () => clearTimeout(id);
+  }, [onDismiss]);
+
+  return (
+    <div
+      role="status"
+      style={{
+        position: 'absolute',
+        left: 16,
+        right: 16,
+        bottom: 96,
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: 10,
+        background: 'var(--navy-700)',
+        color: '#fff',
+        borderRadius: 'var(--radius-md)',
+        padding: '12px 14px',
+        boxShadow: 'var(--shadow-lg)',
+        zIndex: 10,
+      }}
+    >
+      <Icon name="message-circle" size={18} color="#fff" style={{ flexShrink: 0, marginTop: 1 }} />
+      <div style={{ flex: 1, minWidth: 0, font: '600 0.84375rem/1.4 var(--font-sans)' }}>{message}</div>
+      <button
+        onClick={onDismiss}
+        aria-label="Dismiss"
+        style={{ background: 'none', border: 'none', padding: 2, cursor: 'pointer', flexShrink: 0 }}
+      >
+        <Icon name="x" size={16} color="rgba(255,255,255,0.8)" />
+      </button>
     </div>
   );
 }
@@ -318,6 +356,8 @@ export default function HomeScreen({
   onUncompleteTask,
   onboarding,
   onConfirmReason,
+  reasonToastDue,
+  onDismissReasonToast,
   nurseUpdateBanner,
   onDismissNurseUpdateBanner,
   simpleMode,
@@ -389,6 +429,8 @@ export default function HomeScreen({
   // "Motivation" barrier (see data/rules.js) highlights a short win the
   // moment anything's done today, on top of the streak already shown above.
   const showShortWin = onboarding?.highlightWins && doneCount > 0;
+  const reasonDue = onboarding?.personalReason && shouldReconfirmPersonalReason(onboarding.personalReason);
+  const reasonMessage = onboarding?.personalReason?.value ? pickDailyReasonMessage(onboarding.personalReason.value) : null;
 
   if (simpleMode) {
     return (
@@ -449,7 +491,7 @@ export default function HomeScreen({
             <WeightGoalMiniCard weightGoal={patientPlan.weight} currentLbs={todaySample.weight} />
           </div>
 
-          <ReasonCard personalReason={onboarding?.personalReason} onConfirm={onConfirmReason} />
+          {reasonDue && <ReasonConfirmCard personalReason={onboarding.personalReason} onConfirm={onConfirmReason} />}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 20 }}>
             {activeTodos.map((t) => {
@@ -574,6 +616,7 @@ export default function HomeScreen({
         </div>
 
         <Toast message={toast} />
+        {reasonToastDue && reasonMessage && <ReasonToast message={reasonMessage} onDismiss={onDismissReasonToast} />}
 
         {actionMetric && (
           <MetricActionSheet
@@ -617,7 +660,7 @@ export default function HomeScreen({
   ];
 
   return (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
       <div
         className="vh-scroll"
         style={{
@@ -676,7 +719,7 @@ export default function HomeScreen({
           <WeightGoalMiniCard weightGoal={patientPlan.weight} currentLbs={todaySample.weight} />
         </div>
 
-        <ReasonCard personalReason={onboarding?.personalReason} onConfirm={onConfirmReason} />
+        {reasonDue && <ReasonConfirmCard personalReason={onboarding.personalReason} onConfirm={onConfirmReason} />}
 
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 20 }}>
           <div style={{ font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)' }}>To-Do List</div>
@@ -684,11 +727,6 @@ export default function HomeScreen({
             {doneCount} of {totalCount} complete
           </div>
         </div>
-        {doneCount < totalCount && (
-          <div style={{ font: '400 0.78125rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 4 }}>
-            No worries — you can still log today&apos;s activity.
-          </div>
-        )}
         {activeTodos.length === 0 && (
           <div style={{ textAlign: 'center', padding: '20px 0', font: '600 0.875rem/1.4 var(--font-sans)', color: 'var(--success)' }}>
             All done for today — nice work!
@@ -718,6 +756,8 @@ export default function HomeScreen({
 
         <CheckInCard day={day} onOpenSurvey={onOpenSurvey} />
       </div>
+
+      {reasonToastDue && reasonMessage && <ReasonToast message={reasonMessage} onDismiss={onDismissReasonToast} />}
 
       {actionMetric && (
         <MetricActionSheet

@@ -8,86 +8,98 @@ import { hasWeightManagementCondition } from './sampleData';
 // personalize (see data/rules.js), never to gate anything clinical.
 
 // Shared with every patient, regardless of condition — always asked in
-// this order, 6 questions total.
+// this order. `images` (equipment/activities only) maps an option's label
+// to an OptionImage id; `tip` (outcomes only) is a short encouragement
+// shown under the question, not itself a field to answer.
 export const SHARED_ONBOARDING_QUESTIONS = [
   {
     id: 'equipment',
     type: 'multiselect',
-    question: 'Which of these do you have at home?',
+    question: 'Do you have any equipment?',
     options: ['Resistance bands', 'Light dumbbells (1-3 lb)', 'Small ball', 'Step box or sturdy step'],
-    noneOption: 'None of these',
+    images: {
+      'Resistance bands': 'resistance-band',
+      'Light dumbbells (1-3 lb)': 'dumbbells',
+      'Small ball': 'ball',
+      'Step box or sturdy step': 'step-box',
+    },
+    noneOption: 'None',
+    otherOption: 'Other',
+    otherPlaceholder: 'Tell us what you have…',
   },
   {
     id: 'activities',
     type: 'multiselect',
     question: 'Which activities would you enjoy?',
-    options: ['Walking', 'Swimming', 'Biking', 'Dancing', 'Chair or strength exercises'],
+    options: ['Walking', 'Swimming', 'Biking', 'Dancing', 'Seated exercises', 'Strength exercises'],
+    images: {
+      Walking: 'walking',
+      Swimming: 'swimming',
+      Biking: 'biking',
+      Dancing: 'dancing',
+      'Seated exercises': 'seated-exercise',
+      'Strength exercises': 'strength-exercise',
+    },
     otherOption: 'Other',
   },
   {
-    id: 'preferredTimes',
+    id: 'readingsTime',
     type: 'multiselect',
-    question: 'When is it easiest for you to do your daily tasks?',
-    options: ['Morning', 'Afternoon', 'Evening'],
+    question: 'When do you prefer to take your readings?',
+    options: ['🌅 Morning', '☀️ Afternoon', '🌙 Evening'],
   },
   {
-    id: 'foodsToKeep',
-    type: 'text',
-    optional: true,
-    question: 'Which foods do you enjoy and want to keep in your meals?',
+    id: 'exerciseTime',
+    type: 'multiselect',
+    question: 'When do you prefer to exercise?',
+    options: ['🌅 Morning', '☀️ Afternoon', '🌙 Evening'],
   },
   {
     id: 'outcomes',
     type: 'multiselect',
-    question: 'What would change for you if you reach your goals?',
-    options: ['More energy', 'Less stress', 'Better sleep', 'Feeling confident', 'Time with family'],
+    question: 'What would you like to achieve with the care plan?',
+    options: ['Have more energy', 'Have less stress', 'Sleep better', 'Feel more confident', 'Have more mobility', 'Feel stronger', 'Live more independently'],
     otherOption: 'Other',
+    otherPlaceholder: 'e.g., be able to pick up my grandkids in my arms',
+    tip: 'Try to make it personal — write something that resonates with you and motivates you to keep trying, day by day.',
   },
   {
     id: 'barriers',
     type: 'multiselect',
-    question: 'What could get in the way?',
+    question: 'What do you find more challenging when trying to lose weight?',
     options: ['Time', 'Motivation', 'Cost', 'Not sure where to start'],
   },
 ];
 
-// One short block (1-3 questions) per condition the Provider Portal can
-// flag on a patient's plan — only asked for conditions this patient
-// actually has (see buildOnboardingSteps). `weightManagement` isn't a key
-// in patientPlan.conditions (that object is the four Portal-tracked
+// One short block per condition the Provider Portal can flag on a
+// patient's plan — only asked for conditions this patient actually has
+// (see buildOnboardingSteps). `weightManagement` isn't a key in
+// patientPlan.conditions (that object is the four Portal-tracked
 // conditions); it's matched separately via hasWeightManagementCondition,
 // since overweight and every obesity class share this one block.
+// hypertension and type2Diabetes have no block of their own anymore —
+// their old questions (preferred reading time, salty food, meal times)
+// were either folded into the shared readingsTime question above or
+// dropped as duplicative.
 export const CONDITION_ONBOARDING_BLOCKS = {
-  hypertension: [
-    { id: 'bpTime', type: 'choice', question: 'When is it easiest to take your readings?', options: ['Morning', 'Evening', 'Both'] },
-    { id: 'saltyFood', type: 'choice', question: 'How often do you eat salty or processed food?', options: ['Rarely', 'Sometimes', 'Often'] },
-  ],
-  type2Diabetes: [{ id: 'mealTimes', type: 'text', question: 'What times do you usually eat your meals?' }],
   weightManagement: [
-    {
-      id: 'weightAttempts',
-      type: 'multiselect',
-      question: 'What have you tried before to manage your weight?',
-      options: ['Diet', 'Exercise', 'Medication', 'A program or coach', 'Nothing yet'],
-    },
     {
       id: 'eatingBarrier',
       type: 'multiselect',
-      question: 'When is it hardest to follow your eating plan?',
-      options: ['Evenings', 'When stressed', 'Social events', 'Skipping meals', 'Portion sizes'],
+      question: 'What do you find more challenging when trying to improve your eating habits?',
+      options: ['Evening snacks', 'Stress eating', 'Social events', 'Control portion sizes'],
     },
-    { id: 'readiness', type: 'choice', question: 'How ready do you feel to make changes?', options: ['Just thinking about it', 'Ready to start', 'Already started'] },
   ],
 };
 
 // Condition blocks are assembled in this fixed order — only the ones the
 // patient actually matches are included (see buildOnboardingSteps).
-const CONDITION_BLOCK_ORDER = ['hypertension', 'type2Diabetes', 'cardiovascularDisease', 'heartFailure', 'weightManagement'];
+const CONDITION_BLOCK_ORDER = ['weightManagement'];
 
-/** Every onboarding question this patient sees, in order: the 6 shared
+/** Every onboarding question this patient sees, in order: the shared
  * questions first, then one short block per condition she matches —
- * merged so a question id that more than one block might ask (none do
- * today, but a future condition could) is only ever asked once. */
+ * merged so a question id that more than one block might ask is only
+ * ever asked once. */
 export function buildOnboardingSteps(plan) {
   const seen = new Set();
   const steps = [];

@@ -50,7 +50,7 @@ export default function OnboardingSurveyScreen({
       setStepIndex((i) => Math.max(0, i - 1));
     }
   };
-  const goNext = () => {
+  const advance = () => {
     if (isLast) {
       onSubmit(responses);
       setDone(true);
@@ -58,6 +58,13 @@ export default function OnboardingSurveyScreen({
       setStepIndex(index + 1);
     }
   };
+  const goNext = () => canProceed && advance();
+  // Skipping this one question just moves on with no answer recorded for
+  // it — unlike Next, it doesn't require one. Skipping all of them pauses
+  // onboarding exactly like backing out of question 1 does: the draft is
+  // saved as incomplete and Home shows a nudge to finish later.
+  const skipQuestion = () => advance();
+  const skipAll = () => onPause(responses, index, true);
 
   if (done) {
     return (
@@ -95,7 +102,20 @@ export default function OnboardingSurveyScreen({
           <div style={{ flex: 1, textAlign: 'center', font: '600 0.75rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
             Question {index + 1} of {steps.length}
           </div>
-          <div style={{ width: 36, height: 36, flexShrink: 0 }} />
+          <button
+            onClick={skipAll}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: '8px 4px',
+              font: '600 0.78125rem/1 var(--font-sans)',
+              color: 'var(--text-muted)',
+              cursor: 'pointer',
+              flexShrink: 0,
+            }}
+          >
+            Skip
+          </button>
         </div>
         <div style={{ marginTop: 10, height: 4, borderRadius: 'var(--radius-pill)', background: 'var(--teal-50)', overflow: 'hidden' }}>
           <div
@@ -119,12 +139,30 @@ export default function OnboardingSurveyScreen({
           {step.question}
           {step.optional && <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}> (optional)</span>}
         </div>
-        {step.type === 'choice' && <ChoiceQuestion options={step.options} value={responses[step.id]} onChange={setAnswer} />}
+        {step.tip && (
+          <div
+            style={{
+              marginTop: 10,
+              display: 'flex',
+              gap: 8,
+              background: 'var(--teal-50)',
+              border: '1px solid var(--teal-200)',
+              borderRadius: 'var(--radius-md)',
+              padding: 12,
+            }}
+          >
+            <Icon name="message-circle" size={16} color="var(--teal-600)" style={{ flexShrink: 0, marginTop: 1 }} />
+            <span style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-body)' }}>{step.tip}</span>
+          </div>
+        )}
+        {step.type === 'choice' && <ChoiceQuestion options={step.options} images={step.images} value={responses[step.id]} onChange={setAnswer} />}
         {step.type === 'multiselect' && (
           <MultiSelectQuestion
             options={step.options}
+            images={step.images}
             noneOption={step.noneOption}
             otherOption={step.otherOption}
+            otherPlaceholder={step.otherPlaceholder}
             layout={step.layout}
             value={responses[step.id]}
             onChange={setAnswer}
@@ -153,6 +191,20 @@ export default function OnboardingSurveyScreen({
         >
           {isLast ? 'Finish' : 'Next'}
         </Button>
+        <button
+          onClick={skipQuestion}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: '6px 0',
+            textAlign: 'center',
+            font: '600 0.84375rem/1 var(--font-sans)',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+          }}
+        >
+          Skip this question
+        </button>
       </div>
     </div>
   );

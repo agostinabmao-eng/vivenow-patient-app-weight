@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { exercisesForPatient, TASK_LABELS, MEAL_TYPES, MEAL_PLAN, MEDICATIONS, patientPlan, buildDailyTasks, currentTimeSlot, hasBpTask } from '../data/sampleData';
 import { buildQuestionBlockMap } from '../data/onboardingQuestions';
-import { applyFixedRules, TIME_FOR_PREFERENCE } from '../data/rules';
+import { applyFixedRules, shouldReconfirmPersonalReason } from '../data/rules';
 import { matchMealPlan } from '../utils/matchMealPlan';
 import { bpSeverity, isReadingRecent } from '../utils/bpSafety';
 
@@ -28,6 +28,7 @@ const WATER_UNIT_KEY = 'vivenow.waterUnit';
 const WEIGHT_UNIT_KEY = 'vivenow.weightUnit';
 const EXERCISE_SAFETY_INTRO_KEY = 'vivenow.exerciseSafetyIntroSeen';
 const LEARN_WATCHED_KEY = 'vivenow.learnWatched';
+const REASON_TOAST_KEY = 'vivenow.reasonToastDate';
 
 function todayKey() {
   return new Date().toISOString().slice(0, 10);
@@ -140,8 +141,8 @@ function loadOnboarding() {
   return defaultOnboarding();
 }
 
-// `equipment`/`preferredTimes`/`preferredActivities`/`barriers`/
-// `foodsToKeep`/`personalReason`/`learnHints`/`eveningCheckIn`/
+// `equipment`/`readingsTime`/`exerciseTime`/`preferredActivities`/
+// `barriers`/`personalReason`/`learnHints`/`eveningCheckIn`/
 // `rulesApplied`/`responseBlocks` are all set once, at submitOnboarding —
 // see data/rules.js for how the fixed rules derive them from `responses`.
 // This is also the shape the Provider Portal would read back (see
@@ -155,12 +156,12 @@ function defaultOnboarding() {
     stepIndex: 0,
     welcomeSeen: false,
     equipment: [],
-    preferredTimes: [],
+    readingsTime: [],
+    exerciseTime: [],
     preferredActivities: [],
     barriers: [],
-    foodsToKeep: '',
     personalReason: null,
-    learnHints: { quickFirst: false, welcomeFirst: false, sodiumFirst: false, why5to10First: false },
+    learnHints: { quickFirst: false, welcomeFirst: false },
     highlightWins: false,
     eveningCheckIn: false,
     rulesApplied: [],
@@ -219,6 +220,14 @@ function loadLearnWatched() {
   return {};
 }
 
+function loadReasonToastDate() {
+  try {
+    return localStorage.getItem(REASON_TOAST_KEY) || null;
+  } catch {
+    return null;
+  }
+}
+
 function defaultDay(equipmentOwned = []) {
   const taskDefs = defaultTaskDefs(equipmentOwned);
   return {
@@ -227,6 +236,10 @@ function defaultDay(equipmentOwned = []) {
     tasks: defaultTasks(taskDefs),
     medsTaken: Object.fromEntries(MEDICATIONS.map((m) => [m.id, false])),
     videos: exercisesForPatient(patientPlan, equipmentOwned),
+    // Activity the patient did on her own, outside the prescribed routine
+    // (see ExerciseScreen's "Log other activity" / LogCustomExerciseScreen)
+    // — each logging an exercise just like watching a prescribed video.
+    customExercises: [],
     waterGlasses: 0,
     // Each meal type holds a *list* of logged entries, not one slot — a
     // patient can log several things for the same meal (e.g. a prescribed
@@ -304,6 +317,10 @@ export default function useAppState() {
   const [pendingVideoAfterIntro, setPendingVideoAfterIntro] = useState(null);
   const [learnWatched, setLearnWatched] = useState(loadLearnWatched);
   const [learnVideo, setLearnVideo] = useState(null); // { id, title } | null
+  // The date (YYYY-MM-DD) the personal-reason toast was last shown/
+  // dismissed — compared against today's date to decide whether to show
+  // it again (see HomeScreen's ReasonToast); null means "never shown".
+  const [reasonToastDate, setReasonToastDate] = useState(loadReasonToastDate);
 
   useEffect(() => {
     try {
@@ -381,6 +398,24 @@ export default function useAppState() {
     setLearnWatched((w) => ({ ...w, [id]: true }));
   }, []);
 
+  useEffect(() => {
+    try {
+      if (reasonToastDate) localStorage.setItem(REASON_TOAST_KEY, reasonToastDate);
+    } catch {
+      // storage unavailable — the toast will just show again next visit
+    }
+  }, [reasonToastDate]);
+
+  // Shown once per calendar day (reconfirming the reason, when due, takes
+  // priority instead — see HomeScreen) — dismissing (the X, the timeout,
+  // or just navigating away) marks today as done so it won't repeat.
+  const reasonToastDue = !!(
+    onboarding.personalReason?.value &&
+    !shouldReconfirmPersonalReason(onboarding.personalReason) &&
+    reasonToastDate !== todayKey()
+  );
+  const dismissReasonToast = useCallback(() => setReasonToastDate(todayKey()), []);
+
   // Saving doesn't navigate — OnboardingSurveyScreen shows its own closing
   // screen first ("you're all set") and only leaves for Home once the
   // patient taps through that, the same way the post-exercise survey does.
@@ -401,29 +436,27 @@ export default function useAppState() {
       stepIndex: 0,
       welcomeSeen: true,
       equipment: outcome.equipmentOwned,
-      preferredTimes: responses.preferredTimes || [],
+      readingsTime: responses.readingsTime || [],
+      exerciseTime: responses.exerciseTime || [],
       preferredActivities: outcome.approvedActivities,
       barriers: responses.barriers || [],
-      foodsToKeep: outcome.foodsToKeep,
       personalReason: outcome.personalReason ? { value: outcome.personalReason, setAt: now, lastConfirmedAt: now } : null,
-      learnHints: {
-        quickFirst: outcome.quickFirst,
-        welcomeFirst: outcome.welcomeFirst,
-        sodiumFirst: outcome.sodiumFirst,
-        why5to10First: outcome.why5to10First,
-      },
+      learnHints: { quickFirst: outcome.quickFirst, welcomeFirst: outcome.welcomeFirst },
       highlightWins: outcome.highlightWins,
       eveningCheckIn: outcome.eveningCheckIn,
       rulesApplied: outcome.rulesApplied,
     }));
 
-    // Reminders the hypertension/diabetes rules drive — a real build would
-    // push these straight to the reminder-scheduling backend; here they
-    // just seed the same `reminders` state the bell icon sets by hand.
+    // Reminders the readings/exercise-time rules drive — a real build
+    // would push these straight to the reminder-scheduling backend; here
+    // they just seed the same `reminders` state the bell icon sets by
+    // hand. Readings covers both blood pressure and glucose (whichever
+    // this patient's plan actually tracks — Home only ever shows a
+    // reminder bell for a task that's actually on her list).
     setReminders((r) => ({
       ...r,
-      ...(outcome.bpReminderTime ? { bp: TIME_FOR_PREFERENCE[outcome.bpReminderTime] } : {}),
-      ...(outcome.glucoseReminderNote && !r.glucose ? { glucose: '07:30' } : {}),
+      ...(outcome.readingsReminderTime ? { bp: outcome.readingsReminderTime, glucose: outcome.readingsReminderTime } : {}),
+      ...(outcome.exerciseReminderTime ? { exercise: outcome.exerciseReminderTime } : {}),
     }));
 
     // Equipment is only known now — recompute today's exercise (and task)
@@ -784,7 +817,28 @@ export default function useAppState() {
         const setsDone = Math.min(v.dose.sets, v.setsDone + 1);
         return { ...v, setsDone, checked: setsDone >= v.dose.sets };
       });
-      return { ...d, videos, tasks: markTaskSlot(d, 'exercise', videos.some((v) => v.checked)) };
+      return { ...d, videos, tasks: markTaskSlot(d, 'exercise', videos.some((v) => v.checked) || d.customExercises.length > 0) };
+    });
+  }, []);
+
+  // Logging an activity the patient did on her own (outside the prescribed
+  // routine) counts toward the Exercise task exactly like watching a
+  // prescribed video does — see ExerciseScreen's "Log other activity".
+  const openCustomExerciseForm = useCallback(() => open('exercise-log-custom'), [open]);
+  const closeCustomExerciseForm = useCallback(() => setScreen('exercise'), []);
+  const saveCustomExercise = useCallback((activityType, durationMinutes, intensity) => {
+    setDay((d) => {
+      const entry = { id: newEntryId(), activityType, durationMinutes, intensity, loggedAt: new Date().toISOString() };
+      const customExercises = [...d.customExercises, entry];
+      return { ...d, customExercises, tasks: markTaskSlot(d, 'exercise', true) };
+    });
+    setScreen('exercise');
+  }, []);
+  const removeCustomExercise = useCallback((id) => {
+    setDay((d) => {
+      const customExercises = d.customExercises.filter((e) => e.id !== id);
+      const stillDone = d.videos.some((v) => v.checked) || customExercises.length > 0;
+      return { ...d, customExercises, tasks: markTaskSlot(d, 'exercise', stillDone) };
     });
   }, []);
 
@@ -890,6 +944,8 @@ export default function useAppState() {
     submitOnboarding,
     pauseOnboarding,
     confirmPersonalReason,
+    reasonToastDue,
+    dismissReasonToast,
     nurseUpdateBanner,
     simulateNurseUpdate,
     dismissNurseUpdateBanner,
@@ -927,6 +983,10 @@ export default function useAppState() {
     goToAdjacentVideo,
     closeVideoPlayer,
     markVideoWatched,
+    openCustomExerciseForm,
+    closeCustomExerciseForm,
+    saveCustomExercise,
+    removeCustomExercise,
     submitExerciseFeedback,
     exerciseGate,
     submitSymptomCheck,
