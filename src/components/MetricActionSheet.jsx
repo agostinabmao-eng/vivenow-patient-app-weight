@@ -37,7 +37,7 @@ export default function MetricActionSheet({ metric, onClose, onSeeProgress, onLo
             background: 'none',
             border: 'none',
             borderBottom: '1px solid var(--border-subtle)',
-            font: '600 0.9375rem/1 var(--font-sans)',
+            font: '600 1rem/1 var(--font-sans)',
             color: 'var(--ink)',
             cursor: 'pointer',
           }}
@@ -55,7 +55,7 @@ export default function MetricActionSheet({ metric, onClose, onSeeProgress, onLo
             padding: '14px 4px',
             background: 'none',
             border: 'none',
-            font: '600 0.9375rem/1 var(--font-sans)',
+            font: '600 1rem/1 var(--font-sans)',
             color: 'var(--ink)',
             cursor: 'pointer',
           }}

@@ -1,5 +1,5 @@
 import TaskScreenShell from '../components/TaskScreenShell';
-import Input from '../components/Input';
+import Stepper from '../components/Stepper';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
 
@@ -8,6 +8,7 @@ export default function TaskSteps({ stepsInput, setStepsInput, onSave, onBack })
   return (
     <TaskScreenShell
       icon="footprints"
+      photo="steps"
       title="Log Steps"
       description="Enter the step count from your tracker."
       onBack={onBack}
@@ -17,16 +18,8 @@ export default function TaskSteps({ stepsInput, setStepsInput, onSave, onBack })
         </Button>
       }
     >
-      <div style={{ width: '100%', maxWidth: 220, marginTop: 24 }}>
-        <Input
-          label="Steps"
-          placeholder="2,450"
-          type="number"
-          inputMode="numeric"
-          value={stepsInput}
-          onChange={(e) => setStepsInput(e.target.value)}
-          style={{ fontSize: 22, fontWeight: 700, textAlign: 'center' }}
-        />
+      <div style={{ width: '100%', marginTop: 28 }}>
+        <Stepper label="Steps today" unit="steps" placeholder="2450" value={stepsInput} onChange={setStepsInput} step={250} max={100000} />
       </div>
     </TaskScreenShell>
   );

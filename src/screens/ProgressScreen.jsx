@@ -48,7 +48,7 @@ function FlameRow({ days, labels }) {
         return (
           <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
             <Icon name="flame" size={20} color={earned ? 'var(--gold-500)' : 'var(--gray-300)'} fill={earned ? 'var(--gold-500)' : 'none'} />
-            <span style={{ font: '500 0.625rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>{labels[i]}</span>
+            <span style={{ font: '500 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>{labels[i]}</span>
           </div>
         );
       })}
@@ -71,7 +71,7 @@ function DeltaLabel({ pct, goodDirection, previousLabel }) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
         <Icon name="minus" size={12} color="var(--text-muted)" />
-        <span style={{ font: '600 0.71875rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>No change vs {previousLabel}</span>
+        <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>No change vs {previousLabel}</span>
       </div>
     );
   }
@@ -81,7 +81,7 @@ function DeltaLabel({ pct, goodDirection, previousLabel }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
       <Icon name={increased ? 'arrow-up' : 'arrow-down'} size={12} color={color} />
-      <span style={{ font: '600 0.71875rem/1.3 var(--font-sans)', color }}>
+      <span style={{ font: '600 1rem/1.3 var(--font-sans)', color }}>
         {increased ? '+' : ''}
         {pct}% vs {previousLabel}
       </span>
@@ -110,7 +110,7 @@ function SummaryCard({ icon, label, value, active, onClick, children }) {
         <div style={{ width: 28, height: 28, borderRadius: 'var(--radius-sm)', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Icon name={icon} size={15} color="var(--teal-600)" />
         </div>
-        <div style={{ font: '600 0.75rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{label}</div>
+        <div style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{label}</div>
       </div>
       <div style={{ marginTop: 8, font: '700 1.0625rem/1.2 var(--font-display)', color: 'var(--ink)' }}>{value}</div>
       <div style={{ marginTop: 4 }}>{children}</div>
@@ -136,7 +136,7 @@ function ExpandedMetricCard({ metric, previousLabel, onClose }) {
         <div style={{ width: 32, height: 32, borderRadius: 'var(--radius-sm)', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Icon name={metric.icon} size={17} color="var(--teal-600)" />
         </div>
-        <div style={{ flex: 1, font: '600 0.8125rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{metric.label}</div>
+        <div style={{ flex: 1, font: '600 1rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{metric.label}</div>
         <button
           onClick={onClose}
           aria-label="Collapse"
@@ -145,16 +145,16 @@ function ExpandedMetricCard({ metric, previousLabel, onClose }) {
           <Icon name="x" size={16} color="var(--text-muted)" />
         </button>
       </div>
-      <div style={{ marginTop: 10, font: '600 0.71875rem/1 var(--font-sans)', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--text-muted)' }}>
+      <div style={{ marginTop: 10, font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
         {scrub ? scrub.label : 'Average'}
       </div>
-      <div style={{ marginTop: 3, font: '700 1.75rem/1.2 var(--font-display)', color: 'var(--ink)' }}>{scrub ? scrub.value : metric.value}</div>
+      <div style={{ marginTop: 3, font: '700 2rem/1.2 var(--font-display)', color: 'var(--ink)' }}>{scrub ? scrub.value : metric.value}</div>
       {!scrub && (
         <>
           <div style={{ marginTop: 4 }}>
             <DeltaLabel pct={metric.pct} goodDirection={metric.goodDirection} previousLabel={previousLabel} />
           </div>
-          <div style={{ marginTop: 4, font: '500 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>Today: {metric.today}</div>
+          <div style={{ marginTop: 4, font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>Today: {metric.today}</div>
         </>
       )}
       <div style={{ marginTop: 14 }}>{metric.chart(setScrub)}</div>
@@ -262,7 +262,7 @@ export default function ProgressScreen({ day, streak, doneCount, weightUnit, wat
           xLabels={xLabels}
           unit={` ${weightUnit}`}
           refLines={[
-            { label: 'Baseline', value: Math.round(weightFromLbs(patientPlan.weight.baselineLbs, weightUnit) * 10) / 10, color: 'var(--gray-400)' },
+            { label: 'Baseline', value: Math.round(weightFromLbs(patientPlan.weight.baselineLbs, weightUnit) * 10) / 10, color: 'var(--gray-500)' },
             { label: 'Goal', value: Math.round(weightFromLbs(patientPlan.weight.goalLbs, weightUnit) * 10) / 10, color: 'var(--gold-500)' },
           ]}
           onScrub={(i) => setScrub(i == null ? null : { label: xLabels[i], value: formatWeight(periodDays[i].weight, weightUnit) })}
@@ -420,7 +420,7 @@ export default function ProgressScreen({ day, streak, doneCount, weightUnit, wat
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <div style={{ padding: 'calc(20px + var(--safe-top)) 20px 0' }}>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Progress</div>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Progress</div>
       </div>
 
       <div
@@ -438,7 +438,7 @@ export default function ProgressScreen({ day, streak, doneCount, weightUnit, wat
           <FlameRow days={weekDays} labels={labels} />
           <div style={{ marginTop: 12, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}>
             <Icon name="flame" size={16} color="var(--gold-500)" />
-            <span style={{ font: '600 0.8125rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{streak}-day streak</span>
+            <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{streak}-day streak</span>
           </div>
         </div>
 
@@ -473,7 +473,7 @@ export default function ProgressScreen({ day, streak, doneCount, weightUnit, wat
           >
             {shareStatus === 'downloaded' ? 'Downloaded ✓' : 'Share weekly report'}
           </Button>
-          <div style={{ marginTop: 8, font: '400 0.75rem/1.4 var(--font-sans)', color: 'var(--text-muted)', textAlign: 'center' }}>
+          <div style={{ marginTop: 8, font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', textAlign: 'center' }}>
             Download or share a PDF summary with your caregiver or care team.
           </div>
         </div>

@@ -20,8 +20,8 @@ function Point({ icon, tone, title, body }) {
         <Icon name={icon} size={18} color={`var(--${tone})`} />
       </div>
       <div>
-        <div style={{ font: '700 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
-        <div style={{ font: '400 0.84375rem/1.5 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>{body}</div>
+        <div style={{ font: '700 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>{body}</div>
       </div>
     </div>
   );
@@ -55,8 +55,8 @@ export default function ExerciseSafetyIntroScreen({ onDismiss, dismissLabel = "G
           >
             <Icon name="shield" size={30} color="var(--teal-600)" />
           </div>
-          <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)', marginTop: 14 }}>Exercising safely</div>
-          <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
+          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)', marginTop: 14 }}>Exercising safely</div>
+          <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
             A couple of things to keep in mind before each session.
           </div>
         </div>

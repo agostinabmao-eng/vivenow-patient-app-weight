@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
 const sizes = {
-  sm: 36,
-  md: 44,
+  sm: 52,
+  md: 60,
 };
 
 const palette = {
-  outline: { bg: 'transparent', bgHover: 'var(--teal-50)', fg: 'var(--ink)', border: 'var(--border-default)' },
-  ghost: { bg: 'transparent', bgHover: 'var(--gray-50)', fg: 'var(--ink)', border: 'transparent' },
-  solid: { bg: 'var(--teal-500)', bgHover: 'var(--teal-600)', fg: '#fff', border: 'transparent' },
+  outline: { bg: '#fff', bgHover: 'var(--teal-50)', fg: 'var(--ink)', border: 'var(--border-default)' },
+  ghost: { bg: 'transparent', bgHover: 'var(--ice-100)', fg: 'var(--ink)', border: 'transparent' },
+  solid: { bg: 'var(--teal-600)', bgHover: 'var(--teal-700)', fg: '#fff', border: 'transparent' },
 };
 
 /** A square-ish, icon-only tap target — the header back/profile buttons,
@@ -36,9 +36,9 @@ export default function IconButton({ children, variant = 'outline', size = 'md',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 'var(--radius-md)',
-        background: disabled ? 'var(--gray-100)' : hover ? p.bgHover : p.bg,
-        border: `1.5px solid ${disabled ? 'var(--border-subtle)' : p.border}`,
+        borderRadius: '50%',
+        background: disabled ? 'var(--ice-100)' : hover ? p.bgHover : p.bg,
+        border: `2px solid ${disabled ? 'var(--border-subtle)' : p.border}`,
         color: p.fg,
         cursor: disabled ? 'not-allowed' : 'pointer',
         transition: 'background var(--dur-fast) var(--ease-standard)',

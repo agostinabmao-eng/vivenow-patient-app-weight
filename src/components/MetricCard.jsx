@@ -26,33 +26,33 @@ export default function MetricCard({ metric, onClick }) {
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={onClick ? (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), onClick()) : undefined}
       style={{
-        flex: '0 0 148px',
+        flex: '0 0 184px',
         background: 'var(--surface-card)',
         border: '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-md)',
+        borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-sm)',
-        padding: 14,
+        padding: 18,
         cursor: onClick ? 'pointer' : 'default',
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ width: 30, height: 30, borderRadius: 'var(--radius-sm)', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <Icon name={metric.icon} size={16} color="var(--teal-600)" />
+        <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Icon name={metric.icon} size={20} color="var(--teal-600)" />
         </div>
-        <div style={{ font: '600 0.75rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{metric.label}</div>
+        <div style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{metric.label}</div>
       </div>
 
       {hasWheel ? (
-        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-          <ProgressWheel value={metric.valueNum} max={metric.goal} size={82} strokeWidth={7} centerValue={metric.value} centerLabel={metric.unit} />
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 14 }}>
+          <ProgressWheel value={metric.valueNum} max={metric.goal} size={112} strokeWidth={10} centerValue={metric.value} centerLabel={metric.unit} />
         </div>
       ) : (
         <>
-          <div style={{ marginTop: 10, font: '700 1.375rem/1.1 var(--font-display)', color: 'var(--ink)' }}>{metric.value}</div>
-          <div style={{ marginTop: 2, font: '500 0.75rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{metric.unit}</div>
+          <div style={{ marginTop: 14, font: '700 1.75rem/1.1 var(--font-display)', color: 'var(--ink)' }}>{metric.value}</div>
+          <div style={{ marginTop: 2, font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{metric.unit}</div>
           {metric.hasTrend && (
-            <svg width="100%" height="24" viewBox="0 0 120 24" preserveAspectRatio="none" style={{ marginTop: 6, display: 'block' }}>
-              <polyline points={sparklinePoints(metric.trend)} fill="none" stroke="var(--teal-500)" strokeWidth="2" />
+            <svg width="100%" height="32" viewBox="0 0 120 24" preserveAspectRatio="none" style={{ marginTop: 6, display: 'block' }}>
+              <polyline points={sparklinePoints(metric.trend)} fill="none" stroke="var(--teal-600)" strokeWidth="3" strokeLinecap="round" />
             </svg>
           )}
         </>

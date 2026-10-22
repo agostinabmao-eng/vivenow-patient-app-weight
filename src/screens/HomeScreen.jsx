@@ -10,6 +10,7 @@ import Button from '../components/Button';
 import WaterSlider, { formatWater } from '../components/WaterSlider';
 import MedicationList from '../components/MedicationList';
 import Toast from '../components/Toast';
+import Photo from '../components/Photo';
 import { HeroProgressCard, WeightGoalMiniCard } from '../components/ProgressCards';
 import { formatWeight, weightToLbs } from '../utils/units';
 import { shouldReconfirmPersonalReason, pickDailyReasonMessage } from '../data/rules';
@@ -45,24 +46,23 @@ function OnboardingNudge({ onClick }) {
         gap: 14,
         textAlign: 'left',
         marginTop: 16,
-        background: 'var(--teal-50)',
-        border: '1.5px solid var(--teal-200)',
-        borderRadius: 'var(--radius-md)',
+        background: 'var(--sand-50)',
+        border: '1.5px solid var(--sand-300)',
+        borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-sm)',
-        padding: 16,
+        padding: 20,
         cursor: 'pointer',
       }}
     >
-      <div style={{ width: 44, height: 44, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+      <div style={{ width: 52, height: 52, borderRadius: '50%', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
         <Icon name="clipboard-list" size={20} color="var(--teal-600)" />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '700 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>Finish setting up your profile</div>
-        <div style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>
+        <div style={{ font: '700 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>Finish setting up your profile</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>
           A few more questions to help your care team build your plan
         </div>
       </div>
-      <Icon name="chevron-right" size={20} color="var(--gray-400)" />
     </button>
   );
 }
@@ -73,7 +73,7 @@ function OnboardingNudge({ onClick }) {
  * the whole point. */
 function InlineTodoRow({ icon, label, sub, done, expanded, onToggle, reminderSet, onSetReminder, children }) {
   return (
-    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', overflow: 'hidden' }}>
+    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', overflow: 'hidden' }}>
       <div
         onClick={onToggle}
         role="button"
@@ -81,25 +81,25 @@ function InlineTodoRow({ icon, label, sub, done, expanded, onToggle, reminderSet
         aria-expanded={expanded}
         tabIndex={0}
         onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onToggle()}
-        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 14, minHeight: 56, boxSizing: 'border-box', cursor: 'pointer' }}
+        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 16, minHeight: 88, boxSizing: 'border-box', cursor: 'pointer' }}
       >
         <div
           style={{
-            width: 38,
-            height: 38,
-            borderRadius: 'var(--radius-sm)',
+            width: 56,
+            height: 56,
+            borderRadius: '50%',
             flexShrink: 0,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: done ? 'var(--success-subtle)' : 'var(--teal-50)',
+            background: done ? 'var(--success-subtle)' : 'var(--sand-50)',
           }}
         >
-          <Icon name={icon} size={18} color={done ? 'var(--success)' : 'var(--teal-600)'} />
+          <Icon name={icon} size={24} color={done ? 'var(--success)' : 'var(--teal-600)'} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ font: '600 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
-          <div style={{ font: '400 0.78125rem/1.3 var(--font-sans)', color: done ? 'var(--success)' : 'var(--text-muted)' }}>{sub}</div>
+          <div style={{ font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
+          <div style={{ font: '500 1rem/1.3 var(--font-sans)', color: done ? 'var(--success)' : 'var(--text-muted)' }}>{sub}</div>
         </div>
         <IconButton
           variant="ghost"
@@ -112,11 +112,11 @@ function InlineTodoRow({ icon, label, sub, done, expanded, onToggle, reminderSet
           }}
           style={reminderSet ? { background: 'var(--teal-50)' } : undefined}
         >
-          <Icon name="bell" color={reminderSet ? 'var(--teal-600)' : 'var(--gray-400)'} />
+          <Icon name="bell" color={reminderSet ? 'var(--teal-600)' : 'var(--gray-500)'} />
         </IconButton>
-        <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={20} color="var(--gray-400)" />
+        <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={22} color="var(--gray-500)" />
       </div>
-      {expanded && <div style={{ padding: '0 14px 16px' }}>{children}</div>}
+      {expanded && <div style={{ padding: '0 18px 22px' }}>{children}</div>}
     </div>
   );
 }
@@ -139,17 +139,17 @@ function CompletedTaskRow({ icon, label, onUndo }) {
         gap: 12,
         background: 'var(--gray-50)',
         border: '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-md)',
-        padding: 14,
-        minHeight: 56,
+        borderRadius: 'var(--radius-lg)',
+        padding: 18,
+        minHeight: 72,
         boxSizing: 'border-box',
         cursor: 'pointer',
       }}
     >
-      <div style={{ width: 38, height: 38, borderRadius: 'var(--radius-sm)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--gray-200)' }}>
+      <div style={{ width: 48, height: 48, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--ice-100)' }}>
         <Icon name="check" size={18} color="var(--text-muted)" />
       </div>
-      <div style={{ flex: 1, minWidth: 0, font: '600 0.9375rem/1.3 var(--font-sans)', color: 'var(--text-muted)', textDecoration: 'line-through' }}>{label}</div>
+      <div style={{ flex: 1, minWidth: 0, font: '600 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)', textDecoration: 'line-through' }}>{label}</div>
     </div>
   );
 }
@@ -168,18 +168,18 @@ function CheckInCard({ day, onOpenSurvey }) {
         gap: 14,
         textAlign: 'left',
         marginTop: 20,
-        background: day.surveySubmittedAt ? 'var(--surface-card)' : 'var(--teal-50)',
-        border: `1.5px solid ${day.surveySubmittedAt ? 'var(--border-subtle)' : 'var(--teal-200)'}`,
-        borderRadius: 'var(--radius-md)',
+        background: day.surveySubmittedAt ? 'var(--surface-card)' : 'var(--peach-50)',
+        border: `1.5px solid ${day.surveySubmittedAt ? 'var(--border-subtle)' : 'var(--peach-100)'}`,
+        borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-sm)',
-        padding: 16,
+        padding: 20,
         cursor: 'pointer',
       }}
     >
       <div
         style={{
-          width: 44,
-          height: 44,
+          width: 52,
+          height: 52,
           borderRadius: '50%',
           background: day.surveySubmittedAt ? 'var(--success-subtle)' : '#fff',
           display: 'flex',
@@ -188,17 +188,17 @@ function CheckInCard({ day, onOpenSurvey }) {
           flexShrink: 0,
         }}
       >
-        <Icon name={day.surveySubmittedAt ? 'check' : 'stethoscope'} size={20} color={day.surveySubmittedAt ? 'var(--success)' : 'var(--teal-600)'} />
+        <Icon name={day.surveySubmittedAt ? 'check' : 'stethoscope'} size={24} color={day.surveySubmittedAt ? 'var(--success)' : 'var(--teal-600)'} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '700 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
+        <div style={{ font: '700 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
           {day.surveySubmittedAt ? 'Check-in sent to your care team' : 'Tell your care team how you’re feeling'}
         </div>
-        <div style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>
           {day.surveySubmittedAt ? 'Thanks for checking in — tap to review' : 'A quick weekly check-in — takes under a minute'}
         </div>
       </div>
-      <Icon name="chevron-right" size={20} color="var(--gray-400)" />
+      <Icon name="chevron-right" size={20} color="var(--gray-500)" />
     </button>
   );
 }
@@ -228,7 +228,7 @@ function ReasonConfirmCard({ personalReason, onConfirm }) {
   if (editing) {
     return (
       <div style={{ ...cardStyle, flexDirection: 'column', alignItems: 'stretch', gap: 10 }}>
-        <div style={{ font: '700 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>What&apos;s your reason now?</div>
+        <div style={{ font: '700 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>What&apos;s your reason now?</div>
         <Input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="e.g. Time with family" />
         <Button
           variant="primary"
@@ -248,8 +248,8 @@ function ReasonConfirmCard({ personalReason, onConfirm }) {
     <div style={cardStyle}>
       <Icon name="message-circle" size={18} color="var(--teal-600)" style={{ flexShrink: 0 }} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>Is this still your reason?</div>
-        <div style={{ font: '700 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{personalReason.value}</div>
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>Is this still your reason?</div>
+        <div style={{ font: '700 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{personalReason.value}</div>
       </div>
       <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
         <Button variant="outline" size="sm" onClick={() => onConfirm(true)}>
@@ -281,20 +281,20 @@ function ReasonToast({ message, onDismiss }) {
         position: 'absolute',
         left: 16,
         right: 16,
-        bottom: 96,
+        bottom: 120,
         display: 'flex',
         alignItems: 'flex-start',
         gap: 10,
-        background: 'var(--navy-700)',
+        background: 'var(--ink)',
         color: '#fff',
-        borderRadius: 'var(--radius-md)',
-        padding: '12px 14px',
+        borderRadius: 'var(--radius-lg)',
+        padding: '18px 20px',
         boxShadow: 'var(--shadow-lg)',
         zIndex: 10,
       }}
     >
       <Icon name="message-circle" size={18} color="#fff" style={{ flexShrink: 0, marginTop: 1 }} />
-      <div style={{ flex: 1, minWidth: 0, font: '600 0.84375rem/1.4 var(--font-sans)' }}>{message}</div>
+      <div style={{ flex: 1, minWidth: 0, font: '600 1rem/1.4 var(--font-sans)' }}>{message}</div>
       <button
         onClick={onDismiss}
         aria-label="Dismiss"
@@ -320,10 +320,11 @@ function CompletedTasksSection({ completedTodos, showCompleted, onToggleShow, on
           width: '100%',
           background: 'none',
           border: 'none',
-          padding: '10px 0',
+          padding: '18px 0',
+          minHeight: 'var(--tap-min)',
           textAlign: 'center',
-          font: '600 0.875rem/1 var(--font-sans)',
-          color: 'var(--teal-600)',
+          font: '700 1.0625rem/1 var(--font-sans)',
+          color: 'var(--teal-700)',
           cursor: 'pointer',
         }}
       >
@@ -337,6 +338,44 @@ function CompletedTasksSection({ completedTodos, showCompleted, onToggleShow, on
         </div>
       )}
     </div>
+  );
+}
+
+function greeting() {
+  const h = new Date().getHours();
+  return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
+}
+
+/** Greeting, streak chip and the warm hero photo — shared by both Home
+ * layouts so the first thing a patient sees is a person, not a dashboard. */
+function HomeHeader({ streak, onOpenProfile, showShortWin, doneCount, totalCount }) {
+  return (
+    <>
+      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ font: '600 1.0625rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{greeting()},</div>
+          <div style={{ font: '700 var(--fs-title)/1.15 var(--font-display)', color: 'var(--ink)' }}>{patientName}</div>
+        </div>
+        <IconButton variant="outline" label="Open your profile" onClick={onOpenProfile}>
+          <Icon name="user" size={22} />
+        </IconButton>
+      </div>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 14 }}>
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--gold-100)', borderRadius: 'var(--radius-pill)', padding: '10px 18px' }}>
+          <Icon name="flame" size={18} color="var(--gold-700)" />
+          <span style={{ font: '700 1.0625rem/1.2 var(--font-sans)', color: 'var(--gold-700)' }}>{streak}-day streak</span>
+        </div>
+        {showShortWin && (
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--teal-50)', borderRadius: 'var(--radius-pill)', padding: '10px 18px' }}>
+            <Icon name="check" size={18} color="var(--teal-700)" />
+            <span style={{ font: '700 1.0625rem/1.2 var(--font-sans)', color: 'var(--teal-700)' }}>
+              {doneCount}{totalCount ? ` of ${totalCount}` : ''} done today
+            </span>
+          </div>
+        )}
+      </div>
+      <Photo name="home-walk" alt="Two older adults walking together in a park" height={190} style={{ marginTop: 18 }} />
+    </>
   );
 }
 
@@ -440,7 +479,7 @@ export default function HomeScreen({
           style={{
             flex: 1,
             overflowY: 'auto',
-            padding: `calc(16px + var(--safe-top)) calc(20px + var(--safe-right)) 88px calc(20px + var(--safe-left))`,
+            padding: `calc(20px + var(--safe-top)) calc(24px + var(--safe-right)) 120px calc(24px + var(--safe-left))`,
           }}
         >
           {!online && (
@@ -458,35 +497,18 @@ export default function HomeScreen({
             </div>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Good morning, {patientName}</div>
-            <IconButton variant="outline" label="Open your profile" onClick={onOpenProfile}>
-              <Icon name="user" size={20} />
-            </IconButton>
-          </div>
+          <HomeHeader streak={streak} onOpenProfile={onOpenProfile} showShortWin={showShortWin} doneCount={doneCount} totalCount={totalCount} />
 
           {!onboardingComplete && <OnboardingNudge onClick={onResumeOnboarding} />}
 
-          <div style={{ marginTop: 14 }}>
+          <div style={{ marginTop: 18 }}>
             <HeroProgressCard
               eyebrow="Today's Progress"
               value={doneCount}
               goal={totalCount}
               unit="tasks completed"
-              corner={
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4, flexShrink: 0 }}>
-                  <Icon name="flame" size={16} color="#fff" />
-                  <span style={{ font: '700 0.875rem/1 var(--font-display)', color: '#fff' }}>{streak}</span>
-                </div>
-              }
             />
           </div>
-          {showShortWin && (
-            <div style={{ marginTop: 8, font: '600 0.8125rem/1.3 var(--font-sans)', color: 'var(--teal-700)' }}>
-              🎉 Nice work — you&apos;ve already done {doneCount} of {totalCount} today.
-            </div>
-          )}
-
           <div style={{ marginTop: 12 }}>
             <WeightGoalMiniCard weightGoal={patientPlan.weight} currentLbs={todaySample.weight} />
           </div>
@@ -600,7 +622,7 @@ export default function HomeScreen({
           </div>
 
           {activeTodos.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '20px 0', font: '600 0.875rem/1.4 var(--font-sans)', color: 'var(--success)' }}>
+            <div style={{ textAlign: 'center', padding: '20px 0', font: '600 1rem/1.4 var(--font-sans)', color: 'var(--success)' }}>
               All done for today — nice work!
             </div>
           )}
@@ -666,7 +688,7 @@ export default function HomeScreen({
         style={{
           flex: 1,
           overflowY: 'auto',
-          padding: `calc(16px + var(--safe-top)) calc(20px + var(--safe-right)) 88px calc(20px + var(--safe-left))`,
+          padding: `calc(20px + var(--safe-top)) calc(24px + var(--safe-right)) 120px calc(24px + var(--safe-left))`,
         }}
       >
         {!online && (
@@ -684,32 +706,14 @@ export default function HomeScreen({
           </div>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
-          <div>
-            <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Good morning, {patientName}</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 6 }}>
-              <Icon name="flame" size={16} color="var(--gold-500)" />
-              <span style={{ font: '600 0.8125rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
-                {streak}-day streak
-              </span>
-            </div>
-            {showShortWin && (
-              <div style={{ marginTop: 4, font: '600 0.78125rem/1.3 var(--font-sans)', color: 'var(--teal-700)' }}>
-                🎉 Nice work — you&apos;ve already done {doneCount} today.
-              </div>
-            )}
-          </div>
-          <IconButton variant="outline" label="Open your profile" onClick={onOpenProfile}>
-            <Icon name="user" size={20} />
-          </IconButton>
-        </div>
+        <HomeHeader streak={streak} onOpenProfile={onOpenProfile} showShortWin={showShortWin} doneCount={doneCount} />
 
         {!onboardingComplete && <OnboardingNudge onClick={onResumeOnboarding} />}
 
-        <div style={{ marginTop: 18, font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)' }}>
+        <div style={{ marginTop: 28, font: '700 var(--fs-h2)/1.2 var(--font-display)', color: 'var(--ink)' }}>
           Today&apos;s Summary
         </div>
-        <div className="vh-scroll" style={{ display: 'flex', gap: 12, overflowX: 'auto', margin: '10px -20px 0', padding: '0 20px 2px' }}>
+        <div className="vh-scroll" style={{ display: 'flex', gap: 12, overflowX: 'auto', margin: '14px -24px 0', padding: '4px 24px 10px' }}>
           {summaryCards.map((m) => (
             <MetricCard key={m.id} metric={m} onClick={() => setActionMetric(m)} />
           ))}
@@ -721,14 +725,14 @@ export default function HomeScreen({
 
         {reasonDue && <ReasonConfirmCard personalReason={onboarding.personalReason} onConfirm={onConfirmReason} />}
 
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 20 }}>
-          <div style={{ font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)' }}>To-Do List</div>
-          <div style={{ font: '600 0.8125rem/1.2 var(--font-sans)', color: 'var(--teal-600)' }}>
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 28 }}>
+          <div style={{ font: '700 var(--fs-h2)/1.2 var(--font-display)', color: 'var(--ink)' }}>To-Do List</div>
+          <div style={{ font: '700 1.0625rem/1.2 var(--font-sans)', color: 'var(--teal-700)' }}>
             {doneCount} of {totalCount} complete
           </div>
         </div>
         {activeTodos.length === 0 && (
-          <div style={{ textAlign: 'center', padding: '20px 0', font: '600 0.875rem/1.4 var(--font-sans)', color: 'var(--success)' }}>
+          <div style={{ textAlign: 'center', padding: '20px 0', font: '600 1rem/1.4 var(--font-sans)', color: 'var(--success)' }}>
             All done for today — nice work!
           </div>
         )}

@@ -37,13 +37,13 @@ function VideoRow({ title, watched, onOpen }) {
       >
         <Icon name="play" size={20} color="var(--teal-600)" />
       </div>
-      <div style={{ flex: 1, minWidth: 0, font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
+      <div style={{ flex: 1, minWidth: 0, font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
       {watched ? (
         <div style={{ width: 24, height: 24, borderRadius: '50%', background: 'var(--success-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
           <Icon name="check" size={14} color="var(--success)" />
         </div>
       ) : (
-        <Icon name="chevron-right" size={20} color="var(--gray-400)" />
+        <Icon name="chevron-right" size={20} color="var(--gray-500)" />
       )}
     </div>
   );
@@ -52,7 +52,7 @@ function VideoRow({ title, watched, onOpen }) {
 function Section({ title, children }) {
   return (
     <div>
-      <div style={{ font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)', marginBottom: 10 }}>
+      <div style={{ font: '600 1rem/1 var(--font-display)', color: 'var(--text-muted)', marginBottom: 10 }}>
         {title}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>{children}</div>
@@ -90,7 +90,7 @@ export default function LearnScreen({ watched, learnHints, onOpenVideo, onBack }
         <BackIconButton onClick={onBack} />
       </div>
       <div style={{ padding: '4px 20px 0' }}>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Learn</div>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Learn</div>
       </div>
       <div
         className="vh-scroll"

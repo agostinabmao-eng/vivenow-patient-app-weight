@@ -79,7 +79,7 @@ export default function TrendChart({ series, xLabels, unit = '', goal, goalLabel
           {series.map((s) => (
             <div key={s.label} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
               <span style={{ width: 8, height: 8, borderRadius: '50%', background: s.color, flexShrink: 0 }} />
-              <span style={{ font: '500 0.71875rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>{s.label}</span>
+              <span style={{ font: '500 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>{s.label}</span>
             </div>
           ))}
         </div>

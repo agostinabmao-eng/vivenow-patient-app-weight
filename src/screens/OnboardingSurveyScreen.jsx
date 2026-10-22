@@ -83,8 +83,8 @@ export default function OnboardingSurveyScreen({
         <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'var(--success-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="check" size={34} color="var(--success)" />
         </div>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>You&apos;re all set, {patientName}!</div>
-        <div style={{ font: '400 0.9375rem/1.5 var(--font-sans)', color: 'var(--text-muted)' }}>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>You&apos;re all set, {patientName}!</div>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-muted)' }}>
           Thanks for sharing — we&apos;ve personalized your app with this.
         </div>
         <Button variant="primary" size="lg" onClick={onGoHome} style={{ marginTop: 8, minWidth: 220 }}>
@@ -99,7 +99,7 @@ export default function OnboardingSurveyScreen({
       <div style={{ padding: 'calc(12px + var(--safe-top)) 20px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <BackIconButton onClick={goBack} />
-          <div style={{ flex: 1, textAlign: 'center', font: '600 0.75rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
+          <div style={{ flex: 1, textAlign: 'center', font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
             Question {index + 1} of {steps.length}
           </div>
           <button
@@ -108,7 +108,7 @@ export default function OnboardingSurveyScreen({
               background: 'none',
               border: 'none',
               padding: '8px 4px',
-              font: '600 0.78125rem/1 var(--font-sans)',
+              font: '600 1rem/1 var(--font-sans)',
               color: 'var(--text-muted)',
               cursor: 'pointer',
               flexShrink: 0,
@@ -117,25 +117,26 @@ export default function OnboardingSurveyScreen({
             Skip
           </button>
         </div>
-        <div style={{ marginTop: 10, height: 4, borderRadius: 'var(--radius-pill)', background: 'var(--teal-50)', overflow: 'hidden' }}>
+        <div style={{ marginTop: 12, height: 12, borderRadius: 'var(--radius-pill)', background: 'var(--ice-100)', overflow: 'hidden' }}>
           <div
             style={{
               width: `${((index + 1) / steps.length) * 100}%`,
               height: '100%',
-              background: 'var(--teal-500)',
+              borderRadius: 'var(--radius-pill)',
+              background: 'var(--teal-600)',
               transition: 'width var(--dur-med) var(--ease-standard)',
             }}
           />
         </div>
       </div>
 
-      <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: '24px 20px', display: 'flex', flexDirection: 'column' }}>
+      <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: '24px 24px', display: 'flex', flexDirection: 'column' }}>
         {index === 0 && (
-          <div style={{ font: '500 0.8125rem/1.3 var(--font-sans)', color: 'var(--text-muted)', marginBottom: 8 }}>
+          <div style={{ font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)', marginBottom: 8 }}>
             Just a few quick preferences — this helps us personalize your app.
           </div>
         )}
-        <div style={{ font: '700 1.1875rem/1.4 var(--font-display)', color: 'var(--ink)' }}>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>
           {step.question}
           {step.optional && <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}> (optional)</span>}
         </div>
@@ -152,7 +153,7 @@ export default function OnboardingSurveyScreen({
             }}
           >
             <Icon name="message-circle" size={16} color="var(--teal-600)" style={{ flexShrink: 0, marginTop: 1 }} />
-            <span style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-body)' }}>{step.tip}</span>
+            <span style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-body)' }}>{step.tip}</span>
           </div>
         )}
         {step.type === 'choice' && <ChoiceQuestion options={step.options} images={step.images} value={responses[step.id]} onChange={setAnswer} />}
@@ -198,7 +199,7 @@ export default function OnboardingSurveyScreen({
             border: 'none',
             padding: '6px 0',
             textAlign: 'center',
-            font: '600 0.84375rem/1 var(--font-sans)',
+            font: '600 1rem/1 var(--font-sans)',
             color: 'var(--text-muted)',
             cursor: 'pointer',
           }}

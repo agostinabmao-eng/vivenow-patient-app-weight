@@ -69,8 +69,8 @@ function VideoRow({ video, onOpen }) {
         </div>
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{video.title}</div>
-        <div style={{ font: '400 0.78125rem/1.3 var(--font-sans)', color: video.checked ? 'var(--success)' : 'var(--text-muted)' }}>
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{video.title}</div>
+        <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: video.checked ? 'var(--success)' : 'var(--text-muted)' }}>
           {statusText}
         </div>
       </div>
@@ -82,7 +82,7 @@ function VideoRow({ video, onOpen }) {
           <Icon name="check" size={14} color="var(--success)" />
         </div>
       ) : (
-        <Icon name="chevron-right" size={20} color="var(--gray-400)" />
+        <Icon name="chevron-right" size={20} color="var(--gray-500)" />
       )}
     </div>
   );
@@ -118,8 +118,8 @@ function LoggedExerciseRow({ entry, onRemove }) {
         <Icon name="check" size={20} color="var(--success)" />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{entry.activityType}</div>
-        <div style={{ font: '400 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{entry.activityType}</div>
+        <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>
           {entry.durationMinutes} min · {entry.intensity} intensity
         </div>
       </div>
@@ -149,7 +149,7 @@ function LogCustomExerciseButton({ onClick }) {
         padding: 14,
         minHeight: 56,
         boxSizing: 'border-box',
-        font: '600 0.875rem/1.3 var(--font-sans)',
+        font: '600 1rem/1.3 var(--font-sans)',
         color: 'var(--teal-600)',
         cursor: 'pointer',
       }}
@@ -199,7 +199,7 @@ export default function ExerciseScreen({ videos, videoFilter, customExercises, o
         </IconButton>
       </div>
       <div style={{ padding: '4px 20px 0' }}>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Exercise</div>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Exercise</div>
       </div>
       <div
         className="vh-scroll"
@@ -222,7 +222,7 @@ export default function ExerciseScreen({ videos, videoFilter, customExercises, o
                   border: '1px solid var(--warning)',
                   borderRadius: 'var(--radius-md)',
                   padding: '10px 12px',
-                  font: '600 0.8125rem/1.3 var(--font-sans)',
+                  font: '600 1rem/1.3 var(--font-sans)',
                   color: 'var(--ink)',
                 }}
               >
@@ -243,7 +243,7 @@ export default function ExerciseScreen({ videos, videoFilter, customExercises, o
 
         {customExercises.length > 0 && (
           <div>
-            <div style={{ font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)', marginBottom: 10 }}>
+            <div style={{ font: '600 1rem/1 var(--font-display)', color: 'var(--text-muted)', marginBottom: 10 }}>
               Logged Activities
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

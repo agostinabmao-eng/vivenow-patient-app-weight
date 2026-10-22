@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from 'react';
  * value, instead of tapping +/- one increment at a time. Pointer Events
  * unify mouse and touch, and pointer capture keeps the drag tracking the
  * finger even once it moves outside the track. */
-export default function DragSlider({ value, max, step = 1, onChange, height = 16, fillColor = 'var(--teal-500)', trackColor = 'var(--teal-50)' }) {
+export default function DragSlider({ value, max, step = 1, onChange, height = 24, fillColor = 'var(--teal-500)', trackColor = 'var(--ice-100)' }) {
   const trackRef = useRef(null);
   const [dragging, setDragging] = useState(false);
 
@@ -32,7 +32,7 @@ export default function DragSlider({ value, max, step = 1, onChange, height = 16
   const endDrag = () => setDragging(false);
 
   const pct = max > 0 ? Math.min(100, Math.max(0, (value / max) * 100)) : 0;
-  const thumbSize = height + 12;
+  const thumbSize = height + 20;
 
   return (
     <div
@@ -88,7 +88,7 @@ export default function DragSlider({ value, max, step = 1, onChange, height = 16
           height: thumbSize,
           borderRadius: '50%',
           background: '#fff',
-          border: `2.5px solid ${fillColor}`,
+          border: `4px solid ${fillColor}`,
           boxShadow: 'var(--shadow-sm)',
           pointerEvents: 'none',
         }}

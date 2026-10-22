@@ -46,13 +46,13 @@ export const SHARED_ONBOARDING_QUESTIONS = [
     id: 'readingsTime',
     type: 'multiselect',
     question: 'When do you prefer to take your readings?',
-    options: ['🌅 Morning', '☀️ Afternoon', '🌙 Evening'],
+    options: ['Morning', 'Afternoon', 'Evening'],
   },
   {
     id: 'exerciseTime',
     type: 'multiselect',
     question: 'When do you prefer to exercise?',
-    options: ['🌅 Morning', '☀️ Afternoon', '🌙 Evening'],
+    options: ['Morning', 'Afternoon', 'Evening'],
   },
   {
     id: 'outcomes',

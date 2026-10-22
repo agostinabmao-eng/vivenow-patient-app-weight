@@ -1,5 +1,5 @@
 import TaskScreenShell from '../components/TaskScreenShell';
-import Input from '../components/Input';
+import Stepper from '../components/Stepper';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
 import { weightToLbs } from '../utils/units';
@@ -9,6 +9,7 @@ export default function TaskWeight({ weightInput, setWeightInput, weightUnit, on
   return (
     <TaskScreenShell
       icon="scale"
+      photo="weight"
       title="Measure Weight"
       description="Enter the reading from your scale."
       onBack={onBack}
@@ -25,15 +26,17 @@ export default function TaskWeight({ weightInput, setWeightInput, weightUnit, on
         </Button>
       }
     >
-      <div style={{ width: '100%', maxWidth: 220, marginTop: 24 }}>
-        <Input
-          label={`Weight (${weightUnit})`}
+      <div style={{ width: '100%', marginTop: 28 }}>
+        <Stepper
+          label="Your weight"
+          unit={weightUnit}
           placeholder={weightUnit === 'kg' ? '95.3' : '210.0'}
-          type="number"
-          inputMode="decimal"
           value={weightInput}
-          onChange={(e) => setWeightInput(e.target.value)}
-          style={{ fontSize: 22, fontWeight: 700, textAlign: 'center' }}
+          onChange={setWeightInput}
+          step={weightUnit === 'kg' ? 0.1 : 0.2}
+          decimals={1}
+          min={1}
+          max={999}
         />
       </div>
     </TaskScreenShell>

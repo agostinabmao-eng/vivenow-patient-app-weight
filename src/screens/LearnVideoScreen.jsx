@@ -39,8 +39,8 @@ export default function LearnVideoScreen({ videoId, title, onMarkWatched, onBack
         <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'var(--success-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="check" size={34} color="var(--success)" />
         </div>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Nice — you watched this!</div>
-        <div style={{ font: '400 0.9375rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>{title}</div>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Nice — you watched this!</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>{title}</div>
         <Button variant="primary" size="lg" onClick={onBack} style={{ marginTop: 8, minWidth: 200 }}>
           Back to Learn
         </Button>

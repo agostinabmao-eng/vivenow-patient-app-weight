@@ -26,8 +26,8 @@ export default function Alert({ tone = 'info', icon, title, onDismiss, children 
     >
       <Icon name={icon || t.icon} size={18} color={t.iconColor} style={{ marginTop: 1, flexShrink: 0 }} />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '700 0.84375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
-        <div style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-body)', marginTop: 2 }}>{children}</div>
+        <div style={{ font: '700 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-body)', marginTop: 2 }}>{children}</div>
       </div>
       {onDismiss && (
         <button

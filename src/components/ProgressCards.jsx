@@ -15,16 +15,16 @@ export function HeroProgressCard({ eyebrow, value, goal, unit, corner }) {
   const hasGoal = goal != null;
   const pct = hasGoal && goal > 0 ? Math.min(100, Math.round((value / goal) * 100)) : 0;
   return (
-    <div style={{ background: 'var(--teal-500)', borderRadius: 'var(--radius-lg)', padding: 20, boxShadow: 'var(--shadow-md)' }}>
+    <div style={{ background: 'var(--teal-50)', border: '1px solid var(--teal-200)', borderRadius: 'var(--radius-xl)', padding: 24, boxShadow: 'var(--shadow-sm)' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-        <div style={{ font: '600 0.78125rem/1 var(--font-sans)', color: 'rgba(255,255,255,0.85)', textTransform: 'uppercase', letterSpacing: '.06em' }}>
+        <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--teal-800)' }}>
           {eyebrow}
         </div>
         {corner}
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginTop: 10 }}>
-        <span style={{ font: '700 2.25rem/1 var(--font-display)', color: '#fff' }}>{value.toLocaleString()}</span>
-        <span style={{ font: '600 0.9375rem/1 var(--font-sans)', color: 'rgba(255,255,255,0.85)' }}>
+        <span style={{ font: '700 3rem/1 var(--font-display)', color: 'var(--teal-700)' }}>{value.toLocaleString()}</span>
+        <span style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--teal-800)' }}>
           {hasGoal ? `/ ${goal.toLocaleString()} ${unit}` : unit}
         </span>
       </div>
@@ -34,9 +34,9 @@ export function HeroProgressCard({ eyebrow, value, goal, unit, corner }) {
           aria-valuenow={pct}
           aria-valuemin={0}
           aria-valuemax={100}
-          style={{ marginTop: 14, height: 6, borderRadius: 'var(--radius-pill)', background: 'rgba(255,255,255,0.28)', overflow: 'hidden' }}
+          style={{ marginTop: 18, height: 14, borderRadius: 'var(--radius-pill)', background: '#fff', overflow: 'hidden' }}
         >
-          <div style={{ width: `${pct}%`, height: '100%', background: '#fff', transition: 'width var(--dur-med) var(--ease-standard)' }} />
+          <div style={{ width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-pill)', background: 'var(--teal-600)', transition: 'width var(--dur-med) var(--ease-standard)' }} />
         </div>
       )}
     </div>
@@ -50,16 +50,16 @@ export function HeroProgressCard({ eyebrow, value, goal, unit, corner }) {
 export function SecondaryProgressCard({ icon, label, value, goal, unit }) {
   const pct = goal > 0 ? Math.min(100, Math.round((value / goal) * 100)) : 0;
   return (
-    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: 12 }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <Icon name={icon} size={15} color="var(--teal-600)" />
-        <div style={{ font: '600 0.8125rem/1.2 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
-        <div style={{ marginLeft: 'auto', font: '600 0.75rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
+    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', padding: 18 }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <Icon name={icon} size={18} color="var(--teal-600)" />
+        <div style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
+        <div style={{ marginLeft: 'auto', font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
           {value.toLocaleString()} / {goal.toLocaleString()} {unit}
         </div>
       </div>
-      <div style={{ marginTop: 8, height: 4, borderRadius: 'var(--radius-pill)', background: 'var(--teal-50)', overflow: 'hidden' }}>
-        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--teal-500)', transition: 'width var(--dur-med) var(--ease-standard)' }} />
+      <div style={{ marginTop: 8, height: 10, borderRadius: 'var(--radius-pill)', background: 'var(--ice-100)', overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--teal-600)', transition: 'width var(--dur-med) var(--ease-standard)' }} />
       </div>
     </div>
   );
@@ -88,21 +88,21 @@ export function WeightGoalCard({ weightGoal, currentLbs, weightUnit }) {
   const lostSoFar = Math.round(weightFromLbs(lostSoFarLbs, weightUnit) * 10) / 10;
 
   return (
-    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', padding: 18, boxShadow: 'var(--shadow-sm)' }}>
+    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-xl)', padding: 24, boxShadow: 'var(--shadow-sm)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Icon name="scale" size={17} color="var(--teal-600)" />
-        <div style={{ font: '700 0.9375rem/1.2 var(--font-display)', color: 'var(--ink)' }}>Weight Goal</div>
+        <div style={{ font: '700 1rem/1.2 var(--font-display)', color: 'var(--ink)' }}>Weight Goal</div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14 }}>
         <div>
-          <div style={{ font: '600 0.71875rem/1 var(--font-sans)', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--text-muted)' }}>Baseline</div>
-          <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)', marginTop: 4 }}>{formatWeight(baselineLbs, weightUnit)}</div>
-          <div style={{ font: '400 0.75rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{formatGoalDate(baselineDate)}</div>
+          <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>Baseline</div>
+          <div style={{ font: '700 1.35rem/1.3 var(--font-display)', color: 'var(--ink)', marginTop: 4 }}>{formatWeight(baselineLbs, weightUnit)}</div>
+          <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{formatGoalDate(baselineDate)}</div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <div style={{ font: '600 0.71875rem/1 var(--font-sans)', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--text-muted)' }}>Goal</div>
-          <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)', marginTop: 4 }}>{formatWeight(goalLbs, weightUnit)}</div>
-          <div style={{ font: '400 0.75rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>by {formatGoalDate(goalDate)}</div>
+          <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>Goal</div>
+          <div style={{ font: '700 1.35rem/1.3 var(--font-display)', color: 'var(--ink)', marginTop: 4 }}>{formatWeight(goalLbs, weightUnit)}</div>
+          <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>by {formatGoalDate(goalDate)}</div>
         </div>
       </div>
       <div
@@ -111,11 +111,11 @@ export function WeightGoalCard({ weightGoal, currentLbs, weightUnit }) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label="Progress toward weight goal"
-        style={{ marginTop: 16, height: 8, borderRadius: 'var(--radius-pill)', background: 'var(--teal-50)', overflow: 'hidden' }}
+        style={{ marginTop: 18, height: 16, borderRadius: 'var(--radius-pill)', background: 'var(--ice-100)', overflow: 'hidden' }}
       >
-        <div style={{ width: `${pct}%`, height: '100%', background: 'var(--teal-500)', transition: 'width var(--dur-med) var(--ease-standard)' }} />
+        <div style={{ width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-pill)', background: 'var(--teal-600)', transition: 'width var(--dur-med) var(--ease-standard)' }} />
       </div>
-      <div style={{ marginTop: 8, font: '600 0.8125rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
+      <div style={{ marginTop: 8, font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
         {lostSoFar} of {totalToLose} {weightUnit} toward your goal ({pct}%)
       </div>
     </div>
@@ -128,38 +128,38 @@ export function WeightGoalCard({ weightGoal, currentLbs, weightUnit }) {
  * which never repeat a target's number (see patientPlan.goals). */
 export function GoalsCard({ goals, weightGoal, weightUnit }) {
   return (
-    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', padding: 18, boxShadow: 'var(--shadow-sm)' }}>
+    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-xl)', padding: 24, boxShadow: 'var(--shadow-sm)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
         <Icon name="clipboard-list" size={17} color="var(--teal-600)" />
-        <div style={{ font: '700 0.9375rem/1.2 var(--font-display)', color: 'var(--ink)' }}>Your Goals</div>
+        <div style={{ font: '700 1rem/1.2 var(--font-display)', color: 'var(--ink)' }}>Your Goals</div>
       </div>
 
-      <div style={{ font: '600 0.71875rem/1 var(--font-sans)', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--text-muted)', marginTop: 16 }}>
+      <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 16 }}>
         Targets
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
         {goals.targets.map((t) => (
           <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <Icon name="check" size={14} color="var(--teal-600)" style={{ flexShrink: 0 }} />
-            <span style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{t.label}</span>
+            <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{t.label}</span>
           </div>
         ))}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Icon name="check" size={14} color="var(--teal-600)" style={{ flexShrink: 0 }} />
-          <span style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
+          <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
             Weight at or below {formatWeight(weightGoal.goalLbs, weightUnit)} by {formatGoalDate(weightGoal.goalDate)}
           </span>
         </div>
       </div>
 
-      <div style={{ font: '600 0.71875rem/1 var(--font-sans)', textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--text-muted)', marginTop: 18 }}>
+      <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 18 }}>
         Goals
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
         {goals.behaviors.map((b) => (
           <div key={b} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--teal-400)', marginTop: 7, flexShrink: 0 }} />
-            <span style={{ font: '400 0.84375rem/1.4 var(--font-sans)', color: 'var(--text-body)' }}>{b}</span>
+            <span style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-body)' }}>{b}</span>
           </div>
         ))}
       </div>
@@ -175,27 +175,27 @@ export function WeightGoalMiniCard({ weightGoal, currentLbs }) {
   return (
     <div
       style={{
-        background: 'var(--teal-50)',
-        border: '1px solid var(--teal-200)',
-        borderRadius: 'var(--radius-md)',
-        padding: 12,
+        background: 'var(--sand-50)',
+        border: '1px solid var(--sand-100)',
+        borderRadius: 'var(--radius-lg)',
+        padding: 18,
         display: 'flex',
         alignItems: 'center',
-        gap: 10,
+        gap: 14,
       }}
     >
-      <Icon name="scale" size={17} color="var(--teal-600)" />
+      <Icon name="scale" size={22} color="var(--teal-600)" />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.8125rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>Weight goal: {pct}% there</div>
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>Weight goal: {pct}% there</div>
         <div
           role="progressbar"
           aria-valuenow={pct}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label="Progress toward weight goal"
-          style={{ marginTop: 5, height: 4, borderRadius: 'var(--radius-pill)', background: 'var(--teal-100)', overflow: 'hidden' }}
+          style={{ marginTop: 8, height: 12, borderRadius: 'var(--radius-pill)', background: '#fff', overflow: 'hidden' }}
         >
-          <div style={{ width: `${pct}%`, height: '100%', background: 'var(--teal-500)' }} />
+          <div style={{ width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-pill)', background: 'var(--teal-600)' }} />
         </div>
       </div>
     </div>

@@ -10,7 +10,7 @@ export default function ProgressWheel({ value, max, size = 82, strokeWidth = 7, 
   return (
     <div style={{ position: 'relative', width: size, height: size }}>
       <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--teal-50)" strokeWidth={strokeWidth} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="var(--ice-100)" strokeWidth={strokeWidth} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -36,8 +36,8 @@ export default function ProgressWheel({ value, max, size = 82, strokeWidth = 7, 
           padding: 4,
         }}
       >
-        <span style={{ font: '700 1rem/1.1 var(--font-display)', color: 'var(--ink)' }}>{centerValue}</span>
-        {centerLabel && <span style={{ font: '500 0.625rem/1.2 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>{centerLabel}</span>}
+        <span style={{ font: '700 1.35rem/1.1 var(--font-display)', color: 'var(--ink)' }}>{centerValue}</span>
+        {centerLabel && <span style={{ font: '500 0.8125rem/1.2 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>{centerLabel}</span>}
       </div>
     </div>
   );

@@ -2,18 +2,19 @@
  * the RPM spec's touch-target minimum and read clearly for elderly patients. */
 export default function Input({ label, containerStyle, style, ...rest }) {
   return (
-    <label style={{ display: 'flex', flexDirection: 'column', gap: 6, ...containerStyle }}>
-      {label && <span style={{ font: '600 0.8125rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{label}</span>}
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 8, ...containerStyle }}>
+      {label && <span style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--ink)' }}>{label}</span>}
       <input
         {...rest}
         style={{
           width: '100%',
           boxSizing: 'border-box',
-          padding: '12px 14px',
+          padding: '16px 18px',
+          minHeight: 60,
           borderRadius: 'var(--radius-md)',
-          border: '1.5px solid var(--border-default)',
+          border: '2px solid var(--border-default)',
           background: '#fff',
-          font: '600 1rem/1.3 var(--font-sans)',
+          font: '600 1.125rem/1.3 var(--font-sans)',
           color: 'var(--ink)',
           ...style,
         }}

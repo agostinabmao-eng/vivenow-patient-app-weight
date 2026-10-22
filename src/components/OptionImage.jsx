@@ -98,8 +98,8 @@ export default function OptionImage({ id }) {
   return (
     <div
       style={{
-        width: 40,
-        height: 40,
+        width: 56,
+        height: 56,
         borderRadius: 'var(--radius-sm)',
         flexShrink: 0,
         background: 'linear-gradient(135deg, var(--teal-100), var(--teal-50))',
@@ -108,7 +108,7 @@ export default function OptionImage({ id }) {
         justifyContent: 'center',
       }}
     >
-      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
+      <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
         {content}
       </svg>
     </div>

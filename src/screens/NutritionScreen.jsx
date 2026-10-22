@@ -44,10 +44,10 @@ function PlanItemRow({ name, calories, when, checked, onToggle, onEdit }) {
         {checked && <Icon name="check" size={14} color="#fff" />}
       </div>
       <div onClick={onToggle} style={{ flex: 1, minWidth: 0, cursor: 'pointer' }}>
-        <div style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{name}</div>
-        {checked && when && <div style={{ font: '400 0.75rem/1.3 var(--font-sans)', color: 'var(--success)' }}>Logged · {when}</div>}
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{name}</div>
+        {checked && when && <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--success)' }}>Logged · {when}</div>}
       </div>
-      <div style={{ font: '600 0.8125rem/1 var(--font-sans)', color: 'var(--text-muted)', flexShrink: 0 }}>{calories} kcal</div>
+      <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', flexShrink: 0 }}>{calories} kcal</div>
       {checked && <EditButton onClick={onEdit} />}
     </div>
   );
@@ -63,10 +63,10 @@ function OffPlanRow({ text, calories, when, onEdit }) {
         <Icon name="utensils" size={13} color="var(--teal-600)" />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{text}</div>
-        <div style={{ font: '400 0.75rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>Logged (not on plan) · {when}</div>
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{text}</div>
+        <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>Logged (not on plan) · {when}</div>
       </div>
-      <div style={{ font: '600 0.8125rem/1 var(--font-sans)', color: 'var(--text-muted)', flexShrink: 0 }}>{calories} kcal</div>
+      <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', flexShrink: 0 }}>{calories} kcal</div>
       <EditButton onClick={onEdit} />
     </div>
   );
@@ -84,10 +84,10 @@ function WaterCard({ waterGlasses, waterUnit, onChange }) {
     <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: 12 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
         <Icon name="droplet" size={15} color="var(--teal-600)" />
-        <div style={{ font: '600 0.8125rem/1.2 var(--font-sans)', color: 'var(--ink)' }}>Water</div>
+        <div style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--ink)' }}>Water</div>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 4 }}>
           {atGoal && <Icon name="check" size={13} color="var(--success)" />}
-          <span style={{ font: '600 0.75rem/1 var(--font-sans)', color: atGoal ? 'var(--success)' : 'var(--text-muted)' }}>
+          <span style={{ font: '600 1rem/1 var(--font-sans)', color: atGoal ? 'var(--success)' : 'var(--text-muted)' }}>
             {formatWater(waterGlasses, waterUnit)} / {formatWater(goalGlasses, waterUnit)}
           </span>
         </div>
@@ -106,10 +106,10 @@ function MealCard({ type, entries, onQuickLog, onRemoveEntry, onOpenMeal, onEdit
   return (
     <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', boxShadow: 'var(--shadow-sm)', padding: 14 }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
-        <div style={{ font: '700 0.9375rem/1.3 var(--font-display)', color: 'var(--ink)' }}>{MEAL_LABELS[type]}</div>
-        {entries.length > 0 && <div style={{ font: '600 0.78125rem/1 var(--font-sans)', color: 'var(--success)' }}>{loggedTotal} kcal logged</div>}
+        <div style={{ font: '700 1rem/1.3 var(--font-display)', color: 'var(--ink)' }}>{MEAL_LABELS[type]}</div>
+        {entries.length > 0 && <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--success)' }}>{loggedTotal} kcal logged</div>}
       </div>
-      <div style={{ font: '500 0.71875rem/1 var(--font-sans)', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '.06em', marginTop: 8 }}>
+      <div style={{ font: '500 1rem/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 8 }}>
         Your care team recommends:
       </div>
       <div style={{ marginTop: 2 }}>
@@ -155,7 +155,7 @@ export default function NutritionScreen({ meals, waterGlasses, waterUnit, onQuic
         <BackIconButton onClick={onBack} />
       </div>
       <div style={{ padding: '4px 20px 0' }}>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Nutrition</div>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Nutrition</div>
       </div>
 
       <div

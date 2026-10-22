@@ -20,9 +20,9 @@ export default function SurveyScreen({ initialResponses = {}, onSubmit, onBack }
       <div style={{ padding: 'calc(12px + var(--safe-top)) 20px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <BackIconButton onClick={onBack} />
-          <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Weekly Check-In</div>
+          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Weekly Check-In</div>
         </div>
-        <div style={{ font: '400 0.875rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
           A quick update for your care team — takes under a minute.
         </div>
       </div>

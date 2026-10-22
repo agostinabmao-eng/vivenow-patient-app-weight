@@ -8,8 +8,9 @@ export default function TaskWater({ waterGlasses, waterUnit, onSetGlasses, onSav
   return (
     <TaskScreenShell
       icon="droplet"
+      photo="water"
       title="Drink Water"
-      description="Drag the bar to log how much you've had today."
+      description="Tap + for each glass, or drag the bar."
       onBack={onBack}
       footer={
         <Button variant="primary" size="lg" fullWidth disabled={saveDisabled} onClick={onSave} iconLeft={<Icon name="check" size={20} />}>

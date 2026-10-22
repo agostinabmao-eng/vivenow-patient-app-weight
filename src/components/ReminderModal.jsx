@@ -18,7 +18,7 @@ export default function ReminderModal({ taskLabel, initialTime, onSave, onClose 
           </div>
           <div style={{ font: '700 1.0625rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Remind me</div>
         </div>
-        <div style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>{taskLabel}</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>{taskLabel}</div>
 
         <input
           type="time"
@@ -39,7 +39,7 @@ export default function ReminderModal({ taskLabel, initialTime, onSave, onClose 
 
         <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, cursor: 'pointer' }}>
           <input type="checkbox" checked={applyToAll} onChange={(e) => setApplyToAll(e.target.checked)} />
-          <span style={{ font: '500 0.84375rem/1.3 var(--font-sans)', color: 'var(--text-body)' }}>Use this time for every task</span>
+          <span style={{ font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-body)' }}>Use this time for every task</span>
         </label>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>

@@ -5,6 +5,7 @@
 }
 
 html {
+  font-size: 112.5%; /* 18px base — every rem in the app scales from here */
   -webkit-text-size-adjust: 100%;
   height: 100%;
 }
@@ -16,7 +17,7 @@ body {
   font-size: var(--fs-base);
   line-height: var(--lh-body);
   color: var(--text-body);
-  background: var(--gray-100);
+  background: var(--ice-100);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
@@ -92,4 +93,15 @@ a:hover {
 .vh-hover-row:hover .vh-row-edit-btn,
 .vh-row-edit-btn:focus-visible {
   opacity: 1;
+}
+
+/* Number inputs inside the oversized steppers use the − / + buttons, not
+   the browser's tiny spin arrows. */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
 }

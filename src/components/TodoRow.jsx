@@ -15,31 +15,31 @@ export default function TodoRow({ icon, label, sub, done, reminderSet, onClick, 
         gap: 12,
         background: 'var(--surface-card)',
         border: '1px solid var(--border-subtle)',
-        borderRadius: 'var(--radius-md)',
+        borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-sm)',
-        padding: 14,
-        minHeight: 56,
+        padding: 16,
+        minHeight: 88,
         boxSizing: 'border-box',
         cursor: 'pointer',
       }}
     >
       <div
         style={{
-          width: 38,
-          height: 38,
-          borderRadius: 'var(--radius-sm)',
+          width: 56,
+          height: 56,
+          borderRadius: '50%',
           flexShrink: 0,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: done ? 'var(--success-subtle)' : 'var(--teal-50)',
+          background: done ? 'var(--success-subtle)' : 'var(--sand-50)',
         }}
       >
-        <Icon name={icon} size={18} color={done ? 'var(--success)' : 'var(--teal-600)'} />
+        <Icon name={icon} size={24} color={done ? 'var(--success)' : 'var(--teal-600)'} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
-        <div style={{ font: '400 0.78125rem/1.3 var(--font-sans)', color: done ? 'var(--success)' : 'var(--text-muted)' }}>{sub}</div>
+        <div style={{ font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
+        <div style={{ font: '500 1rem/1.3 var(--font-sans)', color: done ? 'var(--success)' : 'var(--text-muted)' }}>{sub}</div>
       </div>
       <IconButton
         variant="ghost"
@@ -50,11 +50,10 @@ export default function TodoRow({ icon, label, sub, done, reminderSet, onClick, 
           e.stopPropagation();
           onSetReminder();
         }}
-        style={reminderSet ? { background: 'var(--teal-50)' } : undefined}
+        style={reminderSet ? { background: 'var(--gold-100)', borderColor: 'transparent' } : { border: 'none' }}
       >
-        <Icon name="bell" color={reminderSet ? 'var(--teal-600)' : 'var(--gray-400)'} />
+        <Icon name="bell" color={reminderSet ? 'var(--teal-600)' : 'var(--gray-500)'} />
       </IconButton>
-      <Icon name="chevron-right" size={20} color="var(--gray-400)" />
     </div>
   );
 }

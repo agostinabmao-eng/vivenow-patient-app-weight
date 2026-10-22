@@ -34,14 +34,14 @@ export default function PeriodDropdown({ period, customRange, onChange }) {
           border: '1px solid var(--border-default)',
           borderRadius: 'var(--radius-md)',
           padding: '10px 14px',
-          font: '600 0.875rem/1 var(--font-sans)',
+          font: '600 1rem/1 var(--font-sans)',
           color: 'var(--ink)',
           cursor: 'pointer',
         }}
       >
         <Icon name="calendar" size={16} color="var(--teal-600)" />
         {label}
-        <Icon name={open ? 'chevron-up' : 'chevron-down'} size={16} color="var(--gray-400)" />
+        <Icon name={open ? 'chevron-up' : 'chevron-down'} size={16} color="var(--gray-500)" />
       </button>
 
       {open && (
@@ -74,7 +74,7 @@ export default function PeriodDropdown({ period, customRange, onChange }) {
                 background: period === p.key ? 'var(--teal-50)' : 'none',
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
-                font: '600 0.84375rem/1 var(--font-sans)',
+                font: '600 1rem/1 var(--font-sans)',
                 color: 'var(--ink)',
                 cursor: 'pointer',
               }}
@@ -83,14 +83,14 @@ export default function PeriodDropdown({ period, customRange, onChange }) {
             </button>
           ))}
           <div style={{ borderTop: '1px solid var(--border-subtle)', marginTop: 6, paddingTop: 10 }}>
-            <div style={{ font: '600 0.75rem/1 var(--font-sans)', color: 'var(--text-muted)', marginBottom: 6 }}>Custom range</div>
+            <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', marginBottom: 6 }}>Custom range</div>
             <div style={{ display: 'flex', gap: 6 }}>
               <input
                 type="date"
                 value={draftStart}
                 max={draftEnd}
                 onChange={(e) => setDraftStart(e.target.value)}
-                style={{ flex: 1, minWidth: 0, padding: '8px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)', font: '400 0.78125rem/1 var(--font-sans)' }}
+                style={{ flex: 1, minWidth: 0, padding: '8px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)', font: '400 1rem/1 var(--font-sans)' }}
               />
               <input
                 type="date"
@@ -98,7 +98,7 @@ export default function PeriodDropdown({ period, customRange, onChange }) {
                 min={draftStart}
                 max={todayStr()}
                 onChange={(e) => setDraftEnd(e.target.value)}
-                style={{ flex: 1, minWidth: 0, padding: '8px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)', font: '400 0.78125rem/1 var(--font-sans)' }}
+                style={{ flex: 1, minWidth: 0, padding: '8px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--border-default)', font: '400 1rem/1 var(--font-sans)' }}
               />
             </div>
             <button
@@ -114,7 +114,7 @@ export default function PeriodDropdown({ period, customRange, onChange }) {
                 border: 'none',
                 borderRadius: 'var(--radius-sm)',
                 color: '#fff',
-                font: '600 0.8125rem/1 var(--font-sans)',
+                font: '600 1rem/1 var(--font-sans)',
                 cursor: 'pointer',
               }}
             >

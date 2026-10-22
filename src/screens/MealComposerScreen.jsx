@@ -25,9 +25,9 @@ export default function MealComposerScreen({ mealType, existingText, isEditing, 
       <div style={{ padding: 'calc(12px + var(--safe-top)) 20px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <BackIconButton onClick={onBack} />
-          <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>{isEditing ? `Edit ${MEAL_LABELS[mealType]} Entry` : `Log ${MEAL_LABELS[mealType]}`}</div>
+          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>{isEditing ? `Edit ${MEAL_LABELS[mealType]} Entry` : `Log ${MEAL_LABELS[mealType]}`}</div>
         </div>
-        <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
           Tell us what you ate — we&apos;ll estimate the calories.
         </div>
       </div>
@@ -46,7 +46,7 @@ export default function MealComposerScreen({ mealType, existingText, isEditing, 
               border: '1.5px solid var(--border-default)',
               borderRadius: 'var(--radius-md)',
               padding: '12px 52px 12px 14px',
-              font: '400 0.9375rem/1.5 var(--font-sans)',
+              font: '400 1rem/1.5 var(--font-sans)',
               color: 'var(--ink)',
               background: '#fff',
             }}
@@ -76,21 +76,21 @@ export default function MealComposerScreen({ mealType, existingText, isEditing, 
             <Icon name="mic" size={17} color={listening ? '#fff' : 'var(--teal-600)'} />
           </button>
         </div>
-        {listening && <div style={{ font: '600 0.8125rem/1.3 var(--font-sans)', color: 'var(--danger)', marginTop: -8 }}>Listening…</div>}
+        {listening && <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--danger)', marginTop: -8 }}>Listening…</div>}
 
         <div style={{ background: 'var(--teal-50)', borderRadius: 'var(--radius-md)', padding: 14 }}>
           {text.trim() === '' ? (
-            <div style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>
+            <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>
               Type or record what you ate — calories are calculated automatically as you go.
             </div>
           ) : (
             <>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                <span style={{ font: '700 1.375rem/1 var(--font-display)', color: 'var(--ink)' }}>~{estimate.total}</span>
-                <span style={{ font: '600 0.8125rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>kcal estimated</span>
+                <span style={{ font: '700 1.5rem/1 var(--font-display)', color: 'var(--ink)' }}>~{estimate.total}</span>
+                <span style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>kcal estimated</span>
               </div>
               {estimate.isFallback ? (
-                <div style={{ font: '400 0.78125rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
+                <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
                   We didn&apos;t recognize specific foods, so this is a typical {MEAL_LABELS[mealType].toLowerCase()} estimate.
                 </div>
               ) : (
@@ -99,7 +99,7 @@ export default function MealComposerScreen({ mealType, existingText, isEditing, 
                     <span
                       key={i}
                       style={{
-                        font: '600 0.75rem/1 var(--font-sans)',
+                        font: '600 1rem/1 var(--font-sans)',
                         color: 'var(--teal-700)',
                         background: '#fff',
                         border: '1px solid var(--teal-200)',

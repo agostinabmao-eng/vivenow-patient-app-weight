@@ -32,10 +32,10 @@ export default function NurseWillDiscussNotice({ onBack }) {
         <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="stethoscope" size={34} color="var(--teal-600)" />
         </div>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>
           Your nurse will talk about this on your next call
         </div>
-        <div style={{ font: '400 0.9375rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>
           Things like falls, pain, new symptoms, or your medications are best discussed directly with your care team —
           not through the app. If this feels urgent, please call them now.
         </div>

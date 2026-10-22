@@ -109,10 +109,13 @@ const ICONS = {
 export default function Icon({ name, size = 20, color = 'currentColor', strokeWidth = 2, style, ...rest }) {
   const Cmp = ICONS[name];
   if (!Cmp) return null;
+  // Icons render ~25% larger than the size the call site asks for — the
+  // design spec calls for oversized, straightforward icons.
+  const px = Math.round(size * 1.25);
   return (
     <Cmp
-      width={size}
-      height={size}
+      width={px}
+      height={px}
       color={color}
       strokeWidth={strokeWidth}
       aria-hidden="true"

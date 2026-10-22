@@ -74,7 +74,7 @@ function ChoicePill({ label, active, onClick }) {
         border: `1.5px solid ${active ? 'var(--teal-500)' : 'var(--border-default)'}`,
         background: active ? 'var(--teal-50)' : '#fff',
         color: active ? 'var(--teal-700)' : 'var(--ink)',
-        font: '600 0.875rem/1 var(--font-sans)',
+        font: '600 1rem/1 var(--font-sans)',
         cursor: 'pointer',
       }}
     >
@@ -165,10 +165,10 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
         <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="check" size={34} color="var(--teal-600)" />
         </div>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>
           Set {video.setsDone} of {video.dose.sets} done
         </div>
-        <div style={{ font: '400 0.9375rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>Take a short rest, then start your next set.</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>Take a short rest, then start your next set.</div>
         <Button
           variant="primary"
           size="lg"
@@ -201,8 +201,8 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
         <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'var(--success-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="check" size={34} color="var(--success)" />
         </div>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Great job — exercise complete!</div>
-        <div style={{ font: '400 0.9375rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>{video.title}</div>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Great job — exercise complete!</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>{video.title}</div>
         <Button variant="primary" size="lg" onClick={() => setStage('survey')} style={{ marginTop: 8, minWidth: 200 }}>
           Continue
         </Button>
@@ -217,13 +217,13 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
         <div style={{ padding: 'calc(12px + var(--safe-top)) 20px 0' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
             <BackIconButton onClick={onBack} />
-            <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>How did that feel?</div>
+            <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>How did that feel?</div>
           </div>
-          <div style={{ font: '400 0.875rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>{video.title}</div>
+          <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>{video.title}</div>
         </div>
         <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: '20px', display: 'flex', flexDirection: 'column', gap: 22 }}>
           <div>
-            <div style={{ font: '600 0.9375rem/1.4 var(--font-sans)', color: 'var(--ink)' }}>How did the exercise feel overall?</div>
+            <div style={{ font: '600 1rem/1.4 var(--font-sans)', color: 'var(--ink)' }}>How did the exercise feel overall?</div>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 12 }}>
               {MOOD_OPTIONS.map((opt) => (
                 <ChoicePill key={opt} label={opt} active={mood === opt} onClick={() => setMood(opt)} />
@@ -231,7 +231,7 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
             </div>
           </div>
           <div>
-            <div style={{ font: '600 0.9375rem/1.4 var(--font-sans)', color: 'var(--ink)' }}>Did you feel any pain doing this exercise?</div>
+            <div style={{ font: '600 1rem/1.4 var(--font-sans)', color: 'var(--ink)' }}>Did you feel any pain doing this exercise?</div>
             <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
               {['Yes', 'No'].map((opt) => (
                 <ChoicePill key={opt} label={opt} active={pain === opt} onClick={() => setPain(opt)} />
@@ -286,8 +286,8 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
         <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'var(--warning-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="alert-triangle" size={34} color="var(--warning)" />
         </div>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Please stop this exercise for now</div>
-        <div style={{ font: '400 0.9375rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Please stop this exercise for now</div>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>
           Don&apos;t do &ldquo;{video.title}&rdquo; again until your care team has reviewed this. If the discomfort doesn&apos;t go away — or gets worse — contact your care team.
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 8 }}>
@@ -319,8 +319,8 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
         <div style={{ width: 76, height: 76, borderRadius: '50%', background: 'var(--success-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="check" size={34} color="var(--success)" />
         </div>
-        <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Thanks for letting us know!</div>
-        <div style={{ font: '400 0.9375rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>Your feedback helps your care team keep your plan on track.</div>
+        <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Thanks for letting us know!</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>Your feedback helps your care team keep your plan on track.</div>
         <Button variant="primary" size="lg" onClick={onBack} style={{ marginTop: 8, minWidth: 200 }}>
           Back to Exercises
         </Button>
@@ -393,7 +393,7 @@ export default function VideoPlayerScreen({ videos, currentId, onOpenVideo, onMa
         {player}
         <div>
           <div style={{ font: '700 1.0625rem/1.3 var(--font-display)', color: 'var(--ink)' }}>{video.title}</div>
-          <div style={{ font: '400 0.8125rem/1.3 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>
+          <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>
             {isExercise ? `Set ${video.setsDone + 1} of ${video.dose.sets} · ${formatDose(video.dose)}` : video.duration} · Exercise {index + 1} of {videos.length}
           </div>
         </div>

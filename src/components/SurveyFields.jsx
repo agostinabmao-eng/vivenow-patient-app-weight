@@ -25,13 +25,15 @@ const optionButtonStyle = (active) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
-  gap: 10,
-  padding: '14px 16px',
-  borderRadius: 'var(--radius-md)',
-  border: `1.5px solid ${active ? 'var(--teal-500)' : 'var(--border-default)'}`,
+  gap: 12,
+  padding: '18px 20px',
+  minHeight: 76,
+  borderRadius: 'var(--radius-lg)',
+  boxShadow: active ? 'none' : 'var(--shadow-xs)',
+  border: `2px solid ${active ? 'var(--teal-600)' : 'var(--border-default)'}`,
   background: active ? 'var(--teal-50)' : '#fff',
   color: active ? 'var(--teal-700)' : 'var(--ink)',
-  font: '600 0.9375rem/1.3 var(--font-sans)',
+  font: '600 1.0625rem/1.3 var(--font-sans)',
   cursor: 'pointer',
 });
 
@@ -52,7 +54,7 @@ export function ChoiceQuestion({ options, images, value, onChange }) {
         return (
           <button key={opt} onClick={() => onChange(opt)} aria-pressed={active} style={optionButtonStyle(active)}>
             <OptionLabel opt={opt} image={images?.[opt]} />
-            {active && <Icon name="check" size={16} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
+            {active && <Icon name="check" size={20} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
           </button>
         );
       })}
@@ -90,7 +92,7 @@ export function MultiSelectQuestion({ options, images, noneOption, otherOption, 
         return (
           <button key={opt} onClick={() => toggle(opt)} aria-pressed={active} style={optionButtonStyle(active)}>
             <OptionLabel opt={opt} image={images?.[opt]} />
-            {active && <Icon name="check" size={16} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
+            {active && <Icon name="check" size={20} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
           </button>
         );
       })}
@@ -102,7 +104,7 @@ export function MultiSelectQuestion({ options, images, noneOption, otherOption, 
         <>
           <button onClick={toggleOther} aria-pressed={otherSelected} style={{ ...optionButtonStyle(otherSelected), width: '100%' }}>
             <OptionLabel opt={otherOption} />
-            {otherSelected && <Icon name="check" size={16} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
+            {otherSelected && <Icon name="check" size={20} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
           </button>
           {otherSelected && (
             <input
@@ -119,7 +121,7 @@ export function MultiSelectQuestion({ options, images, noneOption, otherOption, 
                 padding: '12px 14px',
                 borderRadius: 'var(--radius-md)',
                 border: '1.5px solid var(--border-default)',
-                font: '400 0.9375rem/1.3 var(--font-sans)',
+                font: '400 1rem/1.3 var(--font-sans)',
               }}
             />
           )}
@@ -159,7 +161,7 @@ export function ScaleQuestion({ min = 1, max = 5, minLabel, maxLabel, value, onC
         })}
       </div>
       {(minLabel || maxLabel) && (
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, font: '500 0.75rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, font: '500 1rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>
           <span>{minLabel}</span>
           <span>{maxLabel}</span>
         </div>
@@ -183,7 +185,7 @@ export function TextQuestion({ value, onChange, placeholder }) {
         padding: '12px 14px',
         borderRadius: 'var(--radius-md)',
         border: '1.5px solid var(--border-default)',
-        font: '400 0.9375rem/1.5 var(--font-sans)',
+        font: '400 1rem/1.5 var(--font-sans)',
         color: 'var(--ink)',
       }}
     />

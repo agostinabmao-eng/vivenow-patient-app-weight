@@ -8,6 +8,7 @@ export default function TaskBP({ bpSys, setBpSys, bpDia, setBpDia, onSave, onBac
   return (
     <TaskScreenShell
       icon="activity"
+      photo="bp"
       title="Measure Blood Pressure"
       description="Enter the reading from your home monitor."
       onBack={onBack}
@@ -17,7 +18,7 @@ export default function TaskBP({ bpSys, setBpSys, bpDia, setBpDia, onSave, onBac
         </Button>
       }
     >
-      <div style={{ display: 'flex', gap: 12, width: '100%', marginTop: 24 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 24, width: '100%', marginTop: 28 }}>
         <Input
           label="Systolic"
           placeholder="120"
@@ -25,7 +26,7 @@ export default function TaskBP({ bpSys, setBpSys, bpDia, setBpDia, onSave, onBac
           inputMode="numeric"
           value={bpSys}
           onChange={(e) => setBpSys(e.target.value)}
-          style={{ fontSize: 22, fontWeight: 700, textAlign: 'center' }}
+          style={{ fontSize: 28, fontWeight: 700, textAlign: 'center' }}
           containerStyle={{ flex: 1, minWidth: 0 }}
         />
         <Input
@@ -35,7 +36,7 @@ export default function TaskBP({ bpSys, setBpSys, bpDia, setBpDia, onSave, onBac
           inputMode="numeric"
           value={bpDia}
           onChange={(e) => setBpDia(e.target.value)}
-          style={{ fontSize: 22, fontWeight: 700, textAlign: 'center' }}
+          style={{ fontSize: 28, fontWeight: 700, textAlign: 'center' }}
           containerStyle={{ flex: 1, minWidth: 0 }}
         />
       </div>

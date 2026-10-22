@@ -24,9 +24,9 @@ export default function LogCustomExerciseScreen({ onSave, onBack }) {
       <div style={{ padding: 'calc(12px + var(--safe-top)) 20px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <BackIconButton onClick={onBack} />
-          <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Log Other Activity</div>
+          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Log Other Activity</div>
         </div>
-        <div style={{ font: '400 0.875rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
           Did something active that wasn&apos;t on your plan? Log it here.
         </div>
       </div>

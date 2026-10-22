@@ -1,15 +1,15 @@
 import Icon from './Icon';
 
-// Height of NavBar's own box (8px top pad + 56px min-height row + 8px
+// Height of NavBar's own box (10px top pad + 68px min-height row + 10px
 // bottom pad); its safe-area inset is added separately since NavBar pads
 // for that itself.
-const NAVBAR_HEIGHT = 72;
+const NAVBAR_HEIGHT = 92;
 
 const buttonStyle = {
-  width: 56,
-  height: 56,
+  width: 68,
+  height: 68,
   borderRadius: '50%',
-  background: 'var(--danger)',
+  background: '#d6420f',
   border: 'none',
   display: 'flex',
   alignItems: 'center',
@@ -52,7 +52,7 @@ export default function SosFab({ onClick, floating, withSafeBottom, hasNavBar = 
           ...buttonStyle,
         }}
       >
-        <Icon name="phone-call" size={24} color="#fff" />
+        <Icon name="phone-call" size={26} color="#fff" />
       </button>
     );
   }

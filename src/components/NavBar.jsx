@@ -19,15 +19,17 @@ export default function NavBar({ active, onNavigate, simpleMode }) {
     <nav
       style={{
         display: 'flex',
-        borderTop: '1px solid var(--border-subtle)',
+        gap: 4,
         background: 'var(--surface-card)',
-        padding: `8px calc(12px + var(--safe-left)) calc(8px + var(--safe-bottom)) calc(12px + var(--safe-right))`,
+        borderRadius: 'var(--radius-xl) var(--radius-xl) 0 0',
+        boxShadow: '0 -6px 24px rgba(28, 51, 70, 0.08)',
+        padding: `10px calc(10px + var(--safe-left)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-right))`,
         flexShrink: 0,
       }}
     >
       {tabs.map((tab) => {
         const isActive = active === tab.key;
-        const color = isActive ? 'var(--teal-600)' : 'var(--gray-400)';
+        const color = isActive ? 'var(--teal-700)' : 'var(--gray-500)';
         return (
           <button
             key={tab.key}
@@ -39,15 +41,17 @@ export default function NavBar({ active, onNavigate, simpleMode }) {
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              gap: 3,
-              minHeight: 56,
-              background: 'none',
+              gap: 4,
+              minHeight: 68,
+              minWidth: 0,
+              background: isActive ? 'var(--teal-50)' : 'transparent',
               border: 'none',
+              borderRadius: 'var(--radius-lg)',
               cursor: 'pointer',
             }}
           >
-            <Icon name={tab.icon} size={22} color={color} />
-            <span style={{ font: `${isActive ? 600 : 500} 0.6875rem/1 var(--font-sans)`, color: isActive ? 'var(--teal-600)' : 'var(--gray-500)' }}>
+            <Icon name={tab.icon} size={24} color={color} strokeWidth={isActive ? 2.4 : 2} />
+            <span style={{ font: `${isActive ? 700 : 600} 0.8rem/1 var(--font-sans)`, color: isActive ? 'var(--teal-700)' : 'var(--text-muted)' }}>
               {tab.label}
             </span>
           </button>

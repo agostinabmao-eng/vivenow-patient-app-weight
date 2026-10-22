@@ -35,10 +35,10 @@ function MedRow({ med, taken, onToggle }) {
         {taken && <Icon name="check" size={15} color="#fff" />}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
           {med.name} <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}>{med.dose}</span>
         </div>
-        <div style={{ font: '400 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{med.time}</div>
+        <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{med.time}</div>
       </div>
     </div>
   );

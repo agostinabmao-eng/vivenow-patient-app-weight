@@ -15,7 +15,7 @@ function initials(fullName) {
 
 function SectionLabel({ children }) {
   return (
-    <div style={{ font: '600 0.75rem/1 var(--font-display)', textTransform: 'uppercase', letterSpacing: '.08em', color: 'var(--text-muted)' }}>
+    <div style={{ font: '600 1rem/1 var(--font-display)', color: 'var(--text-muted)' }}>
       {children}
     </div>
   );
@@ -38,7 +38,7 @@ function UnitToggle({ value, onChange, options }) {
               background: active ? '#fff' : 'transparent',
               boxShadow: active ? 'var(--shadow-sm)' : 'none',
               color: active ? 'var(--ink)' : 'var(--text-muted)',
-              font: '600 0.8125rem/1 var(--font-sans)',
+              font: '600 1rem/1 var(--font-sans)',
               cursor: 'pointer',
             }}
           >
@@ -62,8 +62,8 @@ function DisplayRow({ title, description, control, last }) {
       }}
     >
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ font: '600 0.90625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
-        <div style={{ font: '400 0.78125rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>{description}</div>
+        <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{title}</div>
+        <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>{description}</div>
       </div>
       {control}
     </div>
@@ -93,9 +93,9 @@ function BmiBadge({ weightLbs, heightIn }) {
         padding: '7px 12px',
       }}
     >
-      <span style={{ font: '700 0.78125rem/1 var(--font-sans)', color: tint }}>{level.label}</span>
+      <span style={{ font: '700 1rem/1 var(--font-sans)', color: tint }}>{level.label}</span>
       <span style={{ width: 3, height: 3, borderRadius: '50%', background: tint, opacity: 0.5, flexShrink: 0 }} />
-      <span style={{ font: '600 0.75rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
+      <span style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>
         BMI {bmi.toFixed(1)} · {level.icd10} · {z68Code(bmi)}
       </span>
     </div>
@@ -119,8 +119,8 @@ function AccountRow({ icon, label, last, onClick }) {
       }}
     >
       <Icon name={icon} size={19} color="var(--text-muted)" />
-      <div style={{ flex: 1, font: '600 0.90625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
-      <Icon name="chevron-right" size={18} color="var(--gray-400)" />
+      <div style={{ flex: 1, font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
+      <Icon name="chevron-right" size={18} color="var(--gray-500)" />
     </div>
   );
 }
@@ -159,7 +159,7 @@ export default function ProfileScreen({
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <BackIconButton onClick={onBack} />
-          <div style={{ font: '700 1.1875rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Profile</div>
+          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Profile</div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
@@ -175,12 +175,12 @@ export default function ProfileScreen({
               flexShrink: 0,
             }}
           >
-            <span style={{ font: '700 1.375rem/1 var(--font-display)', color: '#fff' }}>{initials(fullName)}</span>
+            <span style={{ font: '700 1.5rem/1 var(--font-display)', color: '#fff' }}>{initials(fullName)}</span>
           </div>
           <div style={{ minWidth: 0 }}>
             <div style={{ font: '700 1.0625rem/1.3 var(--font-display)', color: 'var(--ink)' }}>{fullName}</div>
-            <div style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>Born {dob}</div>
-            <div style={{ font: '400 0.8125rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>Patient ID {patientId}</div>
+            <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 2 }}>Born {dob}</div>
+            <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)' }}>Patient ID {patientId}</div>
           </div>
         </div>
 
@@ -193,7 +193,7 @@ export default function ProfileScreen({
               <span
                 key={c}
                 style={{
-                  font: '600 0.78125rem/1 var(--font-sans)',
+                  font: '600 1rem/1 var(--font-sans)',
                   color: 'var(--teal-700)',
                   background: 'var(--teal-50)',
                   border: '1px solid var(--teal-200)',
@@ -226,8 +226,8 @@ export default function ProfileScreen({
               <Icon name="stethoscope" size={19} color="var(--teal-600)" />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ font: '600 0.9375rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{careTeam.name}</div>
-              <div style={{ font: '400 0.78125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{careTeam.role}</div>
+              <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{careTeam.name}</div>
+              <div style={{ font: '400 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{careTeam.role}</div>
             </div>
             <a
               href={`tel:${careTeam.phoneTel}`}
@@ -272,10 +272,10 @@ export default function ProfileScreen({
                 }}
               >
                 <Icon name={d.icon} size={18} color="var(--text-muted)" />
-                <div style={{ flex: 1, font: '600 0.875rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{d.label}</div>
+                <div style={{ flex: 1, font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{d.label}</div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <span style={{ width: 7, height: 7, borderRadius: '50%', background: d.connected ? 'var(--success)' : 'var(--gray-300)' }} />
-                  <span style={{ font: '500 0.75rem/1 var(--font-sans)', color: d.connected ? 'var(--success)' : 'var(--text-muted)' }}>
+                  <span style={{ font: '500 1rem/1 var(--font-sans)', color: d.connected ? 'var(--success)' : 'var(--text-muted)' }}>
                     {d.connected ? 'Connected' : 'Not connected'}
                   </span>
                 </div>
@@ -343,7 +343,7 @@ export default function ProfileScreen({
             background: 'none',
             border: 'none',
             padding: '4px 0',
-            font: '500 0.75rem/1.3 var(--font-sans)',
+            font: '500 1rem/1.3 var(--font-sans)',
             color: 'var(--text-muted)',
             textAlign: 'center',
             cursor: 'pointer',
@@ -362,7 +362,7 @@ export default function ProfileScreen({
             background: 'none',
             border: 'none',
             padding: '10px 0',
-            font: '600 0.90625rem/1 var(--font-sans)',
+            font: '600 1rem/1 var(--font-sans)',
             color: 'var(--danger)',
             cursor: 'pointer',
           }}

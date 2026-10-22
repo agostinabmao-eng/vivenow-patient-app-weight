@@ -37,8 +37,8 @@ export default function ElevatedAlertModal({ reading, onCallCaregiver, onContinu
           <Icon name="alert-triangle" size={28} color="var(--warning)" />
         </div>
         <div style={{ font: '700 1.125rem/1.3 var(--font-display)', color: 'var(--ink)', marginTop: 14 }}>Your reading was a little high</div>
-        <div style={{ font: '600 0.9375rem/1.2 var(--font-sans)', color: 'var(--teal-600)', marginTop: 4 }}>{reading}</div>
-        <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 10 }}>
+        <div style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--teal-600)', marginTop: 4 }}>{reading}</div>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 10 }}>
           Take a few minutes to sit down, relax, and breathe slowly. We&apos;ll share this with your care team.
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 20 }}>

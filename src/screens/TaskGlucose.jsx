@@ -25,7 +25,7 @@ export default function TaskGlucose({ glucoseInput, setGlucoseInput, onSave, onB
           inputMode="numeric"
           value={glucoseInput}
           onChange={(e) => setGlucoseInput(e.target.value)}
-          style={{ fontSize: 22, fontWeight: 700, textAlign: 'center' }}
+          style={{ fontSize: 28, fontWeight: 700, textAlign: 'center' }}
         />
       </div>
     </TaskScreenShell>

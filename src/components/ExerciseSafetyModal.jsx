@@ -36,7 +36,7 @@ function SymptomRow({ label, checked, onToggle }) {
       >
         {checked && <Icon name="check" size={14} color="#fff" />}
       </div>
-      <span style={{ font: '600 0.90625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</span>
+      <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</span>
     </button>
   );
 }
@@ -102,7 +102,7 @@ export default function ExerciseSafetyModal({ stage, questions, onSubmitSymptoms
   if (stage === 'symptom-check') {
     return (
       <ModalShell icon="stethoscope" iconTone="info" title="Before you start — how are you feeling?">
-        <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
           Let us know if any of these apply right now.
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 16 }}>
@@ -127,7 +127,7 @@ export default function ExerciseSafetyModal({ stage, questions, onSubmitSymptoms
   if (stage === 'symptom-caution') {
     return (
       <ModalShell icon="alert-triangle" iconTone="warning" title="Let's be careful today">
-        <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
           Based on what you shared, take it easy and stop right away if anything feels wrong.
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 20 }}>
@@ -148,7 +148,7 @@ export default function ExerciseSafetyModal({ stage, questions, onSubmitSymptoms
   if (stage === 'need-reading') {
     return (
       <ModalShell icon="activity" iconTone="warning" title="Please measure your blood pressure before you start">
-        <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
           We don&apos;t have a reading from the last 24 hours, and this exercise is moderate intensity.
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 20 }}>
@@ -166,7 +166,7 @@ export default function ExerciseSafetyModal({ stage, questions, onSubmitSymptoms
   if (stage === 'moderate-warning') {
     return (
       <ModalShell icon="alert-triangle" iconTone="warning" title="Your blood pressure is higher than usual today">
-        <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
           Please check with your care team before exercising.
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 20 }}>
@@ -187,7 +187,7 @@ export default function ExerciseSafetyModal({ stage, questions, onSubmitSymptoms
   // stage === 'high-block'
   return (
     <ModalShell icon="alert-triangle" iconTone="danger" title="Let's skip exercise today">
-      <div style={{ font: '400 0.875rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
+      <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
         Your care team has been notified.
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 20 }}>

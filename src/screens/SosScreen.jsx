@@ -8,7 +8,7 @@ export default function SosScreen({ onCancel }) {
       <div
         style={{
           padding: `calc(16px + var(--safe-top)) calc(20px + var(--safe-right)) 12px calc(20px + var(--safe-left))`,
-          font: '700 1.375rem/1.2 var(--font-display)',
+          font: '700 1.5rem/1.2 var(--font-display)',
           color: 'var(--ink)',
         }}
       >
@@ -18,8 +18,8 @@ export default function SosScreen({ onCancel }) {
         <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'var(--danger-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <Icon name="phone-call" size={40} color="var(--danger)" />
         </div>
-        <div style={{ font: '700 1.25rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Contact your care team now?</div>
-        <div style={{ font: '400 0.90625rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>Call for immediate help, or send a text if you can&apos;t talk right now.</div>
+        <div style={{ font: '700 1.4rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Contact your care team now?</div>
+        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>Call for immediate help, or send a text if you can&apos;t talk right now.</div>
       </div>
       <div
         style={{
