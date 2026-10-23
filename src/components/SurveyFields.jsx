@@ -96,6 +96,12 @@ export function MultiSelectQuestion({ options, images, noneOption, otherOption, 
           </button>
         );
       })}
+      {noneOption && !options.includes(noneOption) && (
+        <button onClick={() => toggle(noneOption)} aria-pressed={selected.includes(noneOption)} style={optionButtonStyle(selected.includes(noneOption))}>
+          <OptionLabel opt={noneOption} />
+          {selected.includes(noneOption) && <Icon name="check" size={20} color="var(--teal-600)" style={{ flexShrink: 0 }} />}
+        </button>
+      )}
       {otherOption && (
         // Full width, like every other option — a plain sibling in the
         // same flex flow rather than its own column-flex wrapper, which
