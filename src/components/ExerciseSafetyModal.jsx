@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Icon from './Icon';
 import Button from './Button';
 
-function SymptomRow({ label, checked, onToggle }) {
+function SymptomRow({ label, checked, onToggle, tone = 'danger' }) {
   return (
     <button
       onClick={onToggle}
@@ -14,10 +14,10 @@ function SymptomRow({ label, checked, onToggle }) {
         alignItems: 'center',
         gap: 12,
         textAlign: 'left',
-        background: checked ? 'var(--danger-subtle)' : 'var(--gray-50)',
-        border: `1.5px solid ${checked ? 'var(--danger)' : 'var(--border-default)'}`,
+        background: checked ? `var(--${tone}-subtle)` : 'var(--surface-card)',
+        border: `1.5px solid ${checked ? `var(--${tone})` : 'var(--border-default)'}`,
         borderRadius: 'var(--radius-md)',
-        padding: 14,
+        padding: '10px 14px',
         cursor: 'pointer',
       }}
     >
@@ -30,7 +30,7 @@ function SymptomRow({ label, checked, onToggle }) {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: checked ? 'var(--danger)' : '#fff',
+          background: checked ? `var(--${tone})` : '#fff',
           border: checked ? 'none' : '1.5px solid var(--border-strong)',
         }}
       >
@@ -58,6 +58,7 @@ function ModalShell({ icon, iconTone, title, children }) {
       }}
     >
       <div
+        className="vh-scroll"
         style={{
           background: 'var(--surface-card)',
           borderRadius: 'var(--radius-lg)',
@@ -94,24 +95,37 @@ function ModalShell({ icon, iconTone, title, children }) {
  *    which is not an emergency service. */
 export default function ExerciseSafetyModal({ stage, questions, onSubmitSymptoms, onContactCareTeam, onContinueCaution, onNotNow, onClose }) {
   const [checked, setChecked] = useState({});
+  const [feelingFine, setFeelingFine] = useState(false);
   const toggle = (id) => setChecked((c) => ({ ...c, [id]: !c[id] }));
 
   if (stage === 'symptom-check') {
+    const anySymptom = questions.some((q) => checked[q.id]);
+    const canContinue = anySymptom || feelingFine;
+    const toggleSymptom = (id) => {
+      setFeelingFine(false);
+      toggle(id);
+    };
+    const chooseFine = () => {
+      setFeelingFine((f) => !f);
+      setChecked({});
+    };
     return (
-      <ModalShell icon="stethoscope" iconTone="info" title="Before you start — how are you feeling?">
+      <ModalShell icon="stethoscope" iconTone="info" title="How are you feeling today?">
         <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)', marginTop: 8 }}>
-          Let us know if any of these apply right now.
+          Check anything that applies to you right now.
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, width: '100%', marginTop: 16 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8, width: '100%', marginTop: 12 }}>
           {questions.map((q) => (
-            <SymptomRow key={q.id} label={q.question} checked={!!checked[q.id]} onToggle={() => toggle(q.id)} />
+            <SymptomRow key={q.id} label={q.statement || q.question} checked={!!checked[q.id]} onToggle={() => toggleSymptom(q.id)} />
           ))}
+          <SymptomRow label="I feel fine — none of these" tone="success" checked={feelingFine} onToggle={chooseFine} />
         </div>
         <div style={{ width: '100%', marginTop: 18 }}>
           <Button
             variant="primary"
             size="lg"
             fullWidth
+            disabled={!canContinue}
             onClick={() => onSubmitSymptoms(Object.keys(checked).filter((id) => checked[id]))}
           >
             Continue

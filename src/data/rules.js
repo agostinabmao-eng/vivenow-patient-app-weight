@@ -116,7 +116,7 @@ export const TIME_FOR_PREFERENCE = {
 };
 
 /** "15:00" → "3:00 PM" for the nurse-facing rule labels. */
-function reminderClock(pref) {
+export function reminderClock(pref) {
   const [h, m] = (TIME_FOR_PREFERENCE[pref] || '08:00').split(':').map(Number);
   return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
 }

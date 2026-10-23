@@ -268,7 +268,7 @@ function greeting() {
 }
 
 /** Greeting and streak chip, shared by both Home layouts. */
-function HomeHeader({ streak, onOpenProfile, showShortWin, doneCount, totalCount }) {
+function HomeHeader({ streak, onOpenProfile }) {
   const pill = { display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-card)', borderRadius: 'var(--radius-pill)', boxShadow: 'var(--shadow-sm)', height: 60, flexShrink: 0 };
   return (
     <>
@@ -287,14 +287,6 @@ function HomeHeader({ streak, onOpenProfile, showShortWin, doneCount, totalCount
           </button>
         </div>
       </div>
-      {showShortWin && (
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--teal-50)', borderRadius: 'var(--radius-pill)', padding: '10px 18px', marginTop: 14 }}>
-          <Icon name="check" size={18} color="var(--teal-700)" />
-          <span style={{ font: '700 1.0625rem/1.2 var(--font-sans)', color: 'var(--teal-700)' }}>
-            {doneCount}{totalCount ? ` of ${totalCount}` : ''} done today
-          </span>
-        </div>
-      )}
     </>
   );
 }
@@ -361,9 +353,6 @@ export default function HomeScreen({
   });
   const activeTodos = todos.filter((t) => !t.done);
   const completedTodos = todos.filter((t) => t.done);
-  // "Motivation" barrier (see data/rules.js) highlights a short win the
-  // moment anything's done today, on top of the streak already shown above.
-  const showShortWin = onboarding?.highlightWins && doneCount > 0;
   const reasonDue = onboarding?.personalReason && shouldReconfirmPersonalReason(onboarding.personalReason);
   const reasonMessage = onboarding?.personalReason?.value ? pickDailyReasonMessage(onboarding.personalReason.value) : null;
 
@@ -392,7 +381,7 @@ export default function HomeScreen({
           </div>
         )}
 
-        <HomeHeader streak={streak} onOpenProfile={onOpenProfile} showShortWin={showShortWin} doneCount={doneCount} />
+        <HomeHeader streak={streak} onOpenProfile={onOpenProfile} />
 
         {!onboardingComplete && <OnboardingNudge onClick={onResumeOnboarding} />}
 

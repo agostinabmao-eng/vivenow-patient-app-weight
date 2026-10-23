@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../components/Icon';
 import Button from '../components/Button';
+import Toast from '../components/Toast';
 import BackIconButton from '../components/BackIconButton';
 import { ChoiceQuestion, MultiSelectQuestion, TextQuestion, isAnswered } from '../components/SurveyFields';
 import WelcomeScreen from './WelcomeScreen';
 import { buildOnboardingSteps } from '../data/onboardingQuestions';
+import { reminderClock } from '../data/rules';
 import { patientName, patientPlan } from '../data/sampleData';
 
 /** Step 2 of onboarding (step 1 is the nurse's intake call, outside the
@@ -28,6 +30,14 @@ export default function OnboardingSurveyScreen({
   const [responses, setResponses] = useState(initialResponses);
   const [stepIndex, setStepIndex] = useState(initialStepIndex);
   const [done, setDone] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  // The "reminder set" confirmation fades on its own after a few seconds.
+  useEffect(() => {
+    if (!toast) return undefined;
+    const id = setTimeout(() => setToast(null), 3500);
+    return () => clearTimeout(id);
+  }, [toast]);
 
   if (!welcomeSeen) {
     return <WelcomeScreen onStart={() => setWelcomeSeen(true)} />;
@@ -39,7 +49,20 @@ export default function OnboardingSurveyScreen({
   const isLast = index === steps.length - 1;
   const canProceed = isAnswered(step, responses[step.id]);
 
-  const setAnswer = (value) => setResponses((r) => ({ ...r, [step.id]: value }));
+  const setAnswer = (value) => {
+    setResponses((r) => ({ ...r, [step.id]: value }));
+    // Saying "Yes" to a reminder confirms it right away, at the time of day
+    // picked in the question before (Morning 8 AM, Afternoon 3 PM, Evening 8 PM).
+    const timeKey = { weighReminder: 'readingsTime', exerciseReminder: 'exerciseTime' }[step.id];
+    if (timeKey) {
+      if (value === 'Yes') {
+        const pref = responses[timeKey]?.[0];
+        setToast(pref ? `You will receive a reminder every day at ${reminderClock(pref)}` : 'You will receive a reminder every day');
+      } else {
+        setToast(null);
+      }
+    }
+  };
   // The first question goes back to Welcome (nowhere earlier to pause to);
   // every later question just steps back one, same as a normal wizard.
   const goBack = () => {
@@ -48,6 +71,7 @@ export default function OnboardingSurveyScreen({
       onPause(responses, 0, false);
     } else {
       setStepIndex((i) => Math.max(0, i - 1));
+      setToast(null);
     }
   };
   const advance = () => {
@@ -56,6 +80,7 @@ export default function OnboardingSurveyScreen({
       setDone(true);
     } else {
       setStepIndex(index + 1);
+      setToast(null);
     }
   };
   const goNext = () => canProceed && advance();
@@ -202,6 +227,7 @@ export default function OnboardingSurveyScreen({
           Skip this question
         </button>
       </div>
+      <Toast message={toast} bottom={180} />
     </div>
   );
 }

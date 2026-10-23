@@ -168,10 +168,10 @@ export const patientPlan = {
   // 'pause' — there's no separate "I had a fall" button anywhere else in
   // the app; this question is the only way a fall gets recorded.
   preExerciseCheck: [
-    { id: 'fall', question: 'Have you fallen since your last check-in?', ifFlagged: 'Yes', outcome: 'pause' },
-    { id: 'chestPain', question: 'Are you having chest pain or tightness right now?', ifFlagged: 'Yes', outcome: 'pause' },
-    { id: 'dizziness', question: 'Do you feel dizzy or lightheaded right now?', ifFlagged: 'Yes', outcome: 'caution' },
-    { id: 'breath', question: 'Are you more short of breath than usual right now?', ifFlagged: 'Yes', outcome: 'caution' },
+    { id: 'fall', question: 'Have you fallen since your last check-in?', statement: "I've fallen since my last check-in", ifFlagged: 'Yes', outcome: 'pause' },
+    { id: 'chestPain', question: 'Are you having chest pain or tightness right now?', statement: 'I have chest pain or tightness', ifFlagged: 'Yes', outcome: 'pause' },
+    { id: 'dizziness', question: 'Do you feel dizzy or lightheaded right now?', statement: 'I feel dizzy or lightheaded', ifFlagged: 'Yes', outcome: 'caution' },
+    { id: 'breath', question: 'Are you more short of breath than usual right now?', statement: "I'm more short of breath than usual", ifFlagged: 'Yes', outcome: 'caution' },
   ],
   // Goals are behaviors, not numbers — the clinical targets they serve are
   // stated once, up front (see GoalsCard), and never repeated inside the
