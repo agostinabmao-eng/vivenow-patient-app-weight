@@ -28,17 +28,25 @@ export default function ReminderModal({ taskLabel, initialTime, onSave, onClose 
             width: '100%',
             boxSizing: 'border-box',
             marginTop: 16,
-            padding: '12px 14px',
+            minHeight: 60,
+            padding: '12px 18px',
             borderRadius: 'var(--radius-md)',
-            border: '1.5px solid var(--border-default)',
-            font: '700 1.125rem/1 var(--font-display)',
+            border: '2px solid var(--border-default)',
+            background: 'var(--surface-card)',
+            colorScheme: 'light',
+            font: '700 1.25rem/1 var(--font-display)',
             color: 'var(--ink)',
             textAlign: 'center',
           }}
         />
 
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 14, cursor: 'pointer' }}>
-          <input type="checkbox" checked={applyToAll} onChange={(e) => setApplyToAll(e.target.checked)} />
+        <label style={{ display: 'flex', alignItems: 'center', gap: 12, marginTop: 16, cursor: 'pointer' }}>
+          <input
+            type="checkbox"
+            checked={applyToAll}
+            onChange={(e) => setApplyToAll(e.target.checked)}
+            style={{ width: 26, height: 26, margin: 0, flexShrink: 0, accentColor: 'var(--teal-600)', colorScheme: 'light', cursor: 'pointer' }}
+          />
           <span style={{ font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-body)' }}>Use this time for every task</span>
         </label>
 

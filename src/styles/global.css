@@ -5,6 +5,7 @@
 }
 
 html {
+  color-scheme: light; /* the app has no dark theme — keep native inputs light */
   font-size: 112.5%; /* 18px base — every rem in the app scales from here */
   -webkit-text-size-adjust: 100%;
   height: 100%;
