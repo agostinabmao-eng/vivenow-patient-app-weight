@@ -151,10 +151,8 @@ export default function NutritionScreen({ meals, waterGlasses, waterUnit, onQuic
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div style={{ padding: 'calc(12px + var(--safe-top)) 12px 0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 4, padding: 'calc(12px + var(--safe-top)) 20px 0 12px' }}>
         <BackIconButton onClick={onBack} />
-      </div>
-      <div style={{ padding: '4px 20px 0' }}>
         <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Nutrition</div>
       </div>
 

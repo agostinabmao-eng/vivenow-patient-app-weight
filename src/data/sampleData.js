@@ -521,24 +521,20 @@ export const SURVEY_QUESTIONS = [
 export const MEAL_TYPES = ['breakfast', 'lunch', 'dinner', 'snack'];
 
 // The nutrition team's meal plan for the period — what each meal is
-// supposed to be. The patient can eat exactly this (one tap logs it) or
+// supposed to be — one recommended option per meal. The patient can eat exactly this (one tap logs it) or
 // log something else entirely; Nutrition shows both against the plan.
 export const MEAL_PLAN = {
   breakfast: [
     { name: 'Oatmeal with Berries', calories: 220 },
-    { name: 'Scrambled Eggs & Toast', calories: 280 },
   ],
   lunch: [
     { name: 'Grilled Chicken Salad', calories: 380 },
-    { name: 'Turkey Sandwich on Whole Wheat', calories: 350 },
   ],
   dinner: [
     { name: 'Baked Salmon with Vegetables', calories: 420 },
-    { name: 'Chicken Stir-Fry with Brown Rice', calories: 450 },
   ],
   snack: [
     { name: 'Greek Yogurt with Nuts', calories: 180 },
-    { name: 'Apple with Peanut Butter', calories: 200 },
   ],
 };
 

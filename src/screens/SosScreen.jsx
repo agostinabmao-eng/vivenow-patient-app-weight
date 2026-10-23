@@ -1,25 +1,24 @@
 import Icon from '../components/Icon';
 import Button from '../components/Button';
+import BackIconButton from '../components/BackIconButton';
+import Photo from '../components/Photo';
 import { careTeamPhone } from '../data/sampleData';
 
 export default function SosScreen({ onCancel }) {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      <div
-        style={{
-          padding: `calc(16px + var(--safe-top)) calc(20px + var(--safe-right)) 12px calc(20px + var(--safe-left))`,
-          font: '700 1.5rem/1.2 var(--font-display)',
-          color: 'var(--ink)',
-        }}
-      >
-        SOS Call
+      <div style={{ padding: 'calc(12px + var(--safe-top)) 16px 0' }}>
+        <BackIconButton onClick={onCancel} />
       </div>
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 18, padding: '20px 32px 0', textAlign: 'center' }}>
-        <div style={{ width: 88, height: 88, borderRadius: '50%', background: 'var(--danger-subtle)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Icon name="phone-call" size={40} color="var(--danger)" />
+      <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18, padding: '4px 24px 16px', textAlign: 'center' }}>
+        <Photo name="sos" alt="An older woman checking her phone at the kitchen table" height={180} style={{ width: '100%' }} />
+        <div style={{ font: '700 var(--fs-title)/1.05 var(--font-display)', color: 'var(--ink)', marginTop: 12 }}>Contact your care team now?</div>
+        <div style={{ font: '400 1.0625rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>
+          Call or send a text.
+          <br />
+          Remember it&apos;s not 24/7
         </div>
-        <div style={{ font: '700 1.4rem/1.3 var(--font-display)', color: 'var(--ink)' }}>Contact your care team now?</div>
-        <div style={{ font: '400 1rem/1.5 var(--font-sans)', color: 'var(--text-body)' }}>Call for immediate help, or send a text if you can&apos;t talk right now.</div>
+        <div style={{ font: '700 1.0625rem/1.4 var(--font-sans)', color: 'var(--ink)', marginTop: 18 }}>If you need immediate help, CALL 911</div>
       </div>
       <div
         style={{
@@ -29,7 +28,7 @@ export default function SosScreen({ onCancel }) {
           padding: `0 calc(20px + var(--safe-right)) calc(20px + var(--safe-bottom)) calc(20px + var(--safe-left))`,
         }}
       >
-        <Button variant="danger" size="lg" fullWidth href={`tel:${careTeamPhone.tel}`} iconLeft={<Icon name="phone-call" size={20} color="#fff" />}>
+        <Button variant="primary" size="lg" fullWidth href={`tel:${careTeamPhone.tel}`} iconLeft={<Icon name="phone-call" size={20} color="#fff" />}>
           Call {careTeamPhone.display}
         </Button>
         <Button variant="outline" size="lg" fullWidth href={`sms:${careTeamPhone.tel}`} iconLeft={<Icon name="message-circle" size={20} />}>

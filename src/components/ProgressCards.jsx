@@ -117,7 +117,7 @@ export function WeightGoalCard({ weightGoal, currentLbs, weightUnit }) {
         <div style={{ width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-pill)', background: 'var(--teal-600)', transition: 'width var(--dur-med) var(--ease-standard)' }} />
       </div>
       <div style={{ marginTop: 8, font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
-        {lostSoFar} of {totalToLose} {weightUnit} toward your goal ({pct}%)
+        {lostSoFar} of {totalToLose} {weightUnit} of your goal ({pct}%)
       </div>
     </div>
   );
@@ -136,19 +136,23 @@ export function GoalsCard({ goals, weightGoal, weightUnit }) {
       </div>
 
       <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 16 }}>
-        Targets
+        Target
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
         {goals.targets.map((t) => (
-          <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Icon name="check" size={14} color="var(--teal-600)" style={{ flexShrink: 0 }} />
+          <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Icon name="check" size={18} color="var(--teal-600)" />
+            </span>
             <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{t.label}</span>
           </div>
         ))}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Icon name="check" size={14} color="var(--teal-600)" style={{ flexShrink: 0 }} />
-          <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
-            Weight at or below {formatWeight(weightGoal.goalLbs, weightUnit)} by {formatGoalDate(weightGoal.goalDate)}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <Icon name="scale" size={18} color="var(--teal-600)" />
+          </span>
+          <span style={{ font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
+            Weight {formatWeight(weightGoal.goalLbs, weightUnit)} or less by {formatGoalDate(weightGoal.goalDate)}
           </span>
         </div>
       </div>
@@ -158,8 +162,8 @@ export function GoalsCard({ goals, weightGoal, weightUnit }) {
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
         {goals.behaviors.map((b) => (
-          <div key={b} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-            <span style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--teal-400)', marginTop: 7, flexShrink: 0 }} />
+          <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal-400)', flexShrink: 0 }} />
             <span style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-body)' }}>{b}</span>
           </div>
         ))}
