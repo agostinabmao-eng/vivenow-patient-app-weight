@@ -19,6 +19,7 @@ import SosScreen from './screens/SosScreen';
 import TaskMeds from './screens/TaskMeds';
 import TaskWater from './screens/TaskWater';
 import TaskWeight from './screens/TaskWeight';
+import ScaleSetupScreen from './screens/ScaleSetupScreen';
 import TaskSteps from './screens/TaskSteps';
 import TaskGlucose from './screens/TaskGlucose';
 import ProfileScreen from './screens/ProfileScreen';
@@ -53,6 +54,8 @@ export default function App() {
     nurseUpdateBanner,
     simulateNurseUpdate,
     dismissNurseUpdateBanner,
+    scaleConnected,
+    connectScale,
     waterUnit,
     setWaterUnit,
     weightUnit,
@@ -214,6 +217,9 @@ export default function App() {
     case 'nurse-notice':
       body = <NurseWillDiscussNotice onBack={closeSos} />;
       break;
+    case 'scale-setup':
+      body = <ScaleSetupScreen onBack={goHome} onConnected={connectScale} onFinish={() => open('weight')} />;
+      break;
     case 'meds':
       body = <TaskMeds medsTaken={day.medsTaken} onToggleMed={toggleMed} onMarkAllTaken={markAllMedsTaken} onBack={goHome} />;
       break;
@@ -239,6 +245,8 @@ export default function App() {
           onSetWaterUnit={setWaterUnit}
           weightUnit={weightUnit}
           onSetWeightUnit={setWeightUnit}
+          scaleConnected={scaleConnected}
+          onSetupScale={() => open('scale-setup')}
           onReportRisk={() => open('nurse-notice')}
           onSimulateNurseUpdate={simulateNurseUpdate}
         />
@@ -256,7 +264,9 @@ export default function App() {
           doneCount={doneCount}
           totalCount={totalCount}
           online={online}
-          onOpenTask={open}
+          // Weighing needs the scale paired first — the very first tap on
+          // Measure Weight runs the Bluetooth setup tutorial instead.
+          onOpenTask={(next) => open(next === 'weight' && !scaleConnected ? 'scale-setup' : next)}
           onOpenProfile={() => open('profile')}
           onOpenSurvey={() => open('survey')}
           reminders={reminders}
@@ -306,7 +316,7 @@ export default function App() {
       }}
     >
       <div style={{ flex: 1, overflow: 'hidden' }}>{body}</div>
-      {screen !== 'sos' && screen !== 'onboarding' && screen !== 'exercise-log-custom' && !showExerciseSafetyIntro && (
+      {screen !== 'sos' && screen !== 'onboarding' && screen !== 'exercise-log-custom' && screen !== 'scale-setup' && !showExerciseSafetyIntro && (
         <SosFab
           onClick={() => open('sos')}
           floating={FLOATING_SOS_SCREENS.has(screen)}

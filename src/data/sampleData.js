@@ -138,6 +138,9 @@ export const patientPlan = {
   // target itself is the weight goal below; this is just the one-line
   // "why" for this weight-management-focused plan.
   mainGoalPlain: 'Lower your weight',
+  // Which scale the care team shipped to this patient ('smart' | 'bariatric').
+  // The patient only ever sees this one model (see SCALE_MODELS).
+  scaleModel: 'smart',
   weight: {
     baselineLbs: 214,
     baselineDate: '2026-05-10',
@@ -355,6 +358,11 @@ export const logEntries = [
   { label: 'Blood Pressure', when: 'Yesterday, 8:10 AM', value: '124/82' },
   { label: 'Weight', when: 'Yesterday, 7:50 AM', value: '173.1 lbs' },
 ];
+
+export const SCALE_MODELS = {
+  smart: { label: 'Smart Scale', deviceName: 'ViveNow Smart Scale 4F2A' },
+  bariatric: { label: 'Bariatric Scale', deviceName: 'ViveNow Bariatric Scale 7C19' },
+};
 
 export const careTeamPhone = { display: '(352) 555-0134', tel: '+13525550134' };
 

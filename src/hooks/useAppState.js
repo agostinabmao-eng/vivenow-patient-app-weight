@@ -23,6 +23,7 @@ const STORAGE_KEY = 'vivenow.today';
 const STREAK_KEY = 'vivenow.streak';
 const REMINDERS_KEY = 'vivenow.reminders';
 const ONBOARDING_KEY = 'vivenow.onboarding';
+const SCALE_KEY = 'vivenow.scaleConnected';
 const WATER_UNIT_KEY = 'vivenow.waterUnit';
 const WEIGHT_UNIT_KEY = 'vivenow.weightUnit';
 const EXERCISE_SAFETY_INTRO_KEY = 'vivenow.exerciseSafetyIntroSeen';
@@ -167,6 +168,14 @@ function defaultOnboarding() {
   };
 }
 
+function loadScaleConnected() {
+  try {
+    return localStorage.getItem(SCALE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
 // Ounces is the default display unit; glasses is offered in Profile for
 // patients who'd rather count containers than track a number of ounces.
 function loadWaterUnit() {
@@ -288,6 +297,7 @@ export default function useAppState() {
   const [openVideoId, setOpenVideoId] = useState(null);
   const [reminders, setReminders] = useState(loadReminders);
   const [reminderTarget, setReminderTarget] = useState(null);
+  const [scaleConnected, setScaleConnected] = useState(loadScaleConnected);
   const [waterUnit, setWaterUnit] = useState(loadWaterUnit);
   const [weightUnit, setWeightUnit] = useState(loadWeightUnit);
 
@@ -343,6 +353,14 @@ export default function useAppState() {
       // storage unavailable — onboarding will just be asked again next visit
     }
   }, [onboarding]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(SCALE_KEY, String(scaleConnected));
+    } catch {
+      // storage unavailable — the scale setup just runs again next visit
+    }
+  }, [scaleConnected]);
 
   useEffect(() => {
     try {
@@ -508,6 +526,7 @@ export default function useAppState() {
     }
   }, []);
   const goHome = useCallback(() => setScreen('home'), []);
+  const connectScale = useCallback(() => setScaleConnected(true), []);
   const closeSos = useCallback(() => setScreen(previousScreen), [previousScreen]);
 
   const openLearnVideo = useCallback(
@@ -902,6 +921,8 @@ export default function useAppState() {
     nurseUpdateBanner,
     simulateNurseUpdate,
     dismissNurseUpdateBanner,
+    scaleConnected,
+    connectScale,
     waterUnit,
     setWaterUnit,
     weightUnit,

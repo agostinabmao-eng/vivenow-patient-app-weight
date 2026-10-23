@@ -1,6 +1,6 @@
 import Icon from '../components/Icon';
 import BackIconButton from '../components/BackIconButton';
-import { patientPlan, patientProfile, todaySample } from '../data/sampleData';
+import { patientPlan, patientProfile, todaySample, SCALE_MODELS } from '../data/sampleData';
 import { calculateBmi, classifyBmi, z68Code } from '../utils/bmi';
 
 function initials(fullName) {
@@ -139,6 +139,8 @@ const WEIGHT_UNIT_OPTIONS = [
 
 export default function ProfileScreen({
   onBack,
+  scaleConnected,
+  onSetupScale,
   waterUnit,
   onSetWaterUnit,
   weightUnit,
@@ -146,7 +148,12 @@ export default function ProfileScreen({
   onReportRisk,
   onSimulateNurseUpdate,
 }) {
-  const { fullName, dob, patientId, heightIn, conditions, careTeam, devices } = patientProfile;
+  const { fullName, dob, patientId, heightIn, conditions, careTeam } = patientProfile;
+  // The scale row shows the one model shipped to this patient and reflects
+  // whether the Bluetooth setup has been completed.
+  const devices = patientProfile.devices.map((d) =>
+    d.id === 'scale' ? { ...d, label: SCALE_MODELS[patientPlan.scaleModel]?.label || d.label, connected: scaleConnected } : d,
+  );
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
@@ -267,7 +274,10 @@ export default function ProfileScreen({
             {devices.map((d, i) => (
               <div
                 key={d.id}
+                onClick={d.id === 'scale' && !d.connected ? onSetupScale : undefined}
+                role={d.id === 'scale' && !d.connected ? 'button' : undefined}
                 style={{
+                  cursor: d.id === 'scale' && !d.connected ? 'pointer' : 'default',
                   display: 'flex',
                   alignItems: 'center',
                   gap: 12,
@@ -280,7 +290,7 @@ export default function ProfileScreen({
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <span style={{ width: 7, height: 7, borderRadius: '50%', background: d.connected ? 'var(--success)' : 'var(--gray-300)' }} />
                   <span style={{ font: '500 1rem/1 var(--font-sans)', color: d.connected ? 'var(--success)' : 'var(--text-muted)' }}>
-                    {d.connected ? 'Connected' : 'Not connected'}
+                    {d.connected ? 'Connected' : d.id === 'scale' ? 'Set up' : 'Not connected'}
                   </span>
                 </div>
               </div>
