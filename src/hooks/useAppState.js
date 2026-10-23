@@ -23,7 +23,6 @@ const STORAGE_KEY = 'vivenow.today';
 const STREAK_KEY = 'vivenow.streak';
 const REMINDERS_KEY = 'vivenow.reminders';
 const ONBOARDING_KEY = 'vivenow.onboarding';
-const SIMPLE_MODE_KEY = 'vivenow.simpleMode';
 const WATER_UNIT_KEY = 'vivenow.waterUnit';
 const WEIGHT_UNIT_KEY = 'vivenow.weightUnit';
 const EXERCISE_SAFETY_INTRO_KEY = 'vivenow.exerciseSafetyIntroSeen';
@@ -168,14 +167,6 @@ function defaultOnboarding() {
   };
 }
 
-function loadSimpleMode() {
-  try {
-    return localStorage.getItem(SIMPLE_MODE_KEY) === 'true';
-  } catch {
-    return false;
-  }
-}
-
 // Ounces is the default display unit; glasses is offered in Profile for
 // patients who'd rather count containers than track a number of ounces.
 function loadWaterUnit() {
@@ -297,7 +288,6 @@ export default function useAppState() {
   const [openVideoId, setOpenVideoId] = useState(null);
   const [reminders, setReminders] = useState(loadReminders);
   const [reminderTarget, setReminderTarget] = useState(null);
-  const [simpleMode, setSimpleMode] = useState(loadSimpleMode);
   const [waterUnit, setWaterUnit] = useState(loadWaterUnit);
   const [weightUnit, setWeightUnit] = useState(loadWeightUnit);
 
@@ -353,14 +343,6 @@ export default function useAppState() {
       // storage unavailable — onboarding will just be asked again next visit
     }
   }, [onboarding]);
-
-  useEffect(() => {
-    try {
-      localStorage.setItem(SIMPLE_MODE_KEY, String(simpleMode));
-    } catch {
-      // storage unavailable — Simple mode just won't stick across visits
-    }
-  }, [simpleMode]);
 
   useEffect(() => {
     try {
@@ -447,15 +429,13 @@ export default function useAppState() {
       rulesApplied: outcome.rulesApplied,
     }));
 
-    // Reminders the readings/exercise-time rules drive — a real build
+    // Reminders the weigh-in/exercise rules drive (only when the patient
+    // answered "Yes" to "Do you want to set reminders?") — a real build
     // would push these straight to the reminder-scheduling backend; here
-    // they just seed the same `reminders` state the bell icon sets by
-    // hand. Readings covers both blood pressure and glucose (whichever
-    // this patient's plan actually tracks — Home only ever shows a
-    // reminder bell for a task that's actually on her list).
+    // they just seed the same `reminders` state the bell icon sets by hand.
     setReminders((r) => ({
       ...r,
-      ...(outcome.readingsReminderTime ? { bp: outcome.readingsReminderTime, glucose: outcome.readingsReminderTime } : {}),
+      ...(outcome.readingsReminderTime ? { weight: outcome.readingsReminderTime } : {}),
       ...(outcome.exerciseReminderTime ? { exercise: outcome.exerciseReminderTime } : {}),
     }));
 
@@ -949,8 +929,6 @@ export default function useAppState() {
     nurseUpdateBanner,
     simulateNurseUpdate,
     dismissNurseUpdateBanner,
-    simpleMode,
-    setSimpleMode,
     waterUnit,
     setWaterUnit,
     weightUnit,

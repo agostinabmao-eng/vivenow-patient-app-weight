@@ -10,11 +10,9 @@ const TABS = [
 
 /** Bottom tab bar — Home / Progress / Nutrition / Exercise / Learn. SOS
  * lives outside this bar entirely (see SosFab) so it stays reachable no
- * matter which tab is active. In Simple mode, Nutrition, Exercise and
- * Learn drop off the bar — they're still reachable, just from their to-do
- * list row instead of a persistent tab, so there's less to scan at a glance. */
-export default function NavBar({ active, onNavigate, simpleMode }) {
-  const tabs = simpleMode ? TABS.filter((t) => t.key === 'home' || t.key === 'progress') : TABS;
+ * matter which tab is active. */
+export default function NavBar({ active, onNavigate }) {
+  const tabs = TABS;
   return (
     <nav
       style={{

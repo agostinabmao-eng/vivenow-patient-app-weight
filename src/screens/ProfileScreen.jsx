@@ -1,6 +1,5 @@
 import Icon from '../components/Icon';
 import BackIconButton from '../components/BackIconButton';
-import Switch from '../components/Switch';
 import { patientPlan, patientProfile, todaySample } from '../data/sampleData';
 import { calculateBmi, classifyBmi, z68Code } from '../utils/bmi';
 
@@ -140,8 +139,6 @@ const WEIGHT_UNIT_OPTIONS = [
 
 export default function ProfileScreen({
   onBack,
-  simpleMode,
-  onSetSimpleMode,
   waterUnit,
   onSetWaterUnit,
   weightUnit,
@@ -303,11 +300,6 @@ export default function ProfileScreen({
               padding: '0 14px',
             }}
           >
-            <DisplayRow
-              title="Simple mode"
-              description="Shows just your to-do list, with fewer taps to log each item."
-              control={<Switch checked={simpleMode} onChange={onSetSimpleMode} label="Simple mode" />}
-            />
             <DisplayRow
               title="Water units"
               description="How your water intake is shown"

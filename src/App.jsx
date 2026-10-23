@@ -54,8 +54,6 @@ export default function App() {
     nurseUpdateBanner,
     simulateNurseUpdate,
     dismissNurseUpdateBanner,
-    simpleMode,
-    setSimpleMode,
     waterUnit,
     setWaterUnit,
     weightUnit,
@@ -245,8 +243,6 @@ export default function App() {
       body = (
         <ProfileScreen
           onBack={goHome}
-          simpleMode={simpleMode}
-          onSetSimpleMode={setSimpleMode}
           waterUnit={waterUnit}
           onSetWaterUnit={setWaterUnit}
           weightUnit={weightUnit}
@@ -282,7 +278,6 @@ export default function App() {
           onDismissReasonToast={dismissReasonToast}
           nurseUpdateBanner={nurseUpdateBanner}
           onDismissNurseUpdateBanner={dismissNurseUpdateBanner}
-          simpleMode={simpleMode}
           waterUnit={waterUnit}
           weightUnit={weightUnit}
           weightInput={weightInput}
@@ -327,7 +322,7 @@ export default function App() {
           hasNavBar={TAB_SCREENS.has(screen)}
         />
       )}
-      {TAB_SCREENS.has(screen) && <NavBar active={screen} onNavigate={open} simpleMode={simpleMode} />}
+      {TAB_SCREENS.has(screen) && <NavBar active={screen} onNavigate={open} />}
       {showAlert && <ElevatedAlertModal reading={alertReading} onCallCaregiver={callCaregiver} onContinue={dismissAlert} />}
       {exerciseGate && (
         <ExerciseSafetyModal

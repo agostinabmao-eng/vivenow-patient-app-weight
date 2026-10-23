@@ -13,46 +13,28 @@ import { hasWeightManagementCondition } from './sampleData';
 // shown under the question, not itself a field to answer.
 export const SHARED_ONBOARDING_QUESTIONS = [
   {
-    id: 'equipment',
-    type: 'multiselect',
-    question: 'Do you have any equipment?',
-    options: ['Resistance bands', 'Light dumbbells (1-3 lb)', 'Small ball', 'Step box or sturdy step'],
-    images: {
-      'Resistance bands': 'resistance-band',
-      'Light dumbbells (1-3 lb)': 'dumbbells',
-      'Small ball': 'ball',
-      'Step box or sturdy step': 'step-box',
-    },
-    noneOption: 'None',
-    otherOption: 'Other',
-    otherPlaceholder: 'Tell us what you have…',
-  },
-  {
-    id: 'activities',
-    type: 'multiselect',
-    question: 'Which activities do you enjoy?',
-    options: ['Walking', 'Swimming', 'Biking', 'Dancing', 'Seated exercises', 'Strength exercises'],
-    images: {
-      Walking: 'walking',
-      Swimming: 'swimming',
-      Biking: 'biking',
-      Dancing: 'dancing',
-      'Seated exercises': 'seated-exercise',
-      'Strength exercises': 'strength-exercise',
-    },
-    otherOption: 'Other',
-  },
-  {
     id: 'readingsTime',
     type: 'multiselect',
     question: 'When do you prefer to weigh yourself?',
     options: ['Morning', 'Afternoon', 'Evening'],
   },
   {
+    id: 'weighReminder',
+    type: 'choice',
+    question: 'Do you want to set reminders?',
+    options: ['Yes', 'No'],
+  },
+  {
     id: 'exerciseTime',
     type: 'multiselect',
     question: 'When do you prefer to exercise?',
     options: ['Morning', 'Afternoon', 'Evening'],
+  },
+  {
+    id: 'exerciseReminder',
+    type: 'choice',
+    question: 'Do you want to set reminders?',
+    options: ['Yes', 'No'],
   },
   {
     id: 'outcomes',
@@ -66,7 +48,7 @@ export const SHARED_ONBOARDING_QUESTIONS = [
   {
     id: 'barriers',
     type: 'multiselect',
-    question: 'What do you find more challenging?',
+    question: 'What do you find challenging?',
     options: ['Stress eating', 'Lack of motivation', 'Control portion sizes', 'Not sure what to do'],
     otherOption: 'Other',
   },

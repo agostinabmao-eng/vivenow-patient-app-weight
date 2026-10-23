@@ -23,44 +23,20 @@ function stripEmoji(label) {
 // shown to the nurse as "Applied automatically in the app".
 export const FIXED_RULES = [
   {
-    id: 'equipmentOwned',
-    test: (a) => Array.isArray(a.equipment) && a.equipment.length > 0 && !a.equipment.includes('None'),
-    effect: (a, p, out) => {
-      out.equipmentOwned = equipmentIdsFromLabels(a.equipment);
-    },
-    label: () => 'Showed exercise options that match the equipment at home',
-  },
-  {
-    id: 'noEquipment',
-    test: (a) => Array.isArray(a.equipment) && a.equipment.includes('None'),
-    effect: (a, p, out) => {
-      out.equipmentOwned = [];
-    },
-    label: () => "Hid exercises that need equipment the patient doesn't have",
-  },
-  {
-    id: 'approvedActivities',
-    test: (a) => Array.isArray(a.activities) && a.activities.length > 0,
-    effect: (a, p, out) => {
-      out.approvedActivities = a.activities.filter((act) => act !== 'Other' && !act.startsWith('Something else'));
-    },
-    label: () => "Matched activity suggestions to what the patient enjoys, at the patient's level",
-  },
-  {
-    id: 'readingsTimeReminders',
-    test: (a) => Array.isArray(a.readingsTime) && a.readingsTime.length > 0,
+    id: 'weighReminder',
+    test: (a) => a.weighReminder === 'Yes' && Array.isArray(a.readingsTime) && a.readingsTime.length > 0,
     effect: (a, p, out) => {
       out.readingsReminderTime = TIME_FOR_PREFERENCE[a.readingsTime[0]];
     },
-    label: (a) => `Set reading reminders for ${a.readingsTime.map(stripEmoji).join(' and ').toLowerCase()}`,
+    label: (a) => `Set a weigh-in reminder for ${a.readingsTime.map(stripEmoji).join(' and ').toLowerCase()} (${reminderClock(a.readingsTime[0])})`,
   },
   {
     id: 'exerciseTimeReminder',
-    test: (a) => Array.isArray(a.exerciseTime) && a.exerciseTime.length > 0,
+    test: (a) => a.exerciseReminder === 'Yes' && Array.isArray(a.exerciseTime) && a.exerciseTime.length > 0,
     effect: (a, p, out) => {
       out.exerciseReminderTime = TIME_FOR_PREFERENCE[a.exerciseTime[0]];
     },
-    label: (a) => `Set exercise reminders for ${a.exerciseTime.map(stripEmoji).join(' and ').toLowerCase()}`,
+    label: (a) => `Set an exercise reminder for ${a.exerciseTime.map(stripEmoji).join(' and ').toLowerCase()} (${reminderClock(a.exerciseTime[0])})`,
   },
   {
     id: 'personalReason',
@@ -125,19 +101,25 @@ export function applyFixedRules(responses, plan) {
   return { ...out, rulesApplied };
 }
 
-// A default clock time per preferred-time-of-day answer (the readings and
-// exercise questions both use the same three options) — reminders are a
-// single time-of-day per task today, so picking more than one just uses
-// the first as the representative reminder time.
+// The reminder time for each preferred-time-of-day answer (the weigh-in
+// and exercise questions share the same three options): Morning 8 AM,
+// Afternoon 3 PM, Evening 8 PM. Reminders are a single time-of-day per
+// task, so picking more than one just uses the first.
 export const TIME_FOR_PREFERENCE = {
   Morning: '08:00',
-  Afternoon: '13:00',
-  Evening: '18:00',
+  Afternoon: '15:00',
+  Evening: '20:00',
   // answers saved before the emoji-free options
   '🌅 Morning': '08:00',
-  '☀️ Afternoon': '13:00',
-  '🌙 Evening': '18:00',
+  '☀️ Afternoon': '15:00',
+  '🌙 Evening': '20:00',
 };
+
+/** "15:00" → "3:00 PM" for the nurse-facing rule labels. */
+function reminderClock(pref) {
+  const [h, m] = (TIME_FOR_PREFERENCE[pref] || '08:00').split(':').map(Number);
+  return `${((h + 11) % 12) + 1}:${String(m).padStart(2, '0')} ${h < 12 ? 'AM' : 'PM'}`;
+}
 
 // How often the patient's personal reason gets re-asked ("Is this still
 // your reason?") — 3 to 4 weeks, per the clinical spec; 21 days is the

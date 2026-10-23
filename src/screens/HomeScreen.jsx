@@ -1,38 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../components/Icon';
 import IconButton from '../components/IconButton';
 import Alert from '../components/Alert';
-import MetricCard from '../components/MetricCard';
-import MetricActionSheet from '../components/MetricActionSheet';
 import TodoRow from '../components/TodoRow';
 import Input from '../components/Input';
 import Button from '../components/Button';
-import WaterSlider, { formatWater } from '../components/WaterSlider';
-import MedicationList from '../components/MedicationList';
-import Toast from '../components/Toast';
+import { formatWater } from '../components/WaterSlider';
 import { HeroProgressCard, WeightGoalMiniCard } from '../components/ProgressCards';
-import { formatWeight, weightToLbs } from '../utils/units';
 import { shouldReconfirmPersonalReason, pickDailyReasonMessage } from '../data/rules';
-import { metrics, patientName, MEDICATIONS, patientPlan, todaySample, WEIGHT_DELTA_LBS, isTaskFullyDone, formatSlotStatus } from '../data/sampleData';
-
-// Where "Log data" sends each summary card — the dedicated vitals screen
-// for anything with one, or the tab that owns that metric otherwise
-// (Calories and Exercises are both logged through their own tabs, not a
-// standalone screen).
-const LOG_SCREEN_FOR_METRIC = {
-  weight: 'weight',
-  cal: 'nutrition',
-  exercises: 'exercise',
-  steps: 'steps',
-  bp: 'bp',
-  glucose: 'glucose',
-};
-
-// The tasks simple enough (one value, one drag, or a short checklist) to
-// log right in the to-do row instead of opening their own screen. Meals
-// and Exercise stay full screens — a meal plan and a video library don't
-// fit inline without recreating the clutter Simple mode is trying to remove.
-const INLINE_TASK_IDS = new Set(['weight', 'bp', 'meds', 'water']);
+import { patientName, MEDICATIONS, patientPlan, todaySample, isTaskFullyDone, formatSlotStatus } from '../data/sampleData';
 
 function OnboardingNudge({ onClick }) {
   return (
@@ -63,60 +39,6 @@ function OnboardingNudge({ onClick }) {
         </div>
       </div>
     </button>
-  );
-}
-
-/** A to-do row that expands in place instead of navigating away, for the
- * handful of tasks simple enough to log with one value or one choice —
- * used only in Simple mode, where cutting a screen transition per task is
- * the whole point. */
-function InlineTodoRow({ icon, label, sub, done, expanded, onToggle, reminderSet, onSetReminder, children }) {
-  return (
-    <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', overflow: 'hidden' }}>
-      <div
-        onClick={onToggle}
-        role="button"
-        aria-checked={done}
-        aria-expanded={expanded}
-        tabIndex={0}
-        onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onToggle()}
-        style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 16, minHeight: 88, boxSizing: 'border-box', cursor: 'pointer' }}
-      >
-        <div
-          style={{
-            width: 56,
-            height: 56,
-            borderRadius: '50%',
-            flexShrink: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            background: done ? 'var(--success-subtle)' : 'var(--teal-50)',
-          }}
-        >
-          <Icon name={icon} size={24} color={done ? 'var(--success)' : 'var(--teal-600)'} />
-        </div>
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{label}</div>
-          <div style={{ font: '500 1rem/1.3 var(--font-sans)', color: done ? 'var(--success)' : 'var(--text-muted)' }}>{sub}</div>
-        </div>
-        <IconButton
-          variant="ghost"
-          size="sm"
-          label={`Set reminder for ${label}`}
-          title="Set reminder"
-          onClick={(e) => {
-            e.stopPropagation();
-            onSetReminder();
-          }}
-          style={{ border: 'none' }}
-        >
-          <Icon name="bell" color={reminderSet ? 'var(--teal-600)' : 'var(--gray-500)'} />
-        </IconButton>
-        <Icon name={expanded ? 'chevron-up' : 'chevron-down'} size={22} color="var(--gray-500)" />
-      </div>
-      {expanded && <div style={{ padding: '0 18px 22px' }}>{children}</div>}
-    </div>
   );
 }
 
@@ -397,7 +319,6 @@ export default function HomeScreen({
   onDismissReasonToast,
   nurseUpdateBanner,
   onDismissNurseUpdateBanner,
-  simpleMode,
   waterUnit,
   weightUnit,
   weightInput,
@@ -413,24 +334,7 @@ export default function HomeScreen({
   onMarkAllMedsTaken,
   setWaterGlasses,
 }) {
-  const [actionMetric, setActionMetric] = useState(null);
-  const [expandedTask, setExpandedTask] = useState(null);
   const [showCompleted, setShowCompleted] = useState(false);
-  const [toast, setToast] = useState(null);
-  const toastTimerRef = useRef(null);
-
-  // Inline saves (Weight/BP) confirm with a toast instead of making the
-  // patient close the row by hand — it collapses on its own a beat later
-  // and drops to the completed section.
-  const confirmSave = (message) => {
-    setToast(message);
-    clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = setTimeout(() => {
-      setToast(null);
-      setExpandedTask(null);
-    }, 1600);
-  };
-  useEffect(() => () => clearTimeout(toastTimerRef.current), []);
 
   // Which tasks apply today — the union of base tasks, the patient's
   // condition templates, and her mobility-level template, deduplicated
@@ -455,227 +359,13 @@ export default function HomeScreen({
     }
     return { ...t, done, sub };
   });
-  // Water's "done" flag flips live while its slider is being dragged (no
-  // separate Save step, unlike Weight/BP) — without this exception the
-  // row would vanish out from under the patient's thumb the instant it
-  // crosses 0, before they can actually finish dragging. Keeping the
-  // expanded task in the active list (even once done) fixes that; it drops
-  // to the completed section as soon as it's collapsed.
-  const activeTodos = todos.filter((t) => !t.done || t.id === expandedTask);
-  const completedTodos = todos.filter((t) => t.done && t.id !== expandedTask);
+  const activeTodos = todos.filter((t) => !t.done);
+  const completedTodos = todos.filter((t) => t.done);
   // "Motivation" barrier (see data/rules.js) highlights a short win the
   // moment anything's done today, on top of the streak already shown above.
   const showShortWin = onboarding?.highlightWins && doneCount > 0;
   const reasonDue = onboarding?.personalReason && shouldReconfirmPersonalReason(onboarding.personalReason);
   const reasonMessage = onboarding?.personalReason?.value ? pickDailyReasonMessage(onboarding.personalReason.value) : null;
-
-  if (simpleMode) {
-    return (
-      <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
-        <div
-          className="vh-scroll"
-          style={{
-            flex: 1,
-            overflowY: 'auto',
-            padding: `calc(20px + var(--safe-top)) calc(24px + var(--safe-right)) 120px calc(24px + var(--safe-left))`,
-          }}
-        >
-          {!online && (
-            <div style={{ marginBottom: 14 }}>
-              <Alert tone="warning" title="You're offline">
-                Vitals you enter now are saved on this phone and will sync automatically once you&apos;re back online.
-              </Alert>
-            </div>
-          )}
-          {nurseUpdateBanner && (
-            <div style={{ marginBottom: 14 }}>
-              <Alert tone="info" icon="bell" title="Your nurse updated your plan" onDismiss={onDismissNurseUpdateBanner}>
-                Your care team made a change — take a look next time you're on Progress or Exercise.
-              </Alert>
-            </div>
-          )}
-
-          <HomeHeader streak={streak} onOpenProfile={onOpenProfile} showShortWin={showShortWin} doneCount={doneCount} totalCount={totalCount} />
-
-          {!onboardingComplete && <OnboardingNudge onClick={onResumeOnboarding} />}
-
-          <div style={{ marginTop: 18 }}>
-            <HeroProgressCard
-              eyebrow="Today's Progress"
-              value={doneCount}
-              goal={totalCount}
-              unit="tasks completed"
-            />
-          </div>
-          <div style={{ marginTop: 12 }}>
-            <WeightGoalMiniCard weightGoal={patientPlan.weight} currentLbs={todaySample.weight} />
-          </div>
-
-          {reasonDue && <ReasonConfirmCard personalReason={onboarding.personalReason} onConfirm={onConfirmReason} />}
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 20 }}>
-            {activeTodos.map((t) => {
-              if (!INLINE_TASK_IDS.has(t.id)) {
-                return (
-                  <TodoRow
-                    key={t.id}
-                    icon={t.icon}
-                    label={t.label}
-                    sub={t.sub}
-                    done={t.done}
-                    reminderSet={!!reminders[t.id]}
-                    onClick={() => onOpenTask(t.screen)}
-                    onSetReminder={() => onSetReminder(t.id)}
-                  />
-                );
-              }
-              const expanded = expandedTask === t.id;
-              return (
-                <InlineTodoRow
-                  key={t.id}
-                  icon={t.icon}
-                  label={t.label}
-                  sub={t.sub}
-                  done={t.done}
-                  expanded={expanded}
-                  onToggle={() => setExpandedTask(expanded ? null : t.id)}
-                  reminderSet={!!reminders[t.id]}
-                  onSetReminder={() => onSetReminder(t.id)}
-                >
-                  {t.id === 'weight' && (
-                    <>
-                      <Input
-                        label={`Weight (${weightUnit})`}
-                        type="number"
-                        inputMode="decimal"
-                        value={weightInput}
-                        onChange={(e) => setWeightInput(e.target.value)}
-                        containerStyle={{ marginTop: 4 }}
-                      />
-                      <Button
-                        variant="primary"
-                        size="md"
-                        fullWidth
-                        disabled={!((parseFloat(weightInput) || 0) > 0)}
-                        onClick={() => {
-                          saveWeight(weightToLbs(parseFloat(weightInput) || 0, weightUnit));
-                          confirmSave('Weight saved');
-                        }}
-                        style={{ marginTop: 10 }}
-                        iconLeft={<Icon name="check" size={16} />}
-                      >
-                        OK, save
-                      </Button>
-                    </>
-                  )}
-                  {t.id === 'bp' && (
-                    <>
-                      <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
-                        <Input
-                          label="Systolic"
-                          type="number"
-                          inputMode="numeric"
-                          value={bpSys}
-                          onChange={(e) => setBpSys(e.target.value)}
-                          containerStyle={{ flex: 1, minWidth: 0 }}
-                        />
-                        <Input
-                          label="Diastolic"
-                          type="number"
-                          inputMode="numeric"
-                          value={bpDia}
-                          onChange={(e) => setBpDia(e.target.value)}
-                          containerStyle={{ flex: 1, minWidth: 0 }}
-                        />
-                      </div>
-                      <Button
-                        variant="primary"
-                        size="md"
-                        fullWidth
-                        disabled={!(bpSys !== '' && bpDia !== '')}
-                        onClick={() => {
-                          saveBp();
-                          confirmSave('Blood pressure saved');
-                        }}
-                        style={{ marginTop: 10 }}
-                        iconLeft={<Icon name="check" size={16} />}
-                      >
-                        OK, save
-                      </Button>
-                    </>
-                  )}
-                  {t.id === 'meds' && (
-                    <div style={{ marginTop: 4 }}>
-                      <MedicationList medsTaken={medsTaken} onToggleMed={onToggleMed} onMarkAllTaken={onMarkAllMedsTaken} />
-                    </div>
-                  )}
-                  {t.id === 'water' && (
-                    <div style={{ marginTop: 8 }}>
-                      <WaterSlider waterGlasses={day.waterGlasses} waterUnit={waterUnit} onChange={setWaterGlasses} />
-                    </div>
-                  )}
-                </InlineTodoRow>
-              );
-            })}
-          </div>
-
-          {activeTodos.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '20px 0', font: '600 1rem/1.4 var(--font-sans)', color: 'var(--success)' }}>
-              All done for today — nice work!
-            </div>
-          )}
-
-          <CompletedTasksSection
-            completedTodos={completedTodos}
-            showCompleted={showCompleted}
-            onToggleShow={() => setShowCompleted((s) => !s)}
-            onUndo={onUncompleteTask}
-          />
-
-          <CheckInCard day={day} onOpenSurvey={onOpenSurvey} />
-        </div>
-
-        <Toast message={toast} />
-        {reasonToastDue && reasonMessage && <ReasonToast message={reasonMessage} onDismiss={onDismissReasonToast} />}
-
-        {actionMetric && (
-          <MetricActionSheet
-            metric={actionMetric}
-            onClose={() => setActionMetric(null)}
-            onSeeProgress={() => {
-              setActionMetric(null);
-              onOpenTask('progress');
-            }}
-            onLogData={() => {
-              setActionMetric(null);
-              onOpenTask(LOG_SCREEN_FOR_METRIC[actionMetric.id] || 'progress');
-            }}
-          />
-        )}
-      </div>
-    );
-  }
-
-  const completedVideos = day.videos.filter((v) => v.checked).length;
-  const weightMetric = {
-    ...metrics[0],
-    value: formatWeight(todaySample.weight, weightUnit),
-    unit: `${WEIGHT_DELTA_LBS < 0 ? '−' : '+'}${formatWeight(Math.abs(WEIGHT_DELTA_LBS), weightUnit)} this week`,
-  };
-  const summaryCards = [
-    weightMetric,
-    metrics[1], // Calories
-    {
-      id: 'exercises',
-      icon: 'dumbbell',
-      label: 'Exercises',
-      value: `${completedVideos}/${day.videos.length}`,
-      unit: 'videos done',
-      valueNum: completedVideos,
-      goal: day.videos.length,
-    },
-    metrics[2], // Steps
-  ];
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden', position: 'relative' }}>
@@ -705,15 +395,6 @@ export default function HomeScreen({
         <HomeHeader streak={streak} onOpenProfile={onOpenProfile} showShortWin={showShortWin} doneCount={doneCount} />
 
         {!onboardingComplete && <OnboardingNudge onClick={onResumeOnboarding} />}
-
-        <div style={{ marginTop: 20, font: '700 var(--fs-h2)/1.2 var(--font-display)', color: 'var(--ink)' }}>
-          Today&apos;s Summary
-        </div>
-        <div className="vh-scroll" style={{ display: 'flex', gap: 12, overflowX: 'auto', margin: '14px -24px 0', padding: '4px 24px 10px' }}>
-          {summaryCards.map((m) => (
-            <MetricCard key={m.id} metric={m} onClick={() => setActionMetric(m)} />
-          ))}
-        </div>
 
         <div style={{ marginTop: 14 }}>
           <WeightGoalMiniCard weightGoal={patientPlan.weight} currentLbs={todaySample.weight} />
@@ -759,20 +440,6 @@ export default function HomeScreen({
 
       {reasonToastDue && reasonMessage && <ReasonToast message={reasonMessage} onDismiss={onDismissReasonToast} />}
 
-      {actionMetric && (
-        <MetricActionSheet
-          metric={actionMetric}
-          onClose={() => setActionMetric(null)}
-          onSeeProgress={() => {
-            setActionMetric(null);
-            onOpenTask('progress');
-          }}
-          onLogData={() => {
-            setActionMetric(null);
-            onOpenTask(LOG_SCREEN_FOR_METRIC[actionMetric.id] || 'progress');
-          }}
-        />
-      )}
     </div>
   );
 }
