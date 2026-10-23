@@ -16,7 +16,6 @@ import LearnScreen from './screens/LearnScreen';
 import LearnVideoScreen from './screens/LearnVideoScreen';
 import VideoPlayerScreen from './screens/VideoPlayerScreen';
 import SosScreen from './screens/SosScreen';
-import TaskBP from './screens/TaskBP';
 import TaskMeds from './screens/TaskMeds';
 import TaskWater from './screens/TaskWater';
 import TaskWeight from './screens/TaskWeight';
@@ -95,8 +94,6 @@ export default function App() {
     submitSymptomCheck,
     proceedFromCaution,
     exerciseGateContactCareTeam,
-    exerciseGateGentleMobility,
-    exerciseGateMeasureNow,
     closeExerciseGate,
     exerciseVideoFilter,
     showExerciseSafetyIntro,
@@ -217,11 +214,6 @@ export default function App() {
     case 'nurse-notice':
       body = <NurseWillDiscussNotice onBack={closeSos} />;
       break;
-    case 'bp':
-      body = (
-        <TaskBP bpSys={bpSys} setBpSys={setBpSys} bpDia={bpDia} setBpDia={setBpDia} onSave={saveBp} onBack={goHome} />
-      );
-      break;
     case 'meds':
       body = <TaskMeds medsTaken={day.medsTaken} onToggleMed={toggleMed} onMarkAllTaken={markAllMedsTaken} onBack={goHome} />;
       break;
@@ -230,7 +222,7 @@ export default function App() {
       break;
     case 'weight':
       body = (
-        <TaskWeight weightInput={weightInput} setWeightInput={setWeightInput} weightUnit={weightUnit} onSave={saveWeight} onBack={goHome} />
+        <TaskWeight weightUnit={weightUnit} onSave={saveWeight} onBack={goHome} />
       );
       break;
     case 'steps':
@@ -314,7 +306,7 @@ export default function App() {
       }}
     >
       <div style={{ flex: 1, overflow: 'hidden' }}>{body}</div>
-      {screen !== 'sos' && screen !== 'onboarding' && screen !== 'exercise-log-custom' && (
+      {screen !== 'sos' && screen !== 'onboarding' && screen !== 'exercise-log-custom' && !showExerciseSafetyIntro && (
         <SosFab
           onClick={() => open('sos')}
           floating={FLOATING_SOS_SCREENS.has(screen)}
@@ -322,16 +314,14 @@ export default function App() {
           hasNavBar={TAB_SCREENS.has(screen)}
         />
       )}
-      {TAB_SCREENS.has(screen) && <NavBar active={screen} onNavigate={open} />}
+      {TAB_SCREENS.has(screen) && !showExerciseSafetyIntro && <NavBar active={screen} onNavigate={open} />}
       {showAlert && <ElevatedAlertModal reading={alertReading} onCallCaregiver={callCaregiver} onContinue={dismissAlert} />}
       {exerciseGate && (
         <ExerciseSafetyModal
           stage={exerciseGate.stage}
           questions={patientPlan.preExerciseCheck}
           onSubmitSymptoms={submitSymptomCheck}
-          onMeasureNow={exerciseGateMeasureNow}
           onContactCareTeam={exerciseGateContactCareTeam}
-          onGentleMobility={exerciseGateGentleMobility}
           onContinueCaution={proceedFromCaution}
           onNotNow={closeExerciseGate}
           onClose={closeExerciseGate}

@@ -1,43 +1,36 @@
 import TaskScreenShell from '../components/TaskScreenShell';
-import Stepper from '../components/Stepper';
 import Button from '../components/Button';
 import Icon from '../components/Icon';
-import { weightToLbs } from '../utils/units';
+import { todaySample } from '../data/sampleData';
+import { formatWeight } from '../utils/units';
 
-export default function TaskWeight({ weightInput, setWeightInput, weightUnit, onSave, onBack }) {
-  const saveDisabled = !((parseFloat(weightInput) || 0) > 0);
+/** Weight is never typed in — it comes from the connected smart scale. This
+ * screen just tells the patient how to weigh in and lets them pull the
+ * latest reading from the scale ("Sync" stands in for the device sync a
+ * real build would do in the background). */
+export default function TaskWeight({ weightUnit, onSave, onBack }) {
   return (
     <TaskScreenShell
       icon="scale"
       photo="weight"
       title="Measure Weight"
-      description="Enter the reading from your scale."
+      description="Step on your smart scale. Your weight is sent to the app automatically."
       onBack={onBack}
       footer={
-        <Button
-          variant="primary"
-          size="lg"
-          fullWidth
-          disabled={saveDisabled}
-          onClick={() => onSave(weightToLbs(parseFloat(weightInput) || 0, weightUnit))}
-          iconLeft={<Icon name="check" size={20} />}
-        >
-          OK, save reading
+        <Button variant="primary" size="lg" fullWidth onClick={() => onSave(todaySample.weight)} iconLeft={<Icon name="check" size={20} />}>
+          Sync from my scale
         </Button>
       }
     >
-      <div style={{ width: '100%', marginTop: 28 }}>
-        <Stepper
-          label="Your weight"
-          unit={weightUnit}
-          placeholder={weightUnit === 'kg' ? '95.3' : '210.0'}
-          value={weightInput}
-          onChange={setWeightInput}
-          step={weightUnit === 'kg' ? 0.1 : 0.2}
-          decimals={1}
-          min={1}
-          max={999}
-        />
+      <div style={{ width: '100%', marginTop: 24, display: 'flex', alignItems: 'center', gap: 14, background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-sm)', padding: 18, textAlign: 'left' }}>
+        <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Icon name="scale" size={22} color="var(--teal-600)" />
+        </span>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>Smart Scale</div>
+          <div style={{ font: '500 1rem/1.3 var(--font-sans)', color: 'var(--success)' }}>Connected</div>
+        </div>
+        <div style={{ font: '700 1.35rem/1.2 var(--font-display)', color: 'var(--ink)' }}>{formatWeight(todaySample.weight, weightUnit)}</div>
       </div>
     </TaskScreenShell>
   );

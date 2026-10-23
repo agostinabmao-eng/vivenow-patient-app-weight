@@ -553,28 +553,9 @@ export default function useAppState() {
         setExerciseGate({ stage: 'symptom-check', videoId: id });
         return;
       }
-      if (video.intensity !== 'moderate' || !hasBpTask(patientPlan)) {
-        actuallyOpenVideo(id);
-        return;
-      }
-      const reading = day.vitals.bp;
-      if (!reading || !isReadingRecent(reading.takenAt)) {
-        setPendingExerciseVideoId(id);
-        setExerciseGate({ stage: 'need-reading', videoId: id });
-        return;
-      }
-      const severity = bpSeverity(reading, patientPlan.bp);
-      if (severity === 'high') {
-        setExerciseGate({ stage: 'high-block', videoId: id });
-        return;
-      }
-      if (severity === 'moderate') {
-        setExerciseGate({ stage: 'moderate-warning', videoId: id });
-        return;
-      }
       actuallyOpenVideo(id);
     },
-    [symptomCheckPassed, day.vitals.bp, actuallyOpenVideo],
+    [symptomCheckPassed, actuallyOpenVideo],
   );
 
   // Entry point from the Exercise list — shows the one-time safety intro
@@ -662,14 +643,6 @@ export default function useAppState() {
     setExerciseGate(null);
     open('sos');
   }, [open]);
-  const exerciseGateGentleMobility = useCallback(() => {
-    setExerciseVideoFilter('low');
-    setExerciseGate(null);
-  }, []);
-  const exerciseGateMeasureNow = useCallback(() => {
-    setExerciseGate(null);
-    setScreen('bp');
-  }, []);
   const closeExerciseGate = useCallback(() => setExerciseGate(null), []);
 
   const closeVideoPlayer = useCallback(() => setScreen('exercise'), []);
@@ -970,8 +943,6 @@ export default function useAppState() {
     submitSymptomCheck,
     proceedFromCaution,
     exerciseGateContactCareTeam,
-    exerciseGateGentleMobility,
-    exerciseGateMeasureNow,
     closeExerciseGate,
     exerciseVideoFilter,
     showExerciseSafetyIntro,

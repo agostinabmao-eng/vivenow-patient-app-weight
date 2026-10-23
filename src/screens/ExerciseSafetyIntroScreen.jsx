@@ -31,15 +31,13 @@ function Point({ icon, tone, title, body }) {
  * exercise video — the "talk test" for pacing, and the symptoms that mean
  * stop right away. Reachable again any time from a link on the Exercise
  * tab, not just automatically the first time. */
-export default function ExerciseSafetyIntroScreen({ onDismiss, dismissLabel = "Got it, let's go", showBack = false }) {
+export default function ExerciseSafetyIntroScreen({ onDismiss, dismissLabel = "Got it, let's go" }) {
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-      {showBack && (
-        <div style={{ padding: 'calc(12px + var(--safe-top)) 12px 0' }}>
-          <BackIconButton onClick={onDismiss} />
-        </div>
-      )}
-      <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: `${showBack ? '4px' : 'calc(24px + var(--safe-top))'} 24px 20px`, display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div style={{ padding: 'calc(12px + var(--safe-top)) 12px 0' }}>
+        <BackIconButton onClick={onDismiss} />
+      </div>
+      <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: '4px 24px 20px', display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div style={{ textAlign: 'center' }}>
           <div
             style={{
@@ -77,7 +75,7 @@ export default function ExerciseSafetyIntroScreen({ onDismiss, dismissLabel = "G
           icon="phone-call"
           tone="info"
           title="When to contact your care team"
-          body="If symptoms don't go away after resting — or you're ever unsure — contact your care team."
+          body="If symptoms don't go away after resting — or you're ever unsure — contact your care team. If you need immediate help, call 911."
         />
       </div>
       <div
