@@ -30,7 +30,7 @@ export const SHARED_ONBOARDING_QUESTIONS = [
   {
     id: 'activities',
     type: 'multiselect',
-    question: 'Which activities would you enjoy?',
+    question: 'Which activities do you enjoy?',
     options: ['Walking', 'Swimming', 'Biking', 'Dancing', 'Seated exercises', 'Strength exercises'],
     images: {
       Walking: 'walking',
@@ -57,17 +57,17 @@ export const SHARED_ONBOARDING_QUESTIONS = [
   {
     id: 'outcomes',
     type: 'multiselect',
-    question: 'What would you like to achieve with the care plan?',
+    question: 'What motivates you?',
     options: ['Have more energy', 'Have less stress', 'Sleep better', 'Feel more confident', 'Have more mobility', 'Feel stronger', 'Live more independently'],
     otherOption: 'Other',
     otherPlaceholder: 'e.g., be able to pick up my grandkids in my arms',
-    tip: 'Try to make it personal — write something that resonates with you and motivates you to keep trying, day by day.',
+    tip: 'Make it personal — what keeps you going?',
   },
   {
     id: 'barriers',
     type: 'multiselect',
     question: 'What do you find more challenging?',
-    options: ['Stress eating', 'Lack of motivation', 'Control portion sizes', 'Not sure where to start'],
+    options: ['Stress eating', 'Lack of motivation', 'Control portion sizes', 'Not sure what to do'],
     otherOption: 'Other',
   },
 ];

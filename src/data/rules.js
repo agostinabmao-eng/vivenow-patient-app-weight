@@ -72,7 +72,7 @@ export const FIXED_RULES = [
   },
   {
     id: 'barrierNotSure',
-    test: (a) => Array.isArray(a.barriers) && a.barriers.includes('Not sure where to start'),
+    test: (a) => Array.isArray(a.barriers) && a.barriers.includes('Not sure what to do'),
     effect: (a, p, out) => {
       out.welcomeFirst = true;
     },

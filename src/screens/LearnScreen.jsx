@@ -74,7 +74,7 @@ function Section({ title, children }) {
 export default function LearnScreen({ watched, learnHints, onOpenVideo, onBack }) {
   const { quickFirst, welcomeFirst } = learnHints || {};
 
-  // "Not sure where to start" promotes the welcome video + first-week
+  // "Not sure what to do" promotes the welcome video + first-week
   // guide into their own section at the very top instead of just
   // reordering them within Exercise Education.
   const gettingStarted = welcomeFirst ? EXERCISE_EDUCATION_VIDEOS.filter((v) => v.tag === 'welcome' || v.tag === 'firstWeek') : [];

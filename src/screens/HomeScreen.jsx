@@ -109,7 +109,7 @@ function InlineTodoRow({ icon, label, sub, done, expanded, onToggle, reminderSet
             e.stopPropagation();
             onSetReminder();
           }}
-          style={reminderSet ? { background: 'var(--teal-50)' } : undefined}
+          style={{ border: 'none' }}
         >
           <Icon name="bell" color={reminderSet ? 'var(--teal-600)' : 'var(--gray-500)'} />
         </IconButton>
@@ -284,7 +284,7 @@ function ReasonToast({ message, onDismiss }) {
         display: 'flex',
         alignItems: 'flex-start',
         gap: 10,
-        background: 'var(--ink)',
+        background: 'var(--brand)',
         color: '#fff',
         borderRadius: 'var(--radius-lg)',
         padding: '18px 20px',

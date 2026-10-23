@@ -43,7 +43,7 @@ export default function SosFab({ onClick, floating, withSafeBottom, hasNavBar = 
     return (
       <button
         onClick={onClick}
-        aria-label="SOS — call your care team"
+        aria-label="Contact your care team"
         style={{
           position: 'absolute',
           right: `calc(16px + var(--safe-right))`,
@@ -66,7 +66,7 @@ export default function SosFab({ onClick, floating, withSafeBottom, hasNavBar = 
         padding: `8px calc(16px + var(--safe-right)) ${withSafeBottom ? 'calc(8px + var(--safe-bottom))' : '8px'} 16px`,
       }}
     >
-      <button onClick={onClick} aria-label="SOS — call your care team" style={buttonStyle}>
+      <button onClick={onClick} aria-label="Contact your care team" style={buttonStyle}>
         <Icon name="phone-call" size={24} color="#fff" />
       </button>
     </div>

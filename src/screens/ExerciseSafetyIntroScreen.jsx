@@ -75,9 +75,9 @@ export default function ExerciseSafetyIntroScreen({ onDismiss, dismissLabel = "G
         />
         <Point
           icon="phone-call"
-          tone="danger"
+          tone="info"
           title="When to contact your care team"
-          body="If symptoms don't go away after resting — or you're ever unsure — contact your care team using the SOS button."
+          body="If symptoms don't go away after resting — or you're ever unsure — contact your care team."
         />
       </div>
       <div

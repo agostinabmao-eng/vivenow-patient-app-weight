@@ -50,7 +50,7 @@ export default function TodoRow({ icon, label, sub, done, reminderSet, onClick, 
           e.stopPropagation();
           onSetReminder();
         }}
-        style={reminderSet ? { background: 'var(--gold-100)', borderColor: 'transparent' } : { border: 'none' }}
+        style={{ border: 'none' }}
       >
         <Icon name="bell" color={reminderSet ? 'var(--teal-600)' : 'var(--gray-500)'} />
       </IconButton>
