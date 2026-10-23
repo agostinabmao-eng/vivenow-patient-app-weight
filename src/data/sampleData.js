@@ -374,9 +374,7 @@ export const patientProfile = {
     phoneTel: careTeamPhone.tel,
   },
   devices: [
-    { id: 'bp-cuff', label: 'Blood Pressure Monitor', icon: 'activity', connected: true },
     { id: 'scale', label: 'Smart Scale', icon: 'scale', connected: true },
-    { id: 'glucometer', label: 'Glucose Meter', icon: 'droplets', connected: false },
   ],
 };
 

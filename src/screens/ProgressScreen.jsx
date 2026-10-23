@@ -245,8 +245,7 @@ export default function ProgressScreen({ day, streak, doneCount, weightUnit, wat
   // One entry per Cards-view tile — the source both the compact grid and
   // the expanded detail panel read from, so tapping a card can't show
   // anything the grid itself didn't already have. Order matches product
-  // direction: Weight, Exercise, Calories, Water, Steps, then BP/Glucose
-  // last (point-in-time vitals rather than daily habits).
+  // direction: Weight, Exercise, Calories, Water, Steps.
   const METRICS = [
     {
       id: 'weight',
@@ -338,41 +337,6 @@ export default function ProgressScreen({ day, streak, doneCount, weightUnit, wat
           goal={STEPS_GOAL}
           goalLabel="goal"
           onScrub={(i) => setScrub(i == null ? null : { label: xLabels[i], value: `${periodDays[i].steps.toLocaleString()} steps` })}
-        />
-      ),
-    },
-    {
-      id: 'bp',
-      icon: 'activity',
-      label: 'Blood Pressure',
-      value: `${avgSys}/${avgDia} mmHg`,
-      today: `${todayEntry.bp.sys}/${todayEntry.bp.dia} mmHg`,
-      pct: pctSys,
-      goodDirection: 'down',
-      chart: (setScrub) => (
-        <TrendChart
-          series={[
-            { label: 'Systolic', color: 'var(--teal-500)', data: periodDays.map((d) => d.bp.sys) },
-            { label: 'Diastolic', color: 'var(--navy-500)', data: periodDays.map((d) => d.bp.dia) },
-          ]}
-          xLabels={xLabels}
-          onScrub={(i) => setScrub(i == null ? null : { label: xLabels[i], value: `${periodDays[i].bp.sys}/${periodDays[i].bp.dia} mmHg` })}
-        />
-      ),
-    },
-    {
-      id: 'glucose',
-      icon: 'droplets',
-      label: 'Glucose',
-      value: `${avgGlucose} mg/dL`,
-      today: `${todayEntry.glucose} mg/dL`,
-      pct: pctGlucose,
-      goodDirection: 'down',
-      chart: (setScrub) => (
-        <TrendChart
-          series={[{ label: 'Glucose', color: 'var(--teal-500)', data: periodDays.map((d) => d.glucose) }]}
-          xLabels={xLabels}
-          onScrub={(i) => setScrub(i == null ? null : { label: xLabels[i], value: `${periodDays[i].glucose} mg/dL` })}
         />
       ),
     },
