@@ -9,6 +9,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   build: {
+    // photos in src/assets/photos are ~100 KB each; inlining keeps the build
+    // a flat app.js/app.css/index.html set the Artifact publish step expects.
+    assetsInlineLimit: 400000,
     rollupOptions: {
       output: {
         inlineDynamicImports: true,

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Icon from '../components/Icon';
 import BackIconButton from '../components/BackIconButton';
 import Button from '../components/Button';
@@ -35,7 +35,7 @@ export default function WelcomeScreen({ onStart }) {
           className="vh-scroll"
           style={{ flex: 1, overflowY: 'auto', padding: 'calc(20px + var(--safe-top)) 24px 16px', display: 'flex', flexDirection: 'column', gap: 24 }}
         >
-          <Photo name="welcome" alt="A smiling older adult on a video call with their care team" height={200} />
+          <Photo name="welcome" alt="A smiling older woman using the ViveNow app on her phone" height={280} position="35% 30%" />
           <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>
             Your care team prepared your plan, {patientName}.
           </div>
@@ -56,38 +56,77 @@ export default function WelcomeScreen({ onStart }) {
     );
   }
 
+  return <DailyTasksStep tasks={tasks} onBack={() => setStep(0)} footer={footer} onStart={onStart} />;
+}
+
+// Blood pressure and glucose aren't part of the weight-focused plan this
+// screen introduces, so they're left off the preview list.
+const HIDDEN_TASK_IDS = new Set(['bp', 'glucose']);
+
+/** The task list ticks itself off one row at a time — a short, gentle
+ * preview of what a finished day feels like. */
+function DailyTasksStep({ tasks, onBack, footer, onStart }) {
+  const shown = tasks.filter((t) => !HIDDEN_TASK_IDS.has(t.id));
+  const [checked, setChecked] = useState(0);
+
+  useEffect(() => {
+    if (checked >= shown.length) return undefined;
+    const id = setTimeout(() => setChecked((c) => c + 1), checked === 0 ? 700 : 650);
+    return () => clearTimeout(id);
+  }, [checked, shown.length]);
+
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
       <div style={{ padding: 'calc(12px + var(--safe-top)) 16px 0' }}>
-        <BackIconButton onClick={() => setStep(0)} />
+        <BackIconButton onClick={onBack} />
       </div>
-      <div
-        className="vh-scroll"
-        style={{ flex: 1, overflowY: 'auto', padding: '4px 24px 16px', display: 'flex', flexDirection: 'column', gap: 14 }}
-      >
+      <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: '4px 24px 16px', display: 'flex', flexDirection: 'column', gap: 18 }}>
         <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Your daily tasks</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {tasks.map((t) => (
-            <div
-              key={t.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 14,
-                background: 'var(--surface-card)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-lg)',
-                boxShadow: 'var(--shadow-sm)',
-                padding: '6px 14px',
-                minHeight: 56,
-              }}
-            >
-              <span style={{ width: 42, height: 42, borderRadius: '50%', background: 'var(--sand-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                <Icon name={t.icon} size={18} color="var(--teal-600)" />
-              </span>
-              <span style={{ font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{t.label}</span>
-            </div>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {shown.map((t, i) => {
+            const done = i < checked;
+            return (
+              <div
+                key={t.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 14,
+                  background: done ? 'var(--success-subtle)' : 'var(--surface-card)',
+                  border: `1px solid ${done ? '#bfe6cf' : 'var(--border-subtle)'}`,
+                  borderRadius: 'var(--radius-lg)',
+                  boxShadow: 'var(--shadow-sm)',
+                  padding: '10px 16px 10px 14px',
+                  minHeight: 68,
+                  transition: 'background var(--dur-med) var(--ease-standard), border-color var(--dur-med) var(--ease-standard)',
+                }}
+              >
+                <span style={{ width: 46, height: 46, borderRadius: '50%', background: done ? '#fff' : 'var(--sand-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Icon name={t.icon} size={19} color="var(--teal-600)" />
+                </span>
+                <span style={{ flex: 1, minWidth: 0, font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{t.label}</span>
+                <span
+                  aria-label={done ? 'Done' : undefined}
+                  style={{
+                    width: 36,
+                    height: 36,
+                    borderRadius: '50%',
+                    flexShrink: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    boxSizing: 'border-box',
+                    background: done ? 'var(--success)' : 'transparent',
+                    border: done ? '2px solid var(--success)' : '2px solid var(--border-strong)',
+                    transform: done ? 'scale(1)' : 'scale(0.9)',
+                    transition: 'background var(--dur-med) var(--ease-standard), border-color var(--dur-med) var(--ease-standard), transform 320ms cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  }}
+                >
+                  <Icon name="check" size={16} color="#fff" strokeWidth={3.2} style={{ opacity: done ? 1 : 0, transition: 'opacity var(--dur-med)' }} />
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
       {footer("Let's start", onStart)}
