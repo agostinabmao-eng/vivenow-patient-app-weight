@@ -45,7 +45,7 @@ export const SHARED_ONBOARDING_QUESTIONS = [
   {
     id: 'readingsTime',
     type: 'multiselect',
-    question: 'When do you prefer to take your readings?',
+    question: 'When do you prefer to weigh yourself?',
     options: ['Morning', 'Afternoon', 'Evening'],
   },
   {
