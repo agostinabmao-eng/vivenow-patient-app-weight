@@ -135,32 +135,7 @@ export function GoalsCard({ goals, weightGoal, weightUnit }) {
         <div style={{ font: '700 1rem/1.2 var(--font-display)', color: 'var(--ink)' }}>Your Goals</div>
       </div>
 
-      <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 16 }}>
-        Target
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 10 }}>
-        {goals.targets.map((t) => (
-          <div key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <Icon name="check" size={18} color="var(--teal-600)" />
-            </span>
-            <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>{t.label}</span>
-          </div>
-        ))}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <Icon name="scale" size={18} color="var(--teal-600)" />
-          </span>
-          <span style={{ font: '700 1.0625rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
-            Weight {formatWeight(weightGoal.goalLbs, weightUnit)} or less by {formatGoalDate(weightGoal.goalDate)}
-          </span>
-        </div>
-      </div>
-
-      <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)', marginTop: 18 }}>
-        Goals
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 8 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 16 }}>
         {goals.behaviors.map((b) => (
           <div key={b} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--teal-400)', flexShrink: 0 }} />

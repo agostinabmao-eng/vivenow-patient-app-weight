@@ -34,7 +34,7 @@ const TAB_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn
 // Profile is the one non-tab screen that qualifies (its own footer button
 // was replaced by a header back-icon), so it floats too, just without the
 // NavBar-height offset the tab screens get (see SosFab's hasNavBar prop).
-const FLOATING_SOS_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn', 'profile', 'nurse-notice', 'exercise-log-custom']);
+const FLOATING_SOS_SCREENS = new Set(['home', 'progress', 'nutrition', 'exercise', 'learn', 'profile', 'nurse-notice']);
 
 export default function App() {
   const online = useOnlineStatus();
@@ -319,7 +319,7 @@ export default function App() {
       }}
     >
       <div style={{ flex: 1, overflow: 'hidden' }}>{body}</div>
-      {screen !== 'sos' && screen !== 'onboarding' && (
+      {screen !== 'sos' && screen !== 'onboarding' && screen !== 'exercise-log-custom' && (
         <SosFab
           onClick={() => open('sos')}
           floating={FLOATING_SOS_SCREENS.has(screen)}

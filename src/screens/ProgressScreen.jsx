@@ -70,8 +70,8 @@ function DeltaLabel({ pct, goodDirection, previousLabel }) {
   if (pct === 0) {
     return (
       <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-        <Icon name="minus" size={12} color="var(--text-muted)" />
-        <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>No change vs {previousLabel}</span>
+        <Icon name="minus" size={10} color="var(--text-muted)" />
+        <span style={{ font: '500 0.8125rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>No change vs {previousLabel}</span>
       </div>
     );
   }
@@ -80,11 +80,23 @@ function DeltaLabel({ pct, goodDirection, previousLabel }) {
   const color = good == null ? 'var(--text-muted)' : good ? 'var(--success)' : 'var(--danger)';
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-      <Icon name={increased ? 'arrow-up' : 'arrow-down'} size={12} color={color} />
-      <span style={{ font: '600 1rem/1.3 var(--font-sans)', color }}>
+      <Icon name={increased ? 'arrow-up' : 'arrow-down'} size={10} color={color} />
+      <span style={{ font: '500 0.8125rem/1.3 var(--font-sans)', color }}>
         {increased ? '+' : ''}
         {pct}% vs {previousLabel}
       </span>
+    </div>
+  );
+}
+
+/** "1,371 kcal/day" → big number, small unit, so the vital reads first and
+ * the unit and the trend line below it stay secondary. */
+function MetricValue({ value }) {
+  const m = /^([\d.,]+)(.*)$/.exec(value);
+  return (
+    <div style={{ marginTop: 10, color: 'var(--ink)' }}>
+      <div style={{ font: '700 1.75rem/1.1 var(--font-display)' }}>{m ? m[1] : value}</div>
+      {m && m[2] && <div style={{ font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{m[2].trim()}</div>}
     </div>
   );
 }
@@ -112,8 +124,8 @@ function SummaryCard({ icon, label, value, active, onClick, children }) {
         </div>
         <div style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--text-muted)' }}>{label}</div>
       </div>
-      <div style={{ marginTop: 8, font: '700 1.0625rem/1.2 var(--font-display)', color: 'var(--ink)' }}>{value}</div>
-      <div style={{ marginTop: 4 }}>{children}</div>
+      <MetricValue value={value} />
+      <div style={{ marginTop: 8 }}>{children}</div>
     </div>
   );
 }

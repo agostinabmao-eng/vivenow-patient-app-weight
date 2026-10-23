@@ -24,7 +24,7 @@ export default function LogCustomExerciseScreen({ onSave, onBack }) {
       <div style={{ padding: 'calc(12px + var(--safe-top)) 20px 0' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
           <BackIconButton onClick={onBack} />
-          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Log Other Activity</div>
+          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Log Activity</div>
         </div>
         <div style={{ font: '400 1rem/1.4 var(--font-sans)', color: 'var(--text-muted)', marginTop: 6 }}>
           Did something active that wasn&apos;t on your plan? Log it here.
@@ -47,7 +47,7 @@ export default function LogCustomExerciseScreen({ onSave, onBack }) {
           placeholder="e.g. 20"
         />
         <div>
-          <div style={{ font: '700 1rem/1.4 var(--font-display)', color: 'var(--ink)' }}>How intense was it?</div>
+          <div style={{ font: '600 1rem/1.2 var(--font-sans)', color: 'var(--ink)' }}>How intense was it?</div>
           <ChoiceQuestion options={INTENSITY_OPTIONS} value={intensity} onChange={setIntensity} />
         </div>
       </div>
