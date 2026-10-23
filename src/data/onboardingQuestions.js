@@ -66,8 +66,9 @@ export const SHARED_ONBOARDING_QUESTIONS = [
   {
     id: 'barriers',
     type: 'multiselect',
-    question: 'What do you find more challenging when trying to lose weight?',
-    options: ['Time', 'Motivation', 'Cost', 'Not sure where to start'],
+    question: 'What do you find more challenging?',
+    options: ['Stress eating', 'Lack of motivation', 'Control portion sizes', 'Not sure where to start'],
+    otherOption: 'Other',
   },
 ];
 
@@ -82,14 +83,9 @@ export const SHARED_ONBOARDING_QUESTIONS = [
 // were either folded into the shared readingsTime question above or
 // dropped as duplicative.
 export const CONDITION_ONBOARDING_BLOCKS = {
-  weightManagement: [
-    {
-      id: 'eatingBarrier',
-      type: 'multiselect',
-      question: 'What do you find more challenging when trying to improve your eating habits?',
-      options: ['Evening snacks', 'Stress eating', 'Social events', 'Control portion sizes'],
-    },
-  ],
+  // The old weight-loss and eating-habit challenge questions were merged
+  // into the shared `barriers` question above.
+  weightManagement: [],
 };
 
 // Condition blocks are assembled in this fixed order — only the ones the

@@ -45,8 +45,8 @@ function OnboardingNudge({ onClick }) {
         gap: 14,
         textAlign: 'left',
         marginTop: 16,
-        background: 'var(--sand-50)',
-        border: '1.5px solid var(--sand-300)',
+        background: 'var(--teal-50)',
+        border: '1.5px solid var(--teal-200)',
         borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-sm)',
         padding: 20,
@@ -91,7 +91,7 @@ function InlineTodoRow({ icon, label, sub, done, expanded, onToggle, reminderSet
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            background: done ? 'var(--success-subtle)' : 'var(--sand-50)',
+            background: done ? 'var(--success-subtle)' : 'var(--teal-50)',
           }}
         >
           <Icon name={icon} size={24} color={done ? 'var(--success)' : 'var(--teal-600)'} />
@@ -167,8 +167,8 @@ function CheckInCard({ day, onOpenSurvey }) {
         gap: 14,
         textAlign: 'left',
         marginTop: 20,
-        background: day.surveySubmittedAt ? 'var(--surface-card)' : 'var(--peach-50)',
-        border: `1.5px solid ${day.surveySubmittedAt ? 'var(--border-subtle)' : 'var(--peach-100)'}`,
+        background: day.surveySubmittedAt ? 'var(--surface-card)' : 'var(--teal-50)',
+        border: `1.5px solid ${day.surveySubmittedAt ? 'var(--border-subtle)' : 'var(--teal-200)'}`,
         borderRadius: 'var(--radius-lg)',
         boxShadow: 'var(--shadow-sm)',
         padding: 20,
@@ -347,31 +347,32 @@ function greeting() {
 
 /** Greeting and streak chip, shared by both Home layouts. */
 function HomeHeader({ streak, onOpenProfile, showShortWin, doneCount, totalCount }) {
+  const pill = { display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--surface-card)', borderRadius: 'var(--radius-pill)', boxShadow: 'var(--shadow-sm)', height: 60, flexShrink: 0 };
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <div style={{ minWidth: 0 }}>
           <div style={{ font: '600 1.0625rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{greeting()},</div>
           <div style={{ font: '700 var(--fs-title)/1.15 var(--font-display)', color: 'var(--ink)' }}>{patientName}</div>
         </div>
-        <IconButton variant="outline" label="Open your profile" onClick={onOpenProfile}>
-          <Icon name="user" size={22} />
-        </IconButton>
-      </div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginTop: 14 }}>
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--gold-100)', borderRadius: 'var(--radius-pill)', padding: '10px 18px' }}>
-          <Icon name="flame" size={18} color="var(--gold-700)" />
-          <span style={{ font: '700 1.0625rem/1.2 var(--font-sans)', color: 'var(--gold-700)' }}>{streak}-day streak</span>
-        </div>
-        {showShortWin && (
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--teal-50)', borderRadius: 'var(--radius-pill)', padding: '10px 18px' }}>
-            <Icon name="check" size={18} color="var(--teal-700)" />
-            <span style={{ font: '700 1.0625rem/1.2 var(--font-sans)', color: 'var(--teal-700)' }}>
-              {doneCount}{totalCount ? ` of ${totalCount}` : ''} done today
-            </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ ...pill, gap: 8, padding: '0 20px' }} aria-label={`${streak}-day streak`}>
+            <Icon name="flame" size={20} color="var(--gold-500)" />
+            <span style={{ font: '700 1.1875rem/1 var(--font-display)', color: 'var(--ink)' }}>{streak}</span>
           </div>
-        )}
+          <button type="button" aria-label="Open your profile" onClick={onOpenProfile} style={{ ...pill, width: 60, border: 'none', cursor: 'pointer', color: 'var(--ink)' }}>
+            <Icon name="user" size={22} />
+          </button>
+        </div>
       </div>
+      {showShortWin && (
+        <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: 'var(--teal-50)', borderRadius: 'var(--radius-pill)', padding: '10px 18px', marginTop: 14 }}>
+          <Icon name="check" size={18} color="var(--teal-700)" />
+          <span style={{ font: '700 1.0625rem/1.2 var(--font-sans)', color: 'var(--teal-700)' }}>
+            {doneCount}{totalCount ? ` of ${totalCount}` : ''} done today
+          </span>
+        </div>
+      )}
     </>
   );
 }
@@ -705,7 +706,7 @@ export default function HomeScreen({
 
         {!onboardingComplete && <OnboardingNudge onClick={onResumeOnboarding} />}
 
-        <div style={{ marginTop: 28, font: '700 var(--fs-h2)/1.2 var(--font-display)', color: 'var(--ink)' }}>
+        <div style={{ marginTop: 20, font: '700 var(--fs-h2)/1.2 var(--font-display)', color: 'var(--ink)' }}>
           Today&apos;s Summary
         </div>
         <div className="vh-scroll" style={{ display: 'flex', gap: 12, overflowX: 'auto', margin: '14px -24px 0', padding: '4px 24px 10px' }}>

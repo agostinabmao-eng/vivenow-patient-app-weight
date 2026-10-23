@@ -34,22 +34,25 @@ export default function WelcomeScreen({ onStart }) {
       <div style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
         <div
           className="vh-scroll"
-          style={{ flex: 1, overflowY: 'auto', padding: 'calc(20px + var(--safe-top)) 24px 16px', display: 'flex', flexDirection: 'column', gap: 24 }}
+          style={{ flex: 1, overflowY: 'auto', padding: '0 24px 16px', display: 'flex', flexDirection: 'column', gap: 28 }}
         >
-          <Photo name="welcome" alt="A smiling older woman using the ViveNow app on her phone" height={280} position="35% 30%" />
-          <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>
-            Your care team prepared your plan, {patientName}.
+          <Photo name="welcome" alt="A smiling older woman using the ViveNow app on her phone" height={280} radius="0 0 120px 120px" position="35% 30%" />
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>Welcome {patientName}!</div>
+            <div style={{ font: '700 1.55rem/1.4 var(--font-display)', color: 'var(--ink)', marginTop: 14 }}>Your care team prepared your plan</div>
           </div>
 
-          <div style={{ background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-xl)', padding: 24, boxShadow: 'var(--shadow-sm)' }}>
-            <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>Your main goal</div>
-            <div style={{ font: '700 1.35rem/1.35 var(--font-display)', color: 'var(--ink)', marginTop: 6 }}>{patientPlan.mainGoalPlain}</div>
-            <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <Icon name="check" size={18} color="var(--teal-600)" style={{ flexShrink: 0 }} />
-              <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
-                Weight at or below {patientPlan.weight.goalLbs} lbs by {formatNumericDate(patientPlan.weight.goalDate)}
-              </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 16, background: 'var(--surface-card)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-xl)', padding: 24, boxShadow: 'var(--shadow-sm)' }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ font: '600 1rem/1 var(--font-sans)', color: 'var(--text-muted)' }}>Your main goal</div>
+              <div style={{ font: '700 1.35rem/1.35 var(--font-display)', color: 'var(--ink)', marginTop: 6 }}>{patientPlan.mainGoalPlain}</div>
+              <div style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)', marginTop: 14 }}>
+                Weight {patientPlan.weight.goalLbs} lbs or less by {formatNumericDate(patientPlan.weight.goalDate)}
+              </div>
             </div>
+            <span style={{ width: 46, height: 46, borderRadius: '50%', background: 'var(--teal-50)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <Icon name="check" size={20} color="var(--teal-600)" />
+            </span>
           </div>
         </div>
         {footer('Next', () => setStep(1))}

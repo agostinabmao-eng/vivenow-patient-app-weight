@@ -108,7 +108,7 @@ export default function OptionImage({ id }) {
         justifyContent: 'center',
       }}
     >
-      <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true">
         {content}
       </svg>
     </div>

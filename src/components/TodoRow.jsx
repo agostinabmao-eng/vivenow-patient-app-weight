@@ -32,7 +32,7 @@ export default function TodoRow({ icon, label, sub, done, reminderSet, onClick, 
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: done ? 'var(--success-subtle)' : 'var(--sand-50)',
+          background: done ? 'var(--success-subtle)' : 'var(--teal-50)',
         }}
       >
         <Icon name={icon} size={24} color={done ? 'var(--success)' : 'var(--teal-600)'} />

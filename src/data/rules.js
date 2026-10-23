@@ -71,14 +71,6 @@ export const FIXED_RULES = [
     label: (a) => `Set "${cleanOtherText(a.outcomes[0])}" as the patient's daily reminder on Home`,
   },
   {
-    id: 'barrierTime',
-    test: (a) => Array.isArray(a.barriers) && a.barriers.includes('Time'),
-    effect: (a, p, out) => {
-      out.quickFirst = true;
-    },
-    label: () => 'Showed Quick 5-minute videos first in Learn',
-  },
-  {
     id: 'barrierNotSure',
     test: (a) => Array.isArray(a.barriers) && a.barriers.includes('Not sure where to start'),
     effect: (a, p, out) => {
@@ -88,19 +80,11 @@ export const FIXED_RULES = [
   },
   {
     id: 'barrierMotivation',
-    test: (a) => Array.isArray(a.barriers) && a.barriers.includes('Motivation'),
+    test: (a) => Array.isArray(a.barriers) && a.barriers.includes('Lack of motivation'),
     effect: (a, p, out) => {
       out.highlightWins = true;
     },
     label: () => "Highlighted a short daily win and the patient's streak on Home",
-  },
-  {
-    id: 'eatingBarrierEvenings',
-    test: (a, p) => hasWeightManagementCondition(p) && Array.isArray(a.eatingBarrier) && a.eatingBarrier.includes('Evening snacks'),
-    effect: (a, p, out) => {
-      out.eveningCheckIn = true;
-    },
-    label: () => 'Added an evening check-in reminder',
   },
 ];
 

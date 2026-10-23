@@ -9,7 +9,7 @@ const buttonStyle = {
   width: 68,
   height: 68,
   borderRadius: '50%',
-  background: '#d6420f',
+  background: 'var(--brand)',
   border: 'none',
   display: 'flex',
   alignItems: 'center',

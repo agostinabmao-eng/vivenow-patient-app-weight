@@ -171,13 +171,20 @@ export function GoalsCard({ goals, weightGoal, weightUnit }) {
 /** Compact weight-goal summary for Home — just the percentage and a thin
  * bar, so the goal stays visible day-to-day without repeating the full
  * Progress-tab card's baseline/date detail. */
+function encouragement(pct) {
+  if (pct >= 100) return 'Goal reached — congratulations!';
+  if (pct >= 75) return 'Almost there!';
+  if (pct >= 25) return 'Well done! Keep it going!';
+  return "You've started — every step counts!";
+}
+
 export function WeightGoalMiniCard({ weightGoal, currentLbs }) {
   const { pct } = weightGoalProgress(weightGoal, currentLbs);
   return (
     <div
       style={{
-        background: 'var(--sand-50)',
-        border: '1px solid var(--sand-100)',
+        background: 'var(--teal-50)',
+        border: '1px solid var(--teal-200)',
         borderRadius: 'var(--radius-lg)',
         padding: 18,
         display: 'flex',
@@ -198,6 +205,7 @@ export function WeightGoalMiniCard({ weightGoal, currentLbs }) {
         >
           <div style={{ width: `${pct}%`, height: '100%', borderRadius: 'var(--radius-pill)', background: 'var(--teal-600)' }} />
         </div>
+        <div style={{ marginTop: 10, font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)' }}>{encouragement(pct)}</div>
       </div>
     </div>
   );

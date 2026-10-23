@@ -87,7 +87,7 @@ export const metrics = [
     hasTrend: true,
     trend: [...weeklySample.map((d) => d.weight), todaySample.weight],
   },
-  { id: 'cal', icon: 'flame', label: 'Calories', value: '550', unit: `of ${CALORIE_BURN_GOAL} goal`, valueNum: 550, goal: CALORIE_BURN_GOAL },
+  { id: 'cal', icon: 'flame', label: 'Calories', value: '550', unit: `/${CALORIE_BURN_GOAL} goal`, valueNum: 550, goal: CALORIE_BURN_GOAL },
   { id: 'steps', icon: 'footprints', label: 'Steps', value: '2,450', unit: `of ${STEPS_GOAL.toLocaleString()} goal`, valueNum: 2450, goal: STEPS_GOAL },
   {
     id: 'bp',

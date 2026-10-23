@@ -131,11 +131,6 @@ export default function OnboardingSurveyScreen({
       </div>
 
       <div className="vh-scroll" style={{ flex: 1, overflowY: 'auto', padding: '24px 24px', display: 'flex', flexDirection: 'column' }}>
-        {index === 0 && (
-          <div style={{ font: '500 1rem/1.3 var(--font-sans)', color: 'var(--text-muted)', marginBottom: 8 }}>
-            Just a few quick preferences — this helps us personalize your app.
-          </div>
-        )}
         <div style={{ font: '700 var(--fs-title)/1.2 var(--font-display)', color: 'var(--ink)' }}>
           {step.question}
           {step.optional && <span style={{ color: 'var(--text-muted)', fontWeight: 500 }}> (optional)</span>}
