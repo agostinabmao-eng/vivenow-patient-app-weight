@@ -406,15 +406,15 @@ const BASE_TASK_TEMPLATES = [
 ];
 
 // One task-template list per condition the Provider Portal can flag on a
-// patient's plan. More than one condition can assign the same task id
-// (hypertension and heart failure both want blood pressure tracked) — see
-// buildDailyTasks, which unions their timesOfDay instead of duplicating
-// the row.
+// patient's plan. This plan is weight-focused, so no condition adds a daily
+// blood pressure or glucose task (the templates are kept, empty, so a
+// condition can assign tasks again without touching buildDailyTasks, which
+// unions duplicate task ids instead of repeating the row).
 export const CONDITION_TASK_TEMPLATES = {
-  hypertension: [{ id: 'bp', timesOfDay: ['morning', 'evening'] }],
-  cardiovascularDisease: [{ id: 'bp', timesOfDay: ['morning', 'evening'] }],
-  heartFailure: [{ id: 'bp', timesOfDay: ['morning', 'evening'] }],
-  type2Diabetes: [{ id: 'glucose', timesOfDay: ['morning', 'evening'] }],
+  hypertension: [],
+  cardiovascularDisease: [],
+  heartFailure: [],
+  type2Diabetes: [],
 };
 
 // One task-template list per mobility level — all three currently just
@@ -551,7 +551,7 @@ export function weekDayLabels() {
   for (let i = 6; i >= 0; i--) {
     const d = new Date();
     d.setDate(d.getDate() - i);
-    labels.push(d.toLocaleDateString([], { weekday: 'short' }));
+    labels.push(d.toLocaleDateString('en-US', { weekday: 'short' }));
   }
   return labels;
 }

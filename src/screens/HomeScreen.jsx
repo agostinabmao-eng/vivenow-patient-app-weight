@@ -10,7 +10,6 @@ import Button from '../components/Button';
 import WaterSlider, { formatWater } from '../components/WaterSlider';
 import MedicationList from '../components/MedicationList';
 import Toast from '../components/Toast';
-import Photo from '../components/Photo';
 import { HeroProgressCard, WeightGoalMiniCard } from '../components/ProgressCards';
 import { formatWeight, weightToLbs } from '../utils/units';
 import { shouldReconfirmPersonalReason, pickDailyReasonMessage } from '../data/rules';
@@ -346,8 +345,7 @@ function greeting() {
   return h < 12 ? 'Good morning' : h < 18 ? 'Good afternoon' : 'Good evening';
 }
 
-/** Greeting, streak chip and the warm hero photo — shared by both Home
- * layouts so the first thing a patient sees is a person, not a dashboard. */
+/** Greeting and streak chip, shared by both Home layouts. */
 function HomeHeader({ streak, onOpenProfile, showShortWin, doneCount, totalCount }) {
   return (
     <>
@@ -374,7 +372,6 @@ function HomeHeader({ streak, onOpenProfile, showShortWin, doneCount, totalCount
           </div>
         )}
       </div>
-      <Photo name="home-walk" alt="Two older adults walking together in a park" height={190} style={{ marginTop: 18 }} />
     </>
   );
 }
@@ -677,8 +674,6 @@ export default function HomeScreen({
       goal: day.videos.length,
     },
     metrics[2], // Steps
-    metrics[3], // Blood Pressure
-    metrics[4], // Glucose
   ];
 
   return (

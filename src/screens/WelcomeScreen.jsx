@@ -3,6 +3,7 @@ import Icon from '../components/Icon';
 import BackIconButton from '../components/BackIconButton';
 import Button from '../components/Button';
 import Photo from '../components/Photo';
+import { formatNumericDate } from '../utils/dates';
 import { patientName, patientPlan, buildDailyTasks, exercisesForPatient } from '../data/sampleData';
 
 /** The very first screen a patient sees — step 2 of onboarding, after the
@@ -46,7 +47,7 @@ export default function WelcomeScreen({ onStart }) {
             <div style={{ marginTop: 14, display: 'flex', alignItems: 'center', gap: 8 }}>
               <Icon name="check" size={18} color="var(--teal-600)" style={{ flexShrink: 0 }} />
               <span style={{ font: '600 1rem/1.3 var(--font-sans)', color: 'var(--ink)' }}>
-                Weight at or below {patientPlan.weight.goalLbs} lbs by {new Date(`${patientPlan.weight.goalDate}T00:00:00`).toLocaleDateString([], { month: 'long', day: 'numeric', year: 'numeric' })}
+                Weight at or below {patientPlan.weight.goalLbs} lbs by {formatNumericDate(patientPlan.weight.goalDate)}
               </span>
             </div>
           </div>
@@ -59,14 +60,10 @@ export default function WelcomeScreen({ onStart }) {
   return <DailyTasksStep tasks={tasks} onBack={() => setStep(0)} footer={footer} onStart={onStart} />;
 }
 
-// Blood pressure and glucose aren't part of the weight-focused plan this
-// screen introduces, so they're left off the preview list.
-const HIDDEN_TASK_IDS = new Set(['bp', 'glucose']);
-
 /** The task list ticks itself off one row at a time — a short, gentle
  * preview of what a finished day feels like. */
 function DailyTasksStep({ tasks, onBack, footer, onStart }) {
-  const shown = tasks.filter((t) => !HIDDEN_TASK_IDS.has(t.id));
+  const shown = tasks;
   const [checked, setChecked] = useState(0);
 
   useEffect(() => {
